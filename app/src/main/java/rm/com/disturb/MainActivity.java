@@ -1,11 +1,9 @@
 package rm.com.disturb;
 
 import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,10 +16,12 @@ import butterknife.OnClick;
 import javax.inject.Inject;
 
 public final class MainActivity extends AppCompatActivity {
-  private static final int REQ_PHONE_LISTENER_PERMISSIONS = 1;
+  private static final int REQ_READ_PHONE_STATE_PERMISSION = 1;
+  private static final int REQ_READ_CONTACTS_PERMISSION = 2;
 
   @BindString(R.string.message_test_notification) String messageTestNotification;
   @BindString(R.string.description_test_notification) String descriptionTestNotification;
+  @BindString(R.string.description_wait_permissions) String descriptionWaitPermission;
   @BindString(R.string.permissions_rationale) String permissionsRationale;
   @BindColor(R.color.color_accent) int colorAccent;
 
@@ -37,24 +37,37 @@ public final class MainActivity extends AppCompatActivity {
     ButterKnife.bind(this);
     ((DisturbApplication) getApplicationContext()).injector().inject(this);
 
-    if (isPhoneListenerPermissionGranted()) {
+    if (Permissions.isPhoneListenerPermissionGranted(this)) {
       indicateNotificationsAvailable();
     } else {
-      requestPhoneListenerPermissions();
+      requestAllPermissions();
+    }
+
+    if (!Permissions.isContactAccessPermissionGranted(this)) {
+      requestReadContactsPermissions();
     }
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
-    if (requestCode != REQ_PHONE_LISTENER_PERMISSIONS) {
+    if (requestCode != REQ_READ_PHONE_STATE_PERMISSION) {
       return;
     }
 
-    if (isPhoneListenerPermissionGranted()) {
+    if (Permissions.isPhoneListenerPermissionGranted(this)) {
       indicateNotificationsAvailable();
     } else {
       Toast.makeText(this, permissionsRationale, Toast.LENGTH_LONG).show();
     }
+  }
+
+  @OnClick(R.id.button_test_call) void onSendTestNotification() {
+    if (!Permissions.isPhoneListenerPermissionGranted(this)) {
+      requestAllPermissions();
+      return;
+    }
+
+    notifier.notify(messageTestNotification);
   }
 
   private void indicateNotificationsAvailable() {
@@ -62,22 +75,14 @@ public final class MainActivity extends AppCompatActivity {
     testCall.setColorFilter(colorAccent);
   }
 
-  @OnClick(R.id.button_test_call) void onSendTestNotification() {
-    if (!isPhoneListenerPermissionGranted()) {
-      requestPhoneListenerPermissions();
-      return;
-    }
-
-    notifier.notify(messageTestNotification);
+  private void requestAllPermissions() {
+    ActivityCompat.requestPermissions(this,
+        new String[] { Manifest.permission.READ_CONTACTS, Manifest.permission.READ_PHONE_STATE },
+        REQ_READ_PHONE_STATE_PERMISSION);
   }
 
-  private void requestPhoneListenerPermissions() {
-    ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_PHONE_STATE },
-        REQ_PHONE_LISTENER_PERMISSIONS);
-  }
-
-  private boolean isPhoneListenerPermissionGranted() {
-    return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-        == PackageManager.PERMISSION_GRANTED;
+  private void requestReadContactsPermissions() {
+    ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_CONTACTS },
+        REQ_READ_CONTACTS_PERMISSION);
   }
 }

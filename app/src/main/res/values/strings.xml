@@ -1,7 +1,7 @@
 <resources>
   <string name="app_name">Disturb</string>
-  <string name="description_test_notification">Click the phone to send test notification</string>
+  <string name="description_test_notification">Tap the phone to send test notification</string>
   <string name="description_wait_permissions">Waiting for the permissions to be granted…</string>
   <string name="message_test_notification">Test notification</string>
-  <string name="permissions_rationale">This app would not work without these permissions</string>
+  <string name="permissions_rationale">This app would not work without permission to receive your phone calls</string>
 </resources>

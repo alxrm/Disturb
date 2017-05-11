@@ -3,6 +3,7 @@
     package="rm.com.disturb">
 
   <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+  <uses-permission android:name="android.permission.READ_CONTACTS"/>
   <uses-permission android:name="android.permission.INTERNET"/>
 
   <application
