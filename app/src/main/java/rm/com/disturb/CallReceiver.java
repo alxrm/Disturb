@@ -25,7 +25,7 @@ public final class CallReceiver extends BroadcastReceiver {
     final String number = intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER);
 
     if (TelephonyManager.EXTRA_STATE_RINGING.equalsIgnoreCase(state)) {
-      notifier.notify(MessageFormat.format("Incoming call\n{0}", number));
+      notifier.notify(MessageFormat.format("Number: {0}", number));
     }
   }
 }
