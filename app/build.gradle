@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'let'
 
 apply from: "${rootDir}/constants.gradle"
 
