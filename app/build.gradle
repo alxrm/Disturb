@@ -1,0 +1,43 @@
+apply plugin: 'com.android.application'
+apply plugin: 'let'
+
+apply from: "${rootDir}/constants.gradle"
+
+android {
+  compileSdkVersion targetSdk
+  buildToolsVersion buildTools
+  defaultConfig {
+    applicationId "rm.com.disturb"
+    minSdkVersion minSdk
+    targetSdkVersion targetSdk
+    versionCode 1
+    versionName "1.0"
+    vectorDrawables.useSupportLibrary = true
+  }
+  buildTypes {
+    all {
+      buildConfigField "String", 'BOT_TOKEN', '"YOUR_BOT_TOKEN_HERE"'
+      buildConfigField "String", 'CHAT_ID', '"YOUR_TELEGRAM_ID_HERE"'
+    }
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+  dexOptions {
+    javaMaxHeapSize "2g"
+  }
+}
+
+dependencies {
+  compile fileTree(dir: 'libs', include: ['*.jar'])
+
+  annotationProcessor square.butterknifeCompiler
+  annotationProcessor square.daggerCompiler
+
+  compile square.dagger
+  compile square.butterknife
+
+  compile 'com.android.support:appcompat-v7:25.3.1'
+  compile 'com.github.pengrad:java-telegram-bot-api:2.3.1.1'
+}

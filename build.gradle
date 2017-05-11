@@ -1,0 +1,26 @@
+buildscript {
+  apply from: "constants.gradle"
+
+  repositories {
+    jcenter()
+  }
+
+  dependencies {
+    classpath 'com.android.tools.build:gradle:2.3.0'
+    classpath 'com.github.ben-manes:gradle-versions-plugin:0.14.0'
+    classpath 'com.canelmas.let:let-plugin:0.1.11'
+  }
+}
+
+apply plugin: 'com.github.ben-manes.versions'
+
+allprojects {
+  repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+  }
+}
+
+task clean(type: Delete) {
+  delete rootProject.buildDir
+}
