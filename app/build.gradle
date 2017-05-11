@@ -16,8 +16,8 @@ android {
   }
   buildTypes {
     all {
-      buildConfigField "String", 'BOT_TOKEN', '"381771542:AAFiUgN6S2FMQAcbLl3TXjLZ_HOyRzt_3u4"'
-      buildConfigField "String", 'CHAT_ID', '"247727"'
+      buildConfigField "String", 'BOT_TOKEN', '"YOUR_BOT_TOKEN_HERE"'
+      buildConfigField "String", 'CHAT_ID', '"YOUR_TELEGRAM_ID_HERE"'
     }
     release {
       minifyEnabled false
