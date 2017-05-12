@@ -37,14 +37,14 @@ public final class MainActivity extends AppCompatActivity {
     ButterKnife.bind(this);
     ((DisturbApplication) getApplicationContext()).injector().inject(this);
 
-    if (Permissions.isPhoneListenerPermissionGranted(this)) {
+    if (Permissions.isReadPhoneStatePermissionGranted(this)) {
       indicateNotificationsAvailable();
     } else {
       requestAllPermissions();
     }
 
-    if (!Permissions.isContactAccessPermissionGranted(this)) {
-      requestReadContactsPermissions();
+    if (!Permissions.isReadContactsPermissionGranted(this)) {
+      requestReadContactsPermission();
     }
   }
 
@@ -54,7 +54,7 @@ public final class MainActivity extends AppCompatActivity {
       return;
     }
 
-    if (Permissions.isPhoneListenerPermissionGranted(this)) {
+    if (Permissions.isReadPhoneStatePermissionGranted(this)) {
       indicateNotificationsAvailable();
     } else {
       Toast.makeText(this, permissionsRationale, Toast.LENGTH_LONG).show();
@@ -62,7 +62,7 @@ public final class MainActivity extends AppCompatActivity {
   }
 
   @OnClick(R.id.button_test_call) void onSendTestNotification() {
-    if (!Permissions.isPhoneListenerPermissionGranted(this)) {
+    if (!Permissions.isReadPhoneStatePermissionGranted(this)) {
       requestAllPermissions();
       return;
     }
@@ -81,7 +81,7 @@ public final class MainActivity extends AppCompatActivity {
         REQ_READ_PHONE_STATE_PERMISSION);
   }
 
-  private void requestReadContactsPermissions() {
+  private void requestReadContactsPermission() {
     ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_CONTACTS },
         REQ_READ_CONTACTS_PERMISSION);
   }

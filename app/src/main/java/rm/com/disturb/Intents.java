@@ -12,7 +12,7 @@ final class Intents {
   private Intents() {
   }
 
-  static boolean isValid(@Nullable Intent intent, @NonNull String action) {
+  static boolean matches(@Nullable Intent intent, @NonNull String action) {
     return intent != null
         && action.equalsIgnoreCase(intent.getAction())
         && intent.getExtras() != null;

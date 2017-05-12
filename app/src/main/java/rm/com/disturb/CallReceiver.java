@@ -25,7 +25,7 @@ public final class CallReceiver extends BroadcastReceiver {
   @Override public void onReceive(Context context, Intent intent) {
     ((DisturbApplication) context.getApplicationContext()).injector().inject(this);
 
-    if (!Intents.isValid(intent, TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
+    if (!Intents.matches(intent, TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
       return;
     }
 
@@ -39,7 +39,7 @@ public final class CallReceiver extends BroadcastReceiver {
       return;
     }
 
-    if (Permissions.isContactAccessPermissionGranted(context)) {
+    if (Permissions.isReadContactsPermissionGranted(context)) {
       notifyWithContactName(context, number);
     } else {
       notifier.notify(number);
