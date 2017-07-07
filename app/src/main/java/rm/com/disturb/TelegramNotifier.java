@@ -2,6 +2,7 @@ package rm.com.disturb;
 
 import android.support.annotation.NonNull;
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.concurrent.ExecutorService;
 
@@ -25,7 +26,7 @@ final class TelegramNotifier implements Notifier {
   @Override public void notify(@NonNull final String message) {
     executor.submit(new Runnable() {
       @Override public void run() {
-        bot.execute(new SendMessage(chatId, message));
+        bot.execute(new SendMessage(chatId, message).parseMode(ParseMode.Markdown));
       }
     });
   }

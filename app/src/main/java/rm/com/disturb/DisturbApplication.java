@@ -12,7 +12,7 @@ public final class DisturbApplication extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
-    component = DaggerDisturbComponent.builder().build();
+    component = DaggerDisturbComponent.builder().disturbModule(new DisturbModule(this)).build();
   }
 
   final DisturbComponent injector() {

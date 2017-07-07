@@ -16,8 +16,7 @@ import butterknife.OnClick;
 import javax.inject.Inject;
 
 public final class MainActivity extends AppCompatActivity {
-  private static final int REQ_READ_PHONE_STATE_PERMISSION = 1;
-  private static final int REQ_READ_CONTACTS_PERMISSION = 2;
+  private static final int REQ_PERMISSION = 1;
 
   @BindString(R.string.message_test_notification) String messageTestNotification;
   @BindString(R.string.description_test_notification) String descriptionTestNotification;
@@ -37,24 +36,20 @@ public final class MainActivity extends AppCompatActivity {
     ButterKnife.bind(this);
     ((DisturbApplication) getApplicationContext()).injector().inject(this);
 
-    if (Permissions.isReadPhoneStatePermissionGranted(this)) {
+    if (isAnyOfPermissionsGranted()) {
       indicateNotificationsAvailable();
-    } else {
-      requestAllPermissions();
     }
 
-    if (!Permissions.isReadContactsPermissionGranted(this)) {
-      requestReadContactsPermission();
-    }
+    requestAllPermissions();
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
       @NonNull int[] grantResults) {
-    if (requestCode != REQ_READ_PHONE_STATE_PERMISSION) {
+    if (requestCode != REQ_PERMISSION) {
       return;
     }
 
-    if (Permissions.isReadPhoneStatePermissionGranted(this)) {
+    if (isAnyOfPermissionsGranted()) {
       indicateNotificationsAvailable();
     } else {
       Toast.makeText(this, permissionsRationale, Toast.LENGTH_LONG).show();
@@ -62,12 +57,17 @@ public final class MainActivity extends AppCompatActivity {
   }
 
   @OnClick(R.id.button_test_call) void onSendTestNotification() {
-    if (!Permissions.isReadPhoneStatePermissionGranted(this)) {
+    if (!isAnyOfPermissionsGranted()) {
       requestAllPermissions();
       return;
     }
 
     notifier.notify(messageTestNotification);
+  }
+
+  private boolean isAnyOfPermissionsGranted() {
+    return Permissions.isReadPhoneStatePermissionGranted(this)
+        || Permissions.isReceiveSmsPermissionGranted(this);
   }
 
   private void indicateNotificationsAvailable() {
@@ -76,13 +76,9 @@ public final class MainActivity extends AppCompatActivity {
   }
 
   private void requestAllPermissions() {
-    ActivityCompat.requestPermissions(this,
-        new String[] { Manifest.permission.READ_CONTACTS, Manifest.permission.READ_PHONE_STATE },
-        REQ_READ_PHONE_STATE_PERMISSION);
-  }
-
-  private void requestReadContactsPermission() {
-    ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.READ_CONTACTS },
-        REQ_READ_CONTACTS_PERMISSION);
+    ActivityCompat.requestPermissions(this, new String[] {
+        Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS,
+        Manifest.permission.READ_PHONE_STATE
+    }, REQ_PERMISSION);
   }
 }

@@ -15,13 +15,20 @@ final class Permissions {
   private Permissions() {
   }
 
+  static boolean isReceiveSmsPermissionGranted(@NonNull Context context) {
+    return isPermissionGranted(context, Manifest.permission.RECEIVE_SMS);
+  }
+
   static boolean isReadPhoneStatePermissionGranted(@NonNull Context context) {
-    return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE)
-        == PackageManager.PERMISSION_GRANTED;
+    return isPermissionGranted(context, Manifest.permission.READ_PHONE_STATE);
   }
 
   static boolean isReadContactsPermissionGranted(@NonNull Context context) {
-    return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
+    return isPermissionGranted(context, Manifest.permission.READ_CONTACTS);
+  }
+
+  private static boolean isPermissionGranted(@NonNull Context context, @NonNull String permission) {
+    return ContextCompat.checkSelfPermission(context, permission)
         == PackageManager.PERMISSION_GRANTED;
   }
 }

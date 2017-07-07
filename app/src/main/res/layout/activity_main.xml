@@ -19,7 +19,7 @@
       android:background="?attr/selectableItemBackgroundBorderless"
       android:clickable="true"
       android:scaleType="centerInside"
-      app:srcCompat="@drawable/ic_phone_in_talk_24dp"
+      app:srcCompat="@drawable/ic_notifications"
       />
 
   <TextView

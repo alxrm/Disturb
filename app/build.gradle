@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 apply from: "${rootDir}/constants.gradle"
+apply from: "${rootDir}/telegram.gradle"
 
 android {
   compileSdkVersion targetSdk
@@ -15,8 +16,8 @@ android {
   }
   buildTypes {
     all {
-      buildConfigField "String", 'BOT_TOKEN', '"YOUR_BOT_TOKEN_HERE"'
-      buildConfigField "String", 'CHAT_ID', '"YOUR_TELEGRAM_ID_HERE"'
+      buildConfigField "String", 'BOT_TOKEN', botToken
+      buildConfigField "String", 'CHAT_ID', chatId
     }
     release {
       minifyEnabled false

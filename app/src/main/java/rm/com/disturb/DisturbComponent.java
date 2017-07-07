@@ -12,4 +12,5 @@ import javax.inject.Singleton;
 interface DisturbComponent {
   void inject(MainActivity activity);
   void inject(CallReceiver receiver);
+  void inject(SmsReceiver receiver);
 }
