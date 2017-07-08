@@ -1,19 +1,16 @@
-package rm.com.disturb;
+package rm.com.disturb.utils;
 
 import android.support.annotation.NonNull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import rm.com.disturb.Lists.Transformer;
-
-import static rm.com.disturb.Lists.map;
 
 /**
  * Created by alex
  */
 
-final class Formats {
+public final class Formats {
   private static final List<String> KEYWORDS =
       Arrays.asList("код", "kod", "code", "пароль", "password", "parol", "ключ", "key", "kluch",
           "token");
@@ -21,7 +18,7 @@ final class Formats {
   private Formats() {
   }
 
-  @NonNull static String smsOf(@NonNull String from, @NonNull String text) {
+  @NonNull public static String smsOf(@NonNull String from, @NonNull String text) {
     final String code = extractCodeFrom(text);
 
     if (!code.isEmpty()) {
@@ -32,11 +29,11 @@ final class Formats {
     return String.format(Locale.getDefault(), "%s\n%s", boldOf(from), text);
   }
 
-  @NonNull static String callOf(@NonNull String from) {
+  @NonNull public static String callOf(@NonNull String from) {
     return String.format(Locale.getDefault(), "%s is calling...", boldOf(from));
   }
 
-  @NonNull static String contactNameOf(@NonNull String name, @NonNull String phone) {
+  @NonNull public static String contactNameOf(@NonNull String name, @NonNull String phone) {
     return name.isEmpty() ? phone : (name + ", " + phone);
   }
 
@@ -67,7 +64,7 @@ final class Formats {
 
   private static int firstKeyWordIndex(@NonNull String text) {
     final String lowered = text.toLowerCase();
-    final List<Integer> indices = map(KEYWORDS, new Transformer<String, Integer>() {
+    final List<Integer> indices = Lists.map(KEYWORDS, new Lists.Transformer<String, Integer>() {
       @Override public Integer invoke(String item) {
         return lowered.indexOf(item);
       }

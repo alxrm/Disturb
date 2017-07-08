@@ -1,4 +1,4 @@
-package rm.com.disturb;
+package rm.com.disturb.utils;
 
 import android.Manifest;
 import android.content.Context;
@@ -10,20 +10,20 @@ import android.support.v4.content.ContextCompat;
  * Created by alex
  */
 
-final class Permissions {
+public final class Permissions {
 
   private Permissions() {
   }
 
-  static boolean isReceiveSmsPermissionGranted(@NonNull Context context) {
+  public static boolean isReceiveSmsPermissionGranted(@NonNull Context context) {
     return isPermissionGranted(context, Manifest.permission.RECEIVE_SMS);
   }
 
-  static boolean isReadPhoneStatePermissionGranted(@NonNull Context context) {
+  public static boolean isReadPhoneStatePermissionGranted(@NonNull Context context) {
     return isPermissionGranted(context, Manifest.permission.READ_PHONE_STATE);
   }
 
-  static boolean isReadContactsPermissionGranted(@NonNull Context context) {
+  public static boolean isReadContactsPermissionGranted(@NonNull Context context) {
     return isPermissionGranted(context, Manifest.permission.READ_CONTACTS);
   }
 

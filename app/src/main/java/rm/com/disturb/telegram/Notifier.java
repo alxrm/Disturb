@@ -1,4 +1,4 @@
-package rm.com.disturb;
+package rm.com.disturb.telegram;
 
 import android.support.annotation.NonNull;
 
@@ -6,6 +6,6 @@ import android.support.annotation.NonNull;
  * Created by alex
  */
 
-interface Notifier {
+public interface Notifier {
   void notify(@NonNull String message);
 }

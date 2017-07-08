@@ -1,4 +1,4 @@
-package rm.com.disturb;
+package rm.com.disturb.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -6,6 +6,13 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
 import javax.inject.Inject;
+import rm.com.disturb.DisturbApplication;
+import rm.com.disturb.contact.ContactBook;
+import rm.com.disturb.telegram.Notifier;
+import rm.com.disturb.utils.AsyncResult;
+import rm.com.disturb.utils.Formats;
+import rm.com.disturb.utils.Intents;
+import rm.com.disturb.utils.Permissions;
 
 /**
  * Created by alex

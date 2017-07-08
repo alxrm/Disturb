@@ -15,7 +15,7 @@ public final class DisturbApplication extends Application {
     component = DaggerDisturbComponent.builder().disturbModule(new DisturbModule(this)).build();
   }
 
-  final DisturbComponent injector() {
+  final public DisturbComponent injector() {
     return component;
   }
 }

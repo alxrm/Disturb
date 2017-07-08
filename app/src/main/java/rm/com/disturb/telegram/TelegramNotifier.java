@@ -1,4 +1,4 @@
-package rm.com.disturb;
+package rm.com.disturb.telegram;
 
 import android.support.annotation.NonNull;
 import com.pengrad.telegrambot.TelegramBot;
@@ -10,13 +10,13 @@ import java.util.concurrent.ExecutorService;
  * Created by alex
  */
 
-final class TelegramNotifier implements Notifier {
+public final class TelegramNotifier implements Notifier {
 
   @NonNull private final ExecutorService executor;
   @NonNull private final TelegramBot bot;
   @NonNull private final String chatId;
 
-  TelegramNotifier(@NonNull ExecutorService executor, @NonNull TelegramBot bot,
+  public TelegramNotifier(@NonNull ExecutorService executor, @NonNull TelegramBot bot,
       @NonNull String chatId) {
     this.executor = executor;
     this.bot = bot;

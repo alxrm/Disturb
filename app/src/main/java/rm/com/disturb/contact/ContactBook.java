@@ -1,12 +1,13 @@
-package rm.com.disturb;
+package rm.com.disturb.contact;
 
 import android.support.annotation.NonNull;
+import rm.com.disturb.utils.AsyncResult;
 
 /**
  * Created by alex
  */
 
-interface ContactBook {
+public interface ContactBook {
   @NonNull String findName(@NonNull String phoneNumber);
 
   void findNameAsync(@NonNull String phoneNumber, @NonNull AsyncResult<String> resultHook);

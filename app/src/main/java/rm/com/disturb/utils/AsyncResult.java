@@ -1,4 +1,4 @@
-package rm.com.disturb;
+package rm.com.disturb.utils;
 
 import android.support.annotation.NonNull;
 
@@ -6,6 +6,6 @@ import android.support.annotation.NonNull;
  * Created by alex
  */
 
-interface AsyncResult<T> {
+public interface AsyncResult<T> {
   void ready(@NonNull T result);
 }

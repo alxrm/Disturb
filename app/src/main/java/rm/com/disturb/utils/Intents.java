@@ -1,4 +1,4 @@
-package rm.com.disturb;
+package rm.com.disturb.utils;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -8,11 +8,11 @@ import android.support.annotation.Nullable;
  * Created by alex
  */
 
-final class Intents {
+public final class Intents {
   private Intents() {
   }
 
-  static boolean matches(@Nullable Intent intent, @NonNull String action) {
+  public static boolean matches(@Nullable Intent intent, @NonNull String action) {
     return intent != null
         && action.equalsIgnoreCase(intent.getAction())
         && intent.getExtras() != null;

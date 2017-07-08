@@ -1,4 +1,4 @@
-package rm.com.disturb;
+package rm.com.disturb.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,10 +8,18 @@ import android.support.annotation.NonNull;
 import android.telephony.SmsMessage;
 import java.util.List;
 import javax.inject.Inject;
+import rm.com.disturb.DisturbApplication;
+import rm.com.disturb.contact.ContactBook;
+import rm.com.disturb.telegram.Notifier;
+import rm.com.disturb.utils.AsyncResult;
+import rm.com.disturb.utils.Formats;
+import rm.com.disturb.utils.Intents;
+import rm.com.disturb.utils.Lists;
+import rm.com.disturb.utils.Permissions;
 
-import static rm.com.disturb.Lists.listOfArray;
-import static rm.com.disturb.Lists.map;
-import static rm.com.disturb.Lists.reduce;
+import static rm.com.disturb.utils.Lists.listOfArray;
+import static rm.com.disturb.utils.Lists.map;
+import static rm.com.disturb.utils.Lists.reduce;
 
 public final class SmsReceiver extends BroadcastReceiver {
   private static final String KEY_PDU_CHUNKS = "pdus";

@@ -9,6 +9,10 @@ import dagger.Provides;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import javax.inject.Singleton;
+import rm.com.disturb.contact.ContactBook;
+import rm.com.disturb.contact.LocalContactBook;
+import rm.com.disturb.telegram.Notifier;
+import rm.com.disturb.telegram.TelegramNotifier;
 
 /**
  * Created by alex

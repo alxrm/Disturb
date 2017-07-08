@@ -1,4 +1,4 @@
-package rm.com.disturb;
+package rm.com.disturb.contact;
 
 import android.content.ContentResolver;
 import android.content.Context;
@@ -8,15 +8,16 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import java.util.concurrent.ExecutorService;
+import rm.com.disturb.utils.AsyncResult;
 
 /**
  * Created by alex
  */
-final class LocalContactBook implements ContactBook {
+public final class LocalContactBook implements ContactBook {
   @NonNull private final ExecutorService executor;
   @NonNull private final Context context;
 
-  LocalContactBook(@NonNull ExecutorService executor, @NonNull Context context) {
+  public LocalContactBook(@NonNull ExecutorService executor, @NonNull Context context) {
     this.executor = executor;
     this.context = context;
   }

@@ -14,6 +14,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import javax.inject.Inject;
+import rm.com.disturb.telegram.Notifier;
+import rm.com.disturb.utils.Permissions;
 
 public final class MainActivity extends AppCompatActivity {
   private static final int REQ_PERMISSION = 1;
