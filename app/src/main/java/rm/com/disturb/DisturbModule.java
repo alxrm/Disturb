@@ -13,7 +13,8 @@ import javax.inject.Singleton;
 /**
  * Created by alex
  */
-@Module final class DisturbModule {
+@Module //
+final class DisturbModule {
 
   private final Application application;
 

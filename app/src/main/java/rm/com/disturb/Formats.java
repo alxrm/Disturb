@@ -1,17 +1,34 @@
 package rm.com.disturb;
 
 import android.support.annotation.NonNull;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
+import rm.com.disturb.Lists.Transformer;
+
+import static rm.com.disturb.Lists.map;
 
 /**
  * Created by alex
  */
 
 final class Formats {
+  private static final List<String> KEYWORDS =
+      Arrays.asList("код", "kod", "code", "пароль", "password", "parol", "ключ", "key", "kluch",
+          "token");
+
   private Formats() {
   }
 
   @NonNull static String smsOf(@NonNull String from, @NonNull String text) {
+    final String code = extractCodeFrom(text);
+
+    if (!code.isEmpty()) {
+      return String.format(Locale.getDefault(), "%s\n_Code: %s_\n%s", boldOf(from), code,
+          text);
+    }
+
     return String.format(Locale.getDefault(), "%s\n%s", boldOf(from), text);
   }
 
@@ -29,5 +46,51 @@ final class Formats {
 
   @NonNull private static String boldOf(@NonNull String text) {
     return String.format(Locale.getDefault(), "*%s*", text);
+  }
+
+  @NonNull private static String extractCodeFrom(@NonNull String text) {
+    final int startIndex = firstKeyWordIndex(text);
+
+    if (startIndex == -1) {
+      return "";
+    }
+
+    final List<String> words = Lists.listOfArray(text.substring(startIndex).split("(\\s|,|\\.)"));
+    final String codeWord = Lists.first(words, new Lists.Predicate<String>() {
+      @Override public boolean test(String item) {
+        return isOnlyDigitWord(item);
+      }
+    });
+
+    return codeWord == null ? "" : codeWord;
+  }
+
+  private static int firstKeyWordIndex(@NonNull String text) {
+    final String lowered = text.toLowerCase();
+    final List<Integer> indices = map(KEYWORDS, new Transformer<String, Integer>() {
+      @Override public Integer invoke(String item) {
+        return lowered.indexOf(item);
+      }
+    });
+
+    Collections.sort(indices);
+
+    for (Integer index : indices) {
+      if (index > -1) {
+        return index;
+      }
+    }
+
+    return -1;
+  }
+
+  private static boolean isOnlyDigitWord(@NonNull String word) {
+    for (char item : word.toCharArray()) {
+      if (!Character.isDigit(item)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 }
