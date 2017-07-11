@@ -27,14 +27,15 @@ public final class Lists {
     return result;
   }
 
-  @Nullable public static <T> T first(@NonNull List<T> target, @NonNull Predicate<T> clause) {
+  @NonNull public static <T> T first(@NonNull List<T> target, @NonNull T orElse,
+      @NonNull Predicate<T> clause) {
     for (T item : target) {
       if (clause.test(item)) {
         return item;
       }
     }
 
-    return null;
+    return orElse;
   }
 
   @NonNull public static <T, R> List<R> map(@NonNull List<T> target,

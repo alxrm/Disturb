@@ -13,7 +13,7 @@ import java.util.Locale;
 public final class Formats {
   private static final List<String> KEYWORDS =
       Arrays.asList("код", "kod", "code", "пароль", "password", "parol", "ключ", "key", "kluch",
-          "token");
+          "klyuch", "klutch", "klyutch", "token", "токен");
 
   private Formats() {
   }
@@ -22,8 +22,7 @@ public final class Formats {
     final String code = extractCodeFrom(text);
 
     if (!code.isEmpty()) {
-      return String.format(Locale.getDefault(), "%s\n_Code: %s_\n%s", boldOf(from), code,
-          text);
+      return String.format(Locale.getDefault(), "%s\n_Code: %s_\n%s", boldOf(from), code, text);
     }
 
     return String.format(Locale.getDefault(), "%s\n%s", boldOf(from), text);
@@ -53,13 +52,12 @@ public final class Formats {
     }
 
     final List<String> words = Lists.listOfArray(text.substring(startIndex).split("(\\s|,|\\.)"));
-    final String codeWord = Lists.first(words, new Lists.Predicate<String>() {
+
+    return Lists.first(words, "", new Lists.Predicate<String>() {
       @Override public boolean test(String item) {
         return isOnlyDigitWord(item);
       }
     });
-
-    return codeWord == null ? "" : codeWord;
   }
 
   private static int firstKeyWordIndex(@NonNull String text) {
@@ -72,13 +70,11 @@ public final class Formats {
 
     Collections.sort(indices);
 
-    for (Integer index : indices) {
-      if (index > -1) {
-        return index;
+    return Lists.first(indices, -1, new Lists.Predicate<Integer>() {
+      @Override public boolean test(Integer item) {
+        return item > -1;
       }
-    }
-
-    return -1;
+    });
   }
 
   private static boolean isOnlyDigitWord(@NonNull String word) {
