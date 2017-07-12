@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.contact.ContactBook;
 import rm.com.disturb.telegram.Notifier;
-import rm.com.disturb.utils.AsyncResult;
+import rm.com.disturb.async.AsyncResult;
 import rm.com.disturb.utils.Formats;
 import rm.com.disturb.utils.Intents;
 import rm.com.disturb.utils.Lists;

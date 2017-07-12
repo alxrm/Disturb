@@ -55,7 +55,7 @@ public final class Formats {
 
     return Lists.first(words, "", new Lists.Predicate<String>() {
       @Override public boolean test(String item) {
-        return isOnlyDigitWord(item);
+        return isNonOnlyLetterWord(item);
       }
     });
   }
@@ -77,13 +77,17 @@ public final class Formats {
     });
   }
 
-  private static boolean isOnlyDigitWord(@NonNull String word) {
+  private static boolean isNonOnlyLetterWord(@NonNull String word) {
+    boolean onlyLetters = true;
+
     for (char item : word.toCharArray()) {
-      if (!Character.isDigit(item)) {
+      if (!Character.isLetterOrDigit(item)) {
         return false;
       }
+
+      onlyLetters = onlyLetters && Character.isLetter(item);
     }
 
-    return true;
+    return !onlyLetters;
   }
 }

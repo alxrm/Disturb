@@ -1,7 +1,7 @@
 package rm.com.disturb.contact;
 
 import android.support.annotation.NonNull;
-import rm.com.disturb.utils.AsyncResult;
+import rm.com.disturb.async.AsyncResult;
 
 /**
  * Created by alex

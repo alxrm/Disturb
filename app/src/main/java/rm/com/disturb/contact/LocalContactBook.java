@@ -8,7 +8,7 @@ import android.provider.BaseColumns;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import java.util.concurrent.ExecutorService;
-import rm.com.disturb.utils.AsyncResult;
+import rm.com.disturb.async.AsyncResult;
 
 /**
  * Created by alex
