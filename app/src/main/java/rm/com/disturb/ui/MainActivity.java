@@ -6,38 +6,36 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import butterknife.Unbinder;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.R;
 import rm.com.disturb.storage.ChatId;
+import rm.com.disturb.storage.Password;
 
 public final class MainActivity extends AppCompatActivity implements Navigator {
   static String KEY_FRAGMENT_SAVE = "KEY_FRAGMENT_SAVE";
 
   @Inject @ChatId Provider<String> chatId;
+  @Inject @Password Provider<String> password;
 
   protected Fragment currentFragment;
-  protected Unbinder unbinder;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
     ((DisturbApplication) getApplication()).injector().inject(this);
 
+    currentFragment = getInitialFragment(savedInstanceState,
+        areFieldsEmpty() ? LoginFragment.newInstance() : NotifyFragment.newInstance());
+
+    to(currentFragment);
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
     super.onSaveInstanceState(outState);
     getFragmentManager().putFragment(outState, KEY_FRAGMENT_SAVE, currentFragment);
-  }
-
-  @Override protected void onDestroy() {
-    super.onDestroy();
-
-    if (unbinder != null) {
-      unbinder.unbind();
-    }
   }
 
   @Override public void to(@NonNull Fragment dest) {
@@ -65,5 +63,9 @@ public final class MainActivity extends AppCompatActivity implements Navigator {
       @NonNull Fragment defaultFragment) {
     return (state == null) ? defaultFragment
         : getFragmentManager().getFragment(state, KEY_FRAGMENT_SAVE);
+  }
+
+  private boolean areFieldsEmpty() {
+    return chatId.get().isEmpty() || password.get().isEmpty();
   }
 }

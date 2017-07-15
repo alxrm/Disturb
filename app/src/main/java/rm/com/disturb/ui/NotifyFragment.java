@@ -40,6 +40,10 @@ public final class NotifyFragment extends BaseFragment {
   @Inject @ChatId StringPreference chatIdPreference;
   @Inject Notifier notifier;
 
+  public static NotifyFragment newInstance() {
+    return new NotifyFragment();
+  }
+
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       Bundle savedInstanceState) {

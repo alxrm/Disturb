@@ -38,6 +38,8 @@ dependencies {
   compile square.dagger
   compile square.butterknife
 
-  compile 'com.android.support:appcompat-v7:25.3.1'
+  compile supportDeps.design
+  compile supportDeps.appCompat
+
   compile 'com.github.pengrad:java-telegram-bot-api:2.3.1.1'
 }
