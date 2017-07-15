@@ -1,48 +1,62 @@
-package rm.com.disturb;
+package rm.com.disturb.ui;
 
 import android.Manifest;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import javax.inject.Inject;
+import rm.com.disturb.R;
+import rm.com.disturb.storage.ChatId;
+import rm.com.disturb.storage.StringPreference;
 import rm.com.disturb.telegram.Notifier;
 import rm.com.disturb.utils.Permissions;
 
-public final class MainActivity extends AppCompatActivity {
+/**
+ * Created by alex
+ */
+
+public final class NotifyFragment extends BaseFragment {
   private static final int REQ_PERMISSION = 1;
 
   @BindString(R.string.message_test_notification) String messageTestNotification;
   @BindString(R.string.description_test_notification) String descriptionTestNotification;
-  @BindString(R.string.description_wait_permissions) String descriptionWaitPermission;
   @BindString(R.string.permissions_rationale) String permissionsRationale;
-  @BindColor(R.color.color_accent) int colorAccent;
+  @BindColor(R.color.color_icon_activated) int colorIconActivated;
 
   @BindView(R.id.button_test_call) ImageView testCall;
   @BindView(R.id.text_description) TextView description;
 
+  @Inject @ChatId StringPreference chatIdPreference;
   @Inject Notifier notifier;
 
-  @Override protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_main);
+  @Nullable @Override
+  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      Bundle savedInstanceState) {
+    return inflater.inflate(R.layout.fragment_notify, container, false);
+  }
 
-    ButterKnife.bind(this);
-    ((DisturbApplication) getApplicationContext()).injector().inject(this);
+  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+    injector().inject(this);
 
     if (isAnyOfPermissionsGranted()) {
       indicateNotificationsAvailable();
     }
 
-    requestAllPermissions();
+    if (!isAllOfPermissionsGranted()) {
+      requestAllPermissions();
+    }
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -54,7 +68,7 @@ public final class MainActivity extends AppCompatActivity {
     if (isAnyOfPermissionsGranted()) {
       indicateNotificationsAvailable();
     } else {
-      Toast.makeText(this, permissionsRationale, Toast.LENGTH_LONG).show();
+      Toast.makeText(getActivity(), permissionsRationale, Toast.LENGTH_LONG).show();
     }
   }
 
@@ -68,17 +82,22 @@ public final class MainActivity extends AppCompatActivity {
   }
 
   private boolean isAnyOfPermissionsGranted() {
-    return Permissions.isReadPhoneStatePermissionGranted(this)
-        || Permissions.isReceiveSmsPermissionGranted(this);
+    return Permissions.isReadPhoneStatePermissionGranted(getActivity())
+        || Permissions.isReceiveSmsPermissionGranted(getActivity());
+  }
+
+  private boolean isAllOfPermissionsGranted() {
+    return Permissions.isReadPhoneStatePermissionGranted(getActivity())
+        && Permissions.isReceiveSmsPermissionGranted(getActivity());
   }
 
   private void indicateNotificationsAvailable() {
     description.setText(descriptionTestNotification);
-    testCall.setColorFilter(colorAccent);
+    testCall.setColorFilter(colorIconActivated);
   }
 
   private void requestAllPermissions() {
-    ActivityCompat.requestPermissions(this, new String[] {
+    ActivityCompat.requestPermissions(getActivity(), new String[] {
         Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS,
         Manifest.permission.READ_PHONE_STATE
     }, REQ_PERMISSION);
