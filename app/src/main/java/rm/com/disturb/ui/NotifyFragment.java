@@ -1,10 +1,10 @@
 package rm.com.disturb.ui;
 
 import android.Manifest;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +17,6 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import javax.inject.Inject;
 import rm.com.disturb.R;
-import rm.com.disturb.storage.ChatId;
-import rm.com.disturb.storage.StringPreference;
 import rm.com.disturb.telegram.Notifier;
 import rm.com.disturb.utils.Permissions;
 
@@ -37,7 +35,6 @@ public final class NotifyFragment extends BaseFragment {
   @BindView(R.id.button_test_call) ImageView testCall;
   @BindView(R.id.text_description) TextView description;
 
-  @Inject @ChatId StringPreference chatIdPreference;
   @Inject Notifier notifier;
 
   public static NotifyFragment newInstance() {
@@ -53,12 +50,13 @@ public final class NotifyFragment extends BaseFragment {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     injector().inject(this);
+    toggleActionBar(true);
 
-    if (isAnyOfPermissionsGranted()) {
+    if (areAnyPermissionsGranted()) {
       indicateNotificationsAvailable();
     }
 
-    if (!isAllOfPermissionsGranted()) {
+    if (!areAllPermissionsGranted()) {
       requestAllPermissions();
     }
   }
@@ -69,7 +67,7 @@ public final class NotifyFragment extends BaseFragment {
       return;
     }
 
-    if (isAnyOfPermissionsGranted()) {
+    if (areAnyPermissionsGranted()) {
       indicateNotificationsAvailable();
     } else {
       Toast.makeText(getActivity(), permissionsRationale, Toast.LENGTH_LONG).show();
@@ -77,7 +75,7 @@ public final class NotifyFragment extends BaseFragment {
   }
 
   @OnClick(R.id.button_test_call) void onSendTestNotification() {
-    if (!isAnyOfPermissionsGranted()) {
+    if (!areAnyPermissionsGranted()) {
       requestAllPermissions();
       return;
     }
@@ -85,23 +83,28 @@ public final class NotifyFragment extends BaseFragment {
     notifier.notify(messageTestNotification);
   }
 
-  private boolean isAnyOfPermissionsGranted() {
+  private boolean areAnyPermissionsGranted() {
     return Permissions.isReadPhoneStatePermissionGranted(getActivity())
         || Permissions.isReceiveSmsPermissionGranted(getActivity());
   }
 
-  private boolean isAllOfPermissionsGranted() {
+  private boolean areAllPermissionsGranted() {
     return Permissions.isReadPhoneStatePermissionGranted(getActivity())
         && Permissions.isReceiveSmsPermissionGranted(getActivity());
   }
 
   private void indicateNotificationsAvailable() {
     description.setText(descriptionTestNotification);
+    testCall.setAlpha(1.0F);
     testCall.setColorFilter(colorIconActivated);
   }
 
   private void requestAllPermissions() {
-    ActivityCompat.requestPermissions(getActivity(), new String[] {
+    if (Build.VERSION.SDK_INT < 23) {
+      return;
+    }
+
+    requestPermissions(new String[] {
         Manifest.permission.READ_CONTACTS, Manifest.permission.RECEIVE_SMS,
         Manifest.permission.READ_PHONE_STATE
     }, REQ_PERMISSION);

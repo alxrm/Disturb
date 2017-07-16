@@ -3,7 +3,7 @@
   <color name="color_primary">#1086D7</color>
   <color name="color_primary_dark">#0c68a8</color>
   <color name="color_accent">#1086D7</color>
-  <color name="color_icon_activated">#991086D7</color>
+  <color name="color_icon_activated">#1086D7</color>
 
   <!-- Opaque values: http://stackoverflow.com/a/25170174/2270722
  100% — FF

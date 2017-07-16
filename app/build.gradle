@@ -17,7 +17,6 @@ android {
   buildTypes {
     all {
       buildConfigField "String", 'BOT_TOKEN', botToken
-      buildConfigField "String", 'CHAT_ID', chatId
     }
     release {
       minifyEnabled false

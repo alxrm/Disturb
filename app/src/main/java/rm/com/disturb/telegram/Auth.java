@@ -1,0 +1,13 @@
+package rm.com.disturb.telegram;
+
+import android.support.annotation.NonNull;
+import rm.com.disturb.async.AsyncResult;
+
+/**
+ * Created by alex
+ */
+
+public interface Auth {
+  boolean authorize(@NonNull String chatId);
+  void authorizeAsync(@NonNull String chatId, @NonNull AsyncResult<Boolean> asyncResult);
+}

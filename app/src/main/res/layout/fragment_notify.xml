@@ -19,6 +19,7 @@
       android:clickable="true"
       android:scaleType="centerInside"
       app:srcCompat="@drawable/ic_notifications"
+      android:alpha="0.5"
       tools:ignore="ContentDescription"
       />
 

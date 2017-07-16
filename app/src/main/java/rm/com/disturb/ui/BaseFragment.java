@@ -4,6 +4,8 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -49,5 +51,19 @@ public class BaseFragment extends Fragment {
 
   @NonNull final protected DisturbComponent injector() {
     return ((DisturbApplication) getActivity().getApplication()).injector();
+  }
+
+  final protected void toggleActionBar(boolean show) {
+    final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+
+    if (actionBar == null) {
+      return;
+    }
+
+    if (show) {
+      actionBar.show();
+    } else {
+      actionBar.hide();
+    }
   }
 }
