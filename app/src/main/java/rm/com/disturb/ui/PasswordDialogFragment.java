@@ -7,7 +7,6 @@ import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -74,7 +73,6 @@ public final class PasswordDialogFragment extends DialogFragment {
   private DialogInterface.OnClickListener onSubmit() {
     return new DialogInterface.OnClickListener() {
       @Override public void onClick(DialogInterface dialog, int which) {
-        Log.e("DBG", "onSubmit" + savedPassword.get() + " " + password);
         if (savedPassword.get().equals(password)) {
           confirmationListener.onPasswordConfirmed();
         } else {
