@@ -8,6 +8,8 @@
     <item name="colorAccent">@color/color_accent</item>
   </style>
 
+  <style name="AppTheme.Light" parent="ThemeOverlay.AppCompat.Light"/>
+
   <style name="AppTheme.Dark" parent="ThemeOverlay.AppCompat.Dark">
 
     <item name="colorAccent">@android:color/white</item>

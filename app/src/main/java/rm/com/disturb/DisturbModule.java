@@ -78,7 +78,7 @@ final class DisturbModule {
     return new StringPreference(preferences, "password");
   }
 
-  @Provides @Password static String providePassword(@ChatId StringPreference pref) {
+  @Provides @Password static String providePassword(@Password StringPreference pref) {
     return pref.get();
   }
 

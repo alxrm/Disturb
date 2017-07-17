@@ -20,6 +20,7 @@ import javax.inject.Provider;
 import rm.com.disturb.R;
 import rm.com.disturb.storage.ChatId;
 import rm.com.disturb.storage.Password;
+import rm.com.disturb.storage.StringPreference;
 import rm.com.disturb.telegram.Notifier;
 import rm.com.disturb.utils.Permissions;
 
@@ -27,7 +28,8 @@ import rm.com.disturb.utils.Permissions;
  * Created by alex
  */
 
-public final class NotifyFragment extends BaseFragment {
+public final class NotifyFragment extends BaseFragment
+    implements PasswordDialogFragment.OnPasswordConfirmationListener {
   private static final int REQ_PERMISSION = 1;
 
   @BindString(R.string.message_test_notification) String messageTestNotification;
@@ -40,7 +42,8 @@ public final class NotifyFragment extends BaseFragment {
   @BindView(R.id.notify_chat_id_text) TextView chatIdText;
 
   @Inject Notifier notifier;
-
+  @Inject @ChatId StringPreference chatIdPreference;
+  @Inject @Password StringPreference passwordPreference;
   @Inject @ChatId Provider<String> chatId;
   @Inject @Password Provider<String> password;
 
@@ -83,6 +86,12 @@ public final class NotifyFragment extends BaseFragment {
     }
   }
 
+  @Override public void onPasswordConfirmed() {
+    passwordPreference.delete();
+    chatIdPreference.delete();
+    navigateTo(LoginFragment.newInstance());
+  }
+
   @OnClick(R.id.notify_test_send) void onSendTestNotification() {
     if (!areAnyPermissionsGranted()) {
       requestAllPermissions();
@@ -93,6 +102,7 @@ public final class NotifyFragment extends BaseFragment {
   }
 
   @OnClick(R.id.notify_chat_id_change) void onChangeChatId() {
+    PasswordDialogFragment.show(getFragmentManager(), this);
   }
 
   private boolean areAnyPermissionsGranted() {
