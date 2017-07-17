@@ -1,36 +1,75 @@
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:gravity="center"
-    android:orientation="vertical"
     tools:context="rm.com.disturb.ui.MainActivity"
     >
 
-  <ImageView
-      android:id="@+id/button_test_call"
+  <!--I could use TextView with drawables, but they don't support vectors-->
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="60dp"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="16dp"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      tools:ignore="UseCompoundDrawables"
+      >
+
+    <TextView
+        android:id="@+id/notify_chat_id_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/text_chat_id"
+        android:textColor="#80000000"
+        android:textSize="16sp"
+        />
+
+    <ImageView
+        android:id="@+id/notify_chat_id_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:padding="12dp"
+        app:srcCompat="@drawable/ic_edit"
+        />
+  </LinearLayout>
+
+  <LinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="32dp"
-      android:background="?attr/selectableItemBackgroundBorderless"
-      android:clickable="true"
-      android:scaleType="centerInside"
-      app:srcCompat="@drawable/ic_notifications"
-      android:alpha="0.5"
-      tools:ignore="ContentDescription"
-      />
-
-  <TextView
-      android:id="@+id/text_description"
-      android:layout_width="224dp"
-      android:layout_height="wrap_content"
+      android:layout_centerInParent="true"
       android:gravity="center"
-      android:text="@string/description_wait_permissions"
-      android:textColor="#80000000"
-      android:textSize="16sp"
-      />
+      android:orientation="vertical"
+      >
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/notify_test_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="32dp"
+        android:alpha="0.5"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/ic_notifications"
+        tools:ignore="ContentDescription"
+        />
+
+    <TextView
+        android:id="@+id/notify_description_text"
+        android:layout_width="224dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/description_wait_permissions"
+        android:textColor="#80000000"
+        android:textSize="16sp"
+        />
+
+  </LinearLayout>
+</RelativeLayout>
+

@@ -16,7 +16,10 @@ import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.OnClick;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import rm.com.disturb.R;
+import rm.com.disturb.storage.ChatId;
+import rm.com.disturb.storage.Password;
 import rm.com.disturb.telegram.Notifier;
 import rm.com.disturb.utils.Permissions;
 
@@ -32,10 +35,14 @@ public final class NotifyFragment extends BaseFragment {
   @BindString(R.string.permissions_rationale) String permissionsRationale;
   @BindColor(R.color.color_icon_activated) int colorIconActivated;
 
-  @BindView(R.id.button_test_call) ImageView testCall;
-  @BindView(R.id.text_description) TextView description;
+  @BindView(R.id.notify_test_send) ImageView testCall;
+  @BindView(R.id.notify_description_text) TextView description;
+  @BindView(R.id.notify_chat_id_text) TextView chatIdText;
 
   @Inject Notifier notifier;
+
+  @Inject @ChatId Provider<String> chatId;
+  @Inject @Password Provider<String> password;
 
   public static NotifyFragment newInstance() {
     return new NotifyFragment();
@@ -51,6 +58,8 @@ public final class NotifyFragment extends BaseFragment {
     super.onViewCreated(view, savedInstanceState);
     injector().inject(this);
     toggleActionBar(true);
+
+    chatIdText.setText(getString(R.string.text_chat_id, chatId.get()));
 
     if (areAnyPermissionsGranted()) {
       indicateNotificationsAvailable();
@@ -74,13 +83,16 @@ public final class NotifyFragment extends BaseFragment {
     }
   }
 
-  @OnClick(R.id.button_test_call) void onSendTestNotification() {
+  @OnClick(R.id.notify_test_send) void onSendTestNotification() {
     if (!areAnyPermissionsGranted()) {
       requestAllPermissions();
       return;
     }
 
     notifier.notify(messageTestNotification);
+  }
+
+  @OnClick(R.id.notify_chat_id_change) void onChangeChatId() {
   }
 
   private boolean areAnyPermissionsGranted() {
