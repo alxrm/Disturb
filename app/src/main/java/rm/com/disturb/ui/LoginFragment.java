@@ -52,6 +52,10 @@ public final class LoginFragment extends BaseFragment {
   }
 
   @OnClick(R.id.login_save) void onSave() {
+    if (password.isEmpty() || chatId.isEmpty()) {
+      return;
+    }
+
     if (progressDialog != null && progressDialog.isShowing()) {
       return;
     }
@@ -96,6 +100,9 @@ public final class LoginFragment extends BaseFragment {
     passwordPreference.set(password);
     chatIdPreference.set(chatId);
     navigateTo(NotifyFragment.newInstance());
+
+    password = "";
+    chatId = "";
   }
 
   private void showError() {
