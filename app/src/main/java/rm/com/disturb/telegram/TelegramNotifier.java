@@ -5,7 +5,7 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
 import java.util.concurrent.ExecutorService;
-import rm.com.disturb.storage.Preference;
+import javax.inject.Provider;
 
 /**
  * Created by alex
@@ -17,7 +17,7 @@ public final class TelegramNotifier implements Notifier {
   @NonNull private final String chatId;
 
   public TelegramNotifier(@NonNull ExecutorService executor, @NonNull TelegramBot bot,
-      @NonNull Preference<String> chatIdProvider) {
+      @NonNull Provider<String> chatIdProvider) {
     this.executor = executor;
     this.bot = bot;
     this.chatId = chatIdProvider.get();

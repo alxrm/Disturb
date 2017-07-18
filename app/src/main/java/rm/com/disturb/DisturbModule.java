@@ -11,6 +11,7 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import rm.com.disturb.contact.ContactBook;
 import rm.com.disturb.contact.LocalContactBook;
@@ -54,8 +55,8 @@ final class DisturbModule {
   }
 
   @Provides @Singleton static Notifier provideTelegramNotifier(@NonNull ExecutorService executor,
-      @NonNull TelegramBot bot, @NonNull @ChatId StringPreference chatIdPreference) {
-    return new TelegramNotifier(executor, bot, chatIdPreference);
+      @NonNull TelegramBot bot, @NonNull @ChatId Provider<String> chatId) {
+    return new TelegramNotifier(executor, bot, chatId);
   }
 
   @Provides @Singleton
