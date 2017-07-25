@@ -40,5 +40,5 @@ dependencies {
   compile supportDeps.design
   compile supportDeps.appCompat
 
-  compile 'com.github.pengrad:java-telegram-bot-api:2.3.1.1'
+  compile 'com.github.pengrad:java-telegram-bot-api:3.2.0'
 }
