@@ -1,7 +1,6 @@
 package rm.com.disturb.contact;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.BaseColumns;
@@ -15,11 +14,12 @@ import rm.com.disturb.async.AsyncResult;
  */
 public final class LocalContactBook implements ContactBook {
   @NonNull private final ExecutorService executor;
-  @NonNull private final Context context;
+  @NonNull private final ContentResolver contentResolver;
 
-  public LocalContactBook(@NonNull ExecutorService executor, @NonNull Context context) {
+  public LocalContactBook(@NonNull ExecutorService executor,
+      @NonNull ContentResolver contentResolver) {
     this.executor = executor;
-    this.context = context;
+    this.contentResolver = contentResolver;
   }
 
   @Override public void findNameAsync(@NonNull final String phoneNumber,
@@ -35,7 +35,6 @@ public final class LocalContactBook implements ContactBook {
     final Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
         Uri.encode(phoneNumber));
 
-    final ContentResolver contentResolver = context.getContentResolver();
     final Cursor contactLookup = contentResolver.query(uri, new String[] {
         BaseColumns._ID, ContactsContract.PhoneLookup.DISPLAY_NAME
     }, null, null, null);

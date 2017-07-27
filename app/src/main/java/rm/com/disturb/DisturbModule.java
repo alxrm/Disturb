@@ -84,6 +84,6 @@ final class DisturbModule {
   }
 
   @Provides @Singleton ContactBook provideAsyncContactBook(@NonNull ExecutorService executor) {
-    return new LocalContactBook(executor, application.getApplicationContext());
+    return new LocalContactBook(executor, application.getContentResolver());
   }
 }
