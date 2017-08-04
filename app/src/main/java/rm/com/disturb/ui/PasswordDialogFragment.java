@@ -70,17 +70,6 @@ public final class PasswordDialogFragment extends DialogFragment {
     return builder.show();
   }
 
-  private DialogInterface.OnClickListener onSubmit() {
-    return new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        if (savedPassword.get().equals(password)) {
-          confirmationListener.onPasswordConfirmed();
-        } else {
-          Toast.makeText(getActivity(), "The password didn't match", Toast.LENGTH_LONG).show();
-        }
-      }
-    };
-  }
 
   @Override public void onDismiss(DialogInterface dialog) {
     super.onDismiss(dialog);
@@ -96,7 +85,7 @@ public final class PasswordDialogFragment extends DialogFragment {
     password = nextPassword.toString();
   }
 
-  private View createView() {
+  @NonNull private View createView() {
     final ViewGroup root = (ViewGroup) getView();
     final View dialogLayout =
         getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_password, root);
@@ -106,8 +95,20 @@ public final class PasswordDialogFragment extends DialogFragment {
     return dialogLayout;
   }
 
-  @NonNull final protected DisturbComponent injector() {
+  @NonNull private DisturbComponent injector() {
     return ((DisturbApplication) getActivity().getApplication()).injector();
+  }
+
+  private DialogInterface.OnClickListener onSubmit() {
+    return new DialogInterface.OnClickListener() {
+      @Override public void onClick(DialogInterface dialog, int which) {
+        if (savedPassword.get().equals(password)) {
+          confirmationListener.onPasswordConfirmed();
+        } else {
+          Toast.makeText(getActivity(), "The password didn't match", Toast.LENGTH_LONG).show();
+        }
+      }
+    };
   }
 
   public interface OnPasswordConfirmationListener {

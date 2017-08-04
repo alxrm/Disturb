@@ -36,6 +36,7 @@ dependencies {
 
   compile square.dagger
   compile square.butterknife
+  compile square.retrofit
 
   compile supportDeps.design
   compile supportDeps.appCompat
