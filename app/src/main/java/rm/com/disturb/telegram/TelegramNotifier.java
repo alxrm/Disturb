@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.request.ParseMode;
 import com.pengrad.telegrambot.request.SendMessage;
+import com.pengrad.telegrambot.response.SendResponse;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Provider;
 
@@ -30,7 +31,9 @@ public final class TelegramNotifier implements Notifier {
 
     executor.submit(new Runnable() {
       @Override public void run() {
-        bot.execute(new SendMessage(chatId, message).parseMode(ParseMode.Markdown));
+        final SendResponse execute =
+            bot.execute(new SendMessage(chatId, message).parseMode(ParseMode.Markdown));
+
       }
     });
   }

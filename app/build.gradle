@@ -41,5 +41,7 @@ dependencies {
   compile supportDeps.design
   compile supportDeps.appCompat
 
+  compile "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+
   compile 'com.github.pengrad:java-telegram-bot-api:3.2.0'
 }
