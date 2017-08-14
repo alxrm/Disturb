@@ -1,21 +1,18 @@
 package rm.com.disturb.ui;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
+import android.annotation.SuppressLint;
 import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import butterknife.ButterKnife;
 import butterknife.OnTextChanged;
 import javax.inject.Inject;
 import javax.inject.Provider;
-import rm.com.disturb.DisturbApplication;
-import rm.com.disturb.DisturbComponent;
 import rm.com.disturb.R;
 import rm.com.disturb.storage.Password;
 
@@ -23,9 +20,10 @@ import rm.com.disturb.storage.Password;
  * Created by alex
  */
 
-public final class PasswordDialogFragment extends DialogFragment {
+public final class PasswordDialogFragment extends BaseDialogFragment {
   public static final String TAG_PASSWORD_DIALOG = "TAG_PASSWORD_DIALOG";
 
+  @SuppressLint("StaticFieldLeak") //
   private static PasswordDialogFragment instance;
 
   @Inject @Password Provider<String> savedPassword;
@@ -56,20 +54,23 @@ public final class PasswordDialogFragment extends DialogFragment {
     injector().inject(this);
   }
 
-  @Override public Dialog onCreateDialog(Bundle savedInstanceState) {
-    final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-    builder.setView(createView());
-    builder.setTitle("Confirm change");
-    builder.setPositiveButton(android.R.string.ok, onSubmit());
-    builder.setNegativeButton(android.R.string.cancel, null);
-
-    final Dialog dialog = builder.create();
-    dialog.setCancelable(true);
-    dialog.setCanceledOnTouchOutside(true);
-
-    return builder.show();
+  @NonNull @Override
+  protected View createView(@Nullable ViewGroup root, @NonNull LayoutInflater inflater) {
+    return inflater.inflate(R.layout.fragment_dialog_password, root);
   }
 
+  @Override protected void onCancelClick() {
+    dismiss();
+  }
+
+  @Override protected void onSubmitClick() {
+    if (savedPassword.get().equals(password)) {
+      dismiss();
+      confirmationListener.onPasswordConfirmed();
+    } else {
+      Toast.makeText(getActivity(), "The password didn't match", Toast.LENGTH_LONG).show();
+    }
+  }
 
   @Override public void onDismiss(DialogInterface dialog) {
     super.onDismiss(dialog);
@@ -85,30 +86,12 @@ public final class PasswordDialogFragment extends DialogFragment {
     password = nextPassword.toString();
   }
 
-  @NonNull private View createView() {
-    final ViewGroup root = (ViewGroup) getView();
-    final View dialogLayout =
-        getActivity().getLayoutInflater().inflate(R.layout.fragment_dialog_password, root);
-
-    ButterKnife.bind(this, dialogLayout);
-
-    return dialogLayout;
+  @NonNull @Override protected String title() {
+    return "Confirm change";
   }
 
-  @NonNull private DisturbComponent injector() {
-    return ((DisturbApplication) getActivity().getApplication()).injector();
-  }
-
-  private DialogInterface.OnClickListener onSubmit() {
-    return new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        if (savedPassword.get().equals(password)) {
-          confirmationListener.onPasswordConfirmed();
-        } else {
-          Toast.makeText(getActivity(), "The password didn't match", Toast.LENGTH_LONG).show();
-        }
-      }
-    };
+  @Override protected boolean cancelable() {
+    return true;
   }
 
   public interface OnPasswordConfirmationListener {
