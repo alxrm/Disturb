@@ -1,4 +1,6 @@
-package rm.com.disturb.telegram;
+package rm.com.disturb.telegram.response;
+
+import rm.com.disturb.telegram.model.Message;
 
 /**
  * Created by alex

@@ -1,4 +1,4 @@
-package rm.com.disturb.telegram;
+package rm.com.disturb.telegram.model;
 
 /**
  * Created by alex

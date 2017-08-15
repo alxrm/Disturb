@@ -1,10 +1,10 @@
-package rm.com.disturb.telegram;
+package rm.com.disturb.telegram.response;
 
 /**
  * Created by alex
  */
 
-class TelegramResponse {
+public class TelegramResponse {
   private boolean ok;
   private int error_code;
   private String description;

@@ -3,6 +3,8 @@ package rm.com.disturb.telegram;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import rm.com.disturb.telegram.response.MessageResponse;
+import rm.com.disturb.telegram.response.TelegramResponse;
 
 /**
  * Created by alex

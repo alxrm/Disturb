@@ -30,10 +30,9 @@ public final class LoginFragment extends BaseFragment {
   @Inject @Password StringPreference passwordPreference;
   @Inject Auth auth;
 
-  private ProgressDialog progressDialog;
-
-  @NonNull private String chatId = "";
-  @NonNull private String password = "";
+  private @Nullable ProgressDialog progressDialog;
+  private @NonNull String chatId = "";
+  private @NonNull String password = "";
 
   public static LoginFragment newInstance() {
     return new LoginFragment();
@@ -118,8 +117,10 @@ public final class LoginFragment extends BaseFragment {
   }
 
   private void cancelDialog() {
-    progressDialog.cancel();
-    progressDialog = null;
+    if (progressDialog != null) {
+      progressDialog.cancel();
+      progressDialog = null;
+    }
   }
 
   private void showProgressDialog() {
