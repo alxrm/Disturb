@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
-import com.pengrad.telegrambot.TelegramBot;
-import com.pengrad.telegrambot.TelegramBotAdapter;
 import dagger.Module;
 import dagger.Provides;
 import java.text.MessageFormat;
@@ -24,10 +22,10 @@ import rm.com.disturb.storage.ChatId;
 import rm.com.disturb.storage.Password;
 import rm.com.disturb.storage.StringPreference;
 import rm.com.disturb.telegram.Auth;
-import rm.com.disturb.telegram.Notifier;
+import rm.com.disturb.telegram.Notify;
 import rm.com.disturb.telegram.TelegramApi;
 import rm.com.disturb.telegram.TelegramAuth;
-import rm.com.disturb.telegram.TelegramNotifier;
+import rm.com.disturb.telegram.TelegramNotify;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -53,21 +51,19 @@ final class DisturbModule {
     return new Handler(Looper.getMainLooper());
   }
 
-  @Provides @Singleton static TelegramBot provideTelegramBot() {
-    return TelegramBotAdapter.build(BuildConfig.BOT_TOKEN);
-  }
-
   @Provides @Singleton SharedPreferences provideSharedPreferences() {
     return application.getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
   }
 
-  @Provides @Singleton static Notifier provideTelegramNotifier(@NonNull TelegramApi api,
+  @Provides @Singleton static Notify provideTelegramNotifier(@NonNull ExecutorService executor,
+      @NonNull Handler mainThreadHandler, @NonNull TelegramApi api,
       @NonNull @ChatId Provider<String> chatId) {
-    return new TelegramNotifier(api, chatId);
+    return new TelegramNotify(executor, mainThreadHandler, api, chatId);
   }
 
-  @Provides @Singleton static Auth provideTelegramBotAuth(@NonNull TelegramApi api) {
-    return new TelegramAuth(api);
+  @Provides @Singleton static Auth provideTelegramBotAuth(@NonNull ExecutorService executor,
+      @NonNull Handler mainThreadHandler, @NonNull TelegramApi api) {
+    return new TelegramAuth(executor, mainThreadHandler, api);
   }
 
   @Provides @Singleton @ChatId

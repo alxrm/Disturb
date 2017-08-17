@@ -21,7 +21,7 @@ import rm.com.disturb.R;
 import rm.com.disturb.storage.ChatId;
 import rm.com.disturb.storage.Password;
 import rm.com.disturb.storage.StringPreference;
-import rm.com.disturb.telegram.Notifier;
+import rm.com.disturb.telegram.Notify;
 import rm.com.disturb.utils.Permissions;
 
 /**
@@ -41,7 +41,7 @@ public final class NotifyFragment extends BaseFragment
   @BindView(R.id.notify_description_text) TextView description;
   @BindView(R.id.notify_chat_id_text) TextView chatIdText;
 
-  @Inject Notifier notifier;
+  @Inject Notify notify;
   @Inject @ChatId StringPreference chatIdPreference;
   @Inject @Password StringPreference passwordPreference;
   @Inject @ChatId Provider<String> chatId;
@@ -98,7 +98,7 @@ public final class NotifyFragment extends BaseFragment
       return;
     }
 
-    notifier.notify(messageTestNotification);
+    notify.send(messageTestNotification);
   }
 
   @OnClick(R.id.notify_chat_id_change) void onChangeChatId() {

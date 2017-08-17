@@ -8,7 +8,7 @@ import android.telephony.TelephonyManager;
 import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.contact.ContactBook;
-import rm.com.disturb.telegram.Notifier;
+import rm.com.disturb.telegram.Notify;
 import rm.com.disturb.async.AsyncResult;
 import rm.com.disturb.utils.Formats;
 import rm.com.disturb.utils.Intents;
@@ -19,7 +19,7 @@ import rm.com.disturb.utils.Permissions;
  */
 public final class CallReceiver extends BroadcastReceiver {
 
-  @Inject Notifier notifier;
+  @Inject Notify notify;
   @Inject ContactBook contactBook;
 
   @Override public void onReceive(Context context, Intent intent) {
@@ -47,7 +47,7 @@ public final class CallReceiver extends BroadcastReceiver {
   }
 
   private void notifyCall(@NonNull String from) {
-    notifier.notify(Formats.callOf(from));
+    notify.send(Formats.callOf(from));
   }
 
   private void notifyWithContactName(@NonNull final String number) {

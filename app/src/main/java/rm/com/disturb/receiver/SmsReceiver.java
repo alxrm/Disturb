@@ -10,7 +10,7 @@ import java.util.List;
 import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.contact.ContactBook;
-import rm.com.disturb.telegram.Notifier;
+import rm.com.disturb.telegram.Notify;
 import rm.com.disturb.async.AsyncResult;
 import rm.com.disturb.utils.Formats;
 import rm.com.disturb.utils.Intents;
@@ -24,7 +24,7 @@ import static rm.com.disturb.utils.Lists.reduce;
 public final class SmsReceiver extends BroadcastReceiver {
   private static final String KEY_PDU_CHUNKS = "pdus";
 
-  @Inject Notifier notifier;
+  @Inject Notify notify;
   @Inject ContactBook contactBook;
 
   @Override public void onReceive(Context context, Intent intent) {
@@ -46,7 +46,7 @@ public final class SmsReceiver extends BroadcastReceiver {
   }
 
   private void notifySms(@NonNull String from, @NonNull String text) {
-    notifier.notify(Formats.smsOf(from, text));
+    notify.send(Formats.smsOf(from, text));
   }
 
   private void notifyWithContactName(@NonNull final String number,
