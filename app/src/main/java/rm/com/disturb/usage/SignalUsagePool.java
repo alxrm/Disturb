@@ -1,16 +1,18 @@
-package rm.com.disturb.pool;
+package rm.com.disturb.usage;
 
 import android.support.annotation.NonNull;
 import java.util.List;
 
 public final class SignalUsagePool implements UsagePool<MessageSignal> {
 
-  public SignalUsagePool(@NonNull List<MessageSignalUsage> usages) {
+  private final List<Usage<MessageSignal>> usages;
 
+  public SignalUsagePool(@NonNull List<Usage<MessageSignal>> usages) {
+    this.usages = usages;
   }
 
   @NonNull @Override public List<Usage<MessageSignal>> usages() {
-    return null;
+    return usages;
   }
 
   @Override public void use(@NonNull MessageSignal nextItem) {
