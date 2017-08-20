@@ -18,7 +18,7 @@ import rm.com.disturb.async.AsyncResult;
 import rm.com.disturb.storage.ChatId;
 import rm.com.disturb.storage.Password;
 import rm.com.disturb.storage.StringPreference;
-import rm.com.disturb.telegram.Auth;
+import rm.com.disturb.command.Auth;
 
 /**
  * Created by alex

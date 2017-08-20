@@ -8,7 +8,7 @@ import android.telephony.TelephonyManager;
 import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.contact.ContactBook;
-import rm.com.disturb.telegram.Notify;
+import rm.com.disturb.command.Notify;
 import rm.com.disturb.async.AsyncResult;
 import rm.com.disturb.utils.Formats;
 import rm.com.disturb.utils.Intents;

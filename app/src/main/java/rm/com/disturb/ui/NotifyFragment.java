@@ -21,7 +21,7 @@ import rm.com.disturb.R;
 import rm.com.disturb.storage.ChatId;
 import rm.com.disturb.storage.Password;
 import rm.com.disturb.storage.StringPreference;
-import rm.com.disturb.telegram.Notify;
+import rm.com.disturb.command.Notify;
 import rm.com.disturb.utils.Permissions;
 
 /**

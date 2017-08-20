@@ -1,4 +1,4 @@
-package rm.com.disturb.telegram.impl;
+package rm.com.disturb.command.implementation;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -6,11 +6,14 @@ import android.support.annotation.WorkerThread;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.inject.Singleton;
 import retrofit2.Response;
 import rm.com.disturb.async.AsyncPipeline;
 import rm.com.disturb.async.AsyncResult;
-import rm.com.disturb.telegram.Erase;
+import rm.com.disturb.command.Erase;
+import rm.com.disturb.storage.ChatId;
 import rm.com.disturb.telegram.TelegramApi;
 import rm.com.disturb.telegram.response.TelegramResponse;
 
@@ -18,13 +21,14 @@ import rm.com.disturb.telegram.response.TelegramResponse;
  * Created by alex
  */
 
+@Singleton //
 public final class TelegramErase implements Erase {
   private final TelegramApi api;
   private final AsyncPipeline<Boolean> pipeline;
   private final String chatId;
 
-  public TelegramErase(@NonNull ExecutorService executor, @NonNull Handler mainThreadHandler,
-      @NonNull TelegramApi api, @NonNull Provider<String> chatIdProvider) {
+  @Inject TelegramErase(@NonNull ExecutorService executor, @NonNull Handler mainThreadHandler,
+      @NonNull TelegramApi api, @NonNull @ChatId Provider<String> chatIdProvider) {
     this.api = api;
     this.chatId = chatIdProvider.get();
     this.pipeline = new AsyncPipeline.Builder<>(false) //

@@ -1,7 +1,7 @@
 package rm.com.disturb.usage;
 
 import android.support.annotation.NonNull;
-import rm.com.disturb.telegram.Notify;
+import rm.com.disturb.command.Notify;
 
 /**
  * Created by alex

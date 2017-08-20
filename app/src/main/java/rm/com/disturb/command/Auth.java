@@ -1,4 +1,4 @@
-package rm.com.disturb.telegram;
+package rm.com.disturb.command;
 
 import android.support.annotation.NonNull;
 import rm.com.disturb.async.AsyncResult;

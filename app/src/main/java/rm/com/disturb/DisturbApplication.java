@@ -1,6 +1,7 @@
 package rm.com.disturb;
 
 import android.app.Application;
+import rm.com.disturb.inject.DisturbModule;
 
 /**
  * Created by alex

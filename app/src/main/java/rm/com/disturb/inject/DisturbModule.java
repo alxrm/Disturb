@@ -1,4 +1,4 @@
-package rm.com.disturb;
+package rm.com.disturb.inject;
 
 import android.app.Application;
 import android.content.SharedPreferences;
@@ -11,35 +11,31 @@ import java.text.MessageFormat;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rm.com.disturb.BuildConfig;
 import rm.com.disturb.contact.ContactBook;
 import rm.com.disturb.contact.LocalContactBook;
 import rm.com.disturb.storage.ChatId;
 import rm.com.disturb.storage.Password;
 import rm.com.disturb.storage.StringPreference;
-import rm.com.disturb.telegram.Auth;
-import rm.com.disturb.telegram.Notify;
 import rm.com.disturb.telegram.TelegramApi;
-import rm.com.disturb.telegram.impl.TelegramAuth;
-import rm.com.disturb.telegram.impl.TelegramNotify;
 
 import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by alex
  */
-@Module //
-final class DisturbModule {
+@Module(includes = CommandModule.class) //
+public final class DisturbModule {
   private static final String PREFERENCES_NAME = "disturb";
   private static final String TELEGRAM_BASE_URL = "https://api.telegram.org/bot";
 
   private final Application application;
 
-  DisturbModule(Application application) {
+  public DisturbModule(Application application) {
     this.application = application;
   }
 
@@ -53,17 +49,6 @@ final class DisturbModule {
 
   @Provides @Singleton SharedPreferences provideSharedPreferences() {
     return application.getSharedPreferences(PREFERENCES_NAME, MODE_PRIVATE);
-  }
-
-  @Provides @Singleton static Notify provideTelegramNotifier(@NonNull ExecutorService executor,
-      @NonNull Handler mainThreadHandler, @NonNull TelegramApi api,
-      @NonNull @ChatId Provider<String> chatId) {
-    return new TelegramNotify(executor, mainThreadHandler, api, chatId);
-  }
-
-  @Provides @Singleton static Auth provideTelegramBotAuth(@NonNull ExecutorService executor,
-      @NonNull Handler mainThreadHandler, @NonNull TelegramApi api) {
-    return new TelegramAuth(executor, mainThreadHandler, api);
   }
 
   @Provides @Singleton @ChatId
