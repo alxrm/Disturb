@@ -1,12 +1,20 @@
-package rm.com.disturb.telegram;
+package rm.com.disturb.telegram.impl;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import javax.inject.Provider;
+import retrofit2.Call;
+import retrofit2.Response;
 import rm.com.disturb.async.AsyncPipeline;
 import rm.com.disturb.async.AsyncResult;
+import rm.com.disturb.telegram.TelegramApi;
+import rm.com.disturb.telegram.Update;
+import rm.com.disturb.telegram.response.MessageResponse;
 
 /**
  * Created by alex
@@ -42,9 +50,23 @@ public final class TelegramUpdate implements Update {
         .invoke();
   }
 
-  @NonNull @Override
+  @WorkerThread @NonNull @Override
   public String sendBlocking(@NonNull String messageId, @NonNull String message) {
-    return EMPTY_MESSAGE_ID;
+    final Call<MessageResponse> editMessage = api.editMessage(chatId, messageId, message);
+
+    try {
+      final Response<MessageResponse> response = editMessage.execute();
+      final MessageResponse body = response.body();
+      final boolean isOk = isResponseBodyValid(body) && response.isSuccessful();
+
+      if (!isOk) {
+        return EMPTY_MESSAGE_ID;
+      }
+
+      return String.valueOf(body.message().messageId());
+    } catch (IOException e) {
+      return EMPTY_MESSAGE_ID;
+    }
   }
 
   @NonNull private Callable<String> updateMessageCallable( //
@@ -56,5 +78,9 @@ public final class TelegramUpdate implements Update {
         return sendBlocking(messageId, message);
       }
     };
+  }
+
+  private boolean isResponseBodyValid(@Nullable MessageResponse body) {
+    return body != null && body.isOk() && body.message() != null;
   }
 }

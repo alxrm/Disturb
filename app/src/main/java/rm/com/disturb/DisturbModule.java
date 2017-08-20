@@ -24,8 +24,8 @@ import rm.com.disturb.storage.StringPreference;
 import rm.com.disturb.telegram.Auth;
 import rm.com.disturb.telegram.Notify;
 import rm.com.disturb.telegram.TelegramApi;
-import rm.com.disturb.telegram.TelegramAuth;
-import rm.com.disturb.telegram.TelegramNotify;
+import rm.com.disturb.telegram.impl.TelegramAuth;
+import rm.com.disturb.telegram.impl.TelegramNotify;
 
 import static android.content.Context.MODE_PRIVATE;
 

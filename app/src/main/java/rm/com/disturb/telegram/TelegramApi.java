@@ -21,13 +21,13 @@ public interface TelegramApi {
   @GET("deleteMessage") //
   Call<TelegramResponse> deleteMessage( //
       @Query("chat_id") String chatId, //
-      @Query("message_id") int messageId //
+      @Query("message_id") String messageId //
   );
 
   @GET("editMessageText") //
   Call<MessageResponse> editMessage( //
       @Query("chat_id") String chatId, //
-      @Query("message_id") int messageId, //
+      @Query("message_id") String messageId, //
       @Query("text") String text //
   );
 }

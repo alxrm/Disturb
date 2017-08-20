@@ -1,4 +1,4 @@
-package rm.com.disturb.telegram;
+package rm.com.disturb.telegram.impl;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -9,6 +9,8 @@ import java.util.concurrent.ExecutorService;
 import retrofit2.Response;
 import rm.com.disturb.async.AsyncPipeline;
 import rm.com.disturb.async.AsyncResult;
+import rm.com.disturb.telegram.Auth;
+import rm.com.disturb.telegram.TelegramApi;
 import rm.com.disturb.telegram.response.MessageResponse;
 
 /**
@@ -30,12 +32,12 @@ public final class TelegramAuth implements Auth {
         .build();
   }
 
-  @WorkerThread @Override //
-  public boolean authorize(@NonNull String chatId) {
+  @WorkerThread //
+  @Override public boolean authorizeBlocking(@NonNull String chatId) {
     try {
       final Response<MessageResponse> response = api.sendMessage(chatId, MESSAGE_AUTH).execute();
 
-      return isSuccess(response);
+      return isResponseValid(response);
     } catch (IOException e) {
       return false;
     }
@@ -49,12 +51,12 @@ public final class TelegramAuth implements Auth {
   @NonNull private Callable<Boolean> authCallable(@NonNull final String chatId) {
     return new Callable<Boolean>() {
       @Override public Boolean call() throws Exception {
-        return authorize(chatId);
+        return authorizeBlocking(chatId);
       }
     };
   }
 
-  private boolean isSuccess(@NonNull Response<MessageResponse> response) {
+  private boolean isResponseValid(@NonNull Response<MessageResponse> response) {
     final MessageResponse body = response.body();
     return body != null && response.isSuccessful() && body.isOk();
   }

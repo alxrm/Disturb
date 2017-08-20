@@ -1,8 +1,9 @@
-package rm.com.disturb.telegram;
+package rm.com.disturb.telegram.impl;
 
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.WorkerThread;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -10,6 +11,8 @@ import javax.inject.Provider;
 import retrofit2.Response;
 import rm.com.disturb.async.AsyncPipeline;
 import rm.com.disturb.async.AsyncResult;
+import rm.com.disturb.telegram.Notify;
+import rm.com.disturb.telegram.TelegramApi;
 import rm.com.disturb.telegram.response.MessageResponse;
 
 /**
@@ -42,6 +45,7 @@ public final class TelegramNotify implements Notify {
     pipeline.newBuilder().task(sendMessageCallable(message)).reply(result).build().invoke();
   }
 
+  @WorkerThread //
   @NonNull @Override public String sendBlocking(@NonNull String message) {
     if (chatId.isEmpty()) {
       return EMPTY_MESSAGE_ID;
@@ -50,7 +54,7 @@ public final class TelegramNotify implements Notify {
     try {
       final Response<MessageResponse> response = api.sendMessage(chatId, message).execute();
       final MessageResponse body = response.body();
-      final boolean isOk = isSuccess(body) && response.isSuccessful();
+      final boolean isOk = isResponseBodyValid(body) && response.isSuccessful();
 
       if (!isOk) {
         return EMPTY_MESSAGE_ID;
@@ -70,7 +74,7 @@ public final class TelegramNotify implements Notify {
     };
   }
 
-  private boolean isSuccess(@Nullable MessageResponse body) {
+  private boolean isResponseBodyValid(@Nullable MessageResponse body) {
     return body != null && body.isOk();
   }
 }

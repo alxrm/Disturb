@@ -8,6 +8,6 @@ import rm.com.disturb.async.AsyncResult;
  */
 
 public interface Auth {
-  boolean authorize(@NonNull String chatId);
+  boolean authorizeBlocking(@NonNull String chatId);
   void authorizeAsync(@NonNull String chatId, @NonNull AsyncResult<Boolean> asyncResult);
 }
