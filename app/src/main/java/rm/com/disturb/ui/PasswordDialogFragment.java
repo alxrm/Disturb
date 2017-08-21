@@ -14,7 +14,7 @@ import butterknife.OnTextChanged;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import rm.com.disturb.R;
-import rm.com.disturb.storage.Password;
+import rm.com.disturb.data.storage.Password;
 
 /**
  * Created by alex

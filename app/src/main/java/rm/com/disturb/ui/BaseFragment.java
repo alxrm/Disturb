@@ -10,7 +10,7 @@ import android.view.View;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rm.com.disturb.DisturbApplication;
-import rm.com.disturb.DisturbComponent;
+import rm.com.disturb.inject.DisturbComponent;
 
 /**
  * Created by alex

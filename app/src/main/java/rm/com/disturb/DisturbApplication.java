@@ -1,6 +1,8 @@
 package rm.com.disturb;
 
 import android.app.Application;
+import rm.com.disturb.inject.DaggerDisturbComponent;
+import rm.com.disturb.inject.DisturbComponent;
 import rm.com.disturb.inject.DisturbModule;
 
 /**
@@ -16,7 +18,7 @@ public final class DisturbApplication extends Application {
     component = DaggerDisturbComponent.builder().disturbModule(new DisturbModule(this)).build();
   }
 
-  final public DisturbComponent injector() {
+  public DisturbComponent injector() {
     return component;
   }
 }

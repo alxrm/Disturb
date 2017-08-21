@@ -14,11 +14,11 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import javax.inject.Inject;
 import rm.com.disturb.R;
-import rm.com.disturb.async.AsyncResult;
-import rm.com.disturb.storage.ChatId;
-import rm.com.disturb.storage.Password;
-import rm.com.disturb.storage.StringPreference;
-import rm.com.disturb.command.Auth;
+import rm.com.disturb.data.async.AsyncResult;
+import rm.com.disturb.data.storage.ChatId;
+import rm.com.disturb.data.storage.Password;
+import rm.com.disturb.data.storage.StringPreference;
+import rm.com.disturb.data.command.Auth;
 
 /**
  * Created by alex

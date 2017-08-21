@@ -22,7 +22,7 @@
     </activity>
 
     <receiver
-        android:name=".receiver.CallReceiver"
+        android:name=".data.receiver.CallReceiver"
         android:priority="800">
       <intent-filter>
         <action android:name="android.intent.action.PHONE_STATE"/>
@@ -30,7 +30,7 @@
       </intent-filter>
     </receiver>
     <receiver
-        android:name=".receiver.SmsReceiver"
+        android:name=".data.receiver.SmsReceiver"
         android:priority="800">
       <intent-filter>
         <action android:name="android.provider.Telephony.SMS_RECEIVED"/>

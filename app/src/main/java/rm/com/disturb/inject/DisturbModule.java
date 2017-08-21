@@ -16,12 +16,12 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rm.com.disturb.BuildConfig;
-import rm.com.disturb.contact.ContactBook;
-import rm.com.disturb.contact.LocalContactBook;
-import rm.com.disturb.storage.ChatId;
-import rm.com.disturb.storage.Password;
-import rm.com.disturb.storage.StringPreference;
-import rm.com.disturb.telegram.TelegramApi;
+import rm.com.disturb.data.contact.ContactBook;
+import rm.com.disturb.data.contact.LocalContactBook;
+import rm.com.disturb.data.storage.ChatId;
+import rm.com.disturb.data.storage.Password;
+import rm.com.disturb.data.storage.StringPreference;
+import rm.com.disturb.data.telegram.TelegramApi;
 
 import static android.content.Context.MODE_PRIVATE;
 
