@@ -1,4 +1,4 @@
-package rm.com.disturb.data.usage;
+package rm.com.disturb.data.rule;
 
 import android.support.annotation.NonNull;
 
@@ -9,10 +9,10 @@ public final class MessageSignal implements Signal<String> {
   private final @NonNull String key;
   private final long time;
 
-  public MessageSignal(@NonNull String type, @NonNull String data, @NonNull String key, long time) {
+  public MessageSignal(@NonNull String type, @NonNull String data, @NonNull String key) {
     this.type = type;
     this.data = data;
-    this.time = time;
+    this.time = System.nanoTime();
     this.key = key;
   }
 
