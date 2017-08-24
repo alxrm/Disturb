@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import dagger.Module;
 import dagger.Provides;
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -16,10 +17,20 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rm.com.disturb.BuildConfig;
+import rm.com.disturb.data.command.Erase;
+import rm.com.disturb.data.command.Notify;
+import rm.com.disturb.data.command.Update;
 import rm.com.disturb.data.contact.ContactBook;
 import rm.com.disturb.data.contact.LocalContactBook;
+import rm.com.disturb.data.rule.CallRule;
+import rm.com.disturb.data.rule.MessageSignal;
+import rm.com.disturb.data.rule.RuleSet;
+import rm.com.disturb.data.rule.SignalRuleSet;
+import rm.com.disturb.data.rule.SmsRule;
 import rm.com.disturb.data.storage.ChatId;
 import rm.com.disturb.data.storage.Password;
+import rm.com.disturb.data.storage.SignalStorage;
+import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.storage.StringPreference;
 import rm.com.disturb.data.telegram.TelegramApi;
 
@@ -28,7 +39,7 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * Created by alex
  */
-@Module(includes = CommandModule.class) //
+@Module(includes = { CommandModule.class }) //
 public final class DisturbModule {
   private static final String PREFERENCES_NAME = "disturb";
   private static final String TELEGRAM_BASE_URL = "https://api.telegram.org/bot";
@@ -90,5 +101,24 @@ public final class DisturbModule {
 
   @Provides @Singleton TelegramApi provideApi(@NonNull Retrofit retrofit) {
     return retrofit.create(TelegramApi.class);
+  }
+
+  @Provides @Singleton Storage<MessageSignal> provideSignalStorage() {
+    return new SignalStorage(application);
+  }
+
+  @Provides @Singleton CallRule provideCallRule(@NonNull Storage<MessageSignal> signalStorage,
+      @NonNull Notify notify, @NonNull Update update, @NonNull Erase erase) {
+    return new CallRule(signalStorage, notify, update, erase);
+  }
+
+  @Provides @Singleton SmsRule provideSmsRule(@NonNull ContactBook contactBook,
+      @NonNull Notify notify) {
+    return new SmsRule(contactBook, application, notify);
+  }
+
+  @Provides @Singleton RuleSet<MessageSignal> provideRuleSet(@NonNull CallRule callRule,
+      @NonNull SmsRule smsRule) {
+    return new SignalRuleSet(Arrays.asList(callRule, smsRule));
   }
 }

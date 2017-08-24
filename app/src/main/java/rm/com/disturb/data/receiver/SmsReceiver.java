@@ -9,13 +9,11 @@ import android.telephony.SmsMessage;
 import java.util.List;
 import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
-import rm.com.disturb.data.async.AsyncResult;
-import rm.com.disturb.data.command.Notify;
-import rm.com.disturb.data.contact.ContactBook;
-import rm.com.disturb.utils.Formats;
+import rm.com.disturb.data.rule.MessageSignal;
+import rm.com.disturb.data.rule.RuleSet;
+import rm.com.disturb.data.rule.Signals;
 import rm.com.disturb.utils.Intents;
 import rm.com.disturb.utils.Lists;
-import rm.com.disturb.utils.Permissions;
 
 import static rm.com.disturb.utils.Lists.listOfArray;
 import static rm.com.disturb.utils.Lists.map;
@@ -24,8 +22,7 @@ import static rm.com.disturb.utils.Lists.reduce;
 public final class SmsReceiver extends BroadcastReceiver {
   private static final String KEY_PDU_CHUNKS = "pdus";
 
-  @Inject Notify notify;
-  @Inject ContactBook contactBook;
+  @Inject RuleSet<MessageSignal> signalRuleSet;
 
   @Override public void onReceive(Context context, Intent intent) {
     if (!Intents.matches(intent, Telephony.Sms.Intents.SMS_RECEIVED_ACTION)) {
@@ -38,26 +35,7 @@ public final class SmsReceiver extends BroadcastReceiver {
     final String number = receivedChunks.get(0).getOriginatingAddress();
     final String messageText = unwrapMessageText(receivedChunks);
 
-    if (Permissions.isReadContactsPermissionGranted(context)) {
-      notifyWithContactName(number, messageText);
-    } else {
-      notifySms(number, messageText);
-    }
-  }
-
-  private void notifySms(@NonNull String from, @NonNull String text) {
-    notify.send(Formats.smsOf(from, text));
-  }
-
-  private void notifyWithContactName(@NonNull final String number,
-      @NonNull final String messageText) {
-    contactBook.findNameAsync(number, new AsyncResult<String>() {
-      @Override public void ready(@NonNull String contactName) {
-        final String from = Formats.contactNameOf(contactName, number);
-
-        notifySms(from, messageText);
-      }
-    });
+    signalRuleSet.consume(new MessageSignal(Signals.SMS_RECEIVED, messageText, number));
   }
 
   @NonNull private List<SmsMessage> unwrapMessage(@NonNull Intent intent) {

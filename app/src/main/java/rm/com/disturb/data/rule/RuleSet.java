@@ -7,7 +7,7 @@ import java.util.List;
  * Created by alex
  */
 
-public interface RulePool<T> {
+public interface RuleSet<T> {
   @NonNull List<Rule<T>> rules();
 
   void consume(@NonNull T nextItem);

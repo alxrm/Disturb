@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.List;
 import javax.inject.Singleton;
 import rm.com.disturb.data.rule.MessageSignal;
-import rm.com.disturb.utils.Lists;
 
 /**
  * Created by alex
@@ -23,7 +22,7 @@ public final class SignalStorage implements Storage<MessageSignal> {
   }
 
   @Override public void put(@NonNull final String key, @Nullable final MessageSignal value) {
-
+    
   }
 
   @Nullable @Override public MessageSignal get(@NonNull final String key) {
@@ -36,10 +35,5 @@ public final class SignalStorage implements Storage<MessageSignal> {
 
   @NonNull @Override public List<MessageSignal> all() {
     return Collections.emptyList();
-  }
-
-  @NonNull @Override
-  public List<MessageSignal> some(@NonNull Lists.Predicate<MessageSignal> clause) {
-    return null;
   }
 }

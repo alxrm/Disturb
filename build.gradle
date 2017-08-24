@@ -3,14 +3,19 @@ buildscript {
 
   repositories {
     jcenter()
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
   }
 
   dependencies {
     classpath 'com.android.tools.build:gradle:2.3.0'
     classpath 'com.github.ben-manes:gradle-versions-plugin:0.15.0'
+    classpath "gradle.plugin.com.github.rsavin.gradle:gradle-microwave:1.0.0"
   }
 }
 
+apply plugin: "com.github.rsavin.gradle.microwave"
 apply plugin: 'com.github.ben-manes.versions'
 
 allprojects {
