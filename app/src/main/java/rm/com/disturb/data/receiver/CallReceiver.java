@@ -7,20 +7,21 @@ import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
 import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
-import rm.com.disturb.data.contact.ContactBook;
-import rm.com.disturb.data.command.Notify;
-import rm.com.disturb.data.async.AsyncResult;
-import rm.com.disturb.utils.Formats;
+import rm.com.disturb.data.rule.MessageSignal;
+import rm.com.disturb.data.rule.RuleSet;
+import rm.com.disturb.data.rule.Signals;
 import rm.com.disturb.utils.Intents;
-import rm.com.disturb.utils.Permissions;
+
+import static android.telephony.TelephonyManager.EXTRA_INCOMING_NUMBER;
+import static android.telephony.TelephonyManager.EXTRA_STATE;
+import static android.telephony.TelephonyManager.EXTRA_STATE_IDLE;
 
 /**
  * Created by alex
  */
 public final class CallReceiver extends BroadcastReceiver {
 
-  @Inject Notify notify;
-  @Inject ContactBook contactBook;
+  @Inject RuleSet<MessageSignal> signalRuleSet;
 
   @Override public void onReceive(Context context, Intent intent) {
     if (!Intents.matches(intent, TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
@@ -29,33 +30,17 @@ public final class CallReceiver extends BroadcastReceiver {
 
     ((DisturbApplication) context.getApplicationContext()).injector().inject(this);
 
-    final String state = intent.getExtras()
-        .getString(TelephonyManager.EXTRA_STATE, TelephonyManager.EXTRA_STATE_IDLE);
-
-    final String number =
-        intent.getExtras().getString(TelephonyManager.EXTRA_INCOMING_NUMBER, "Unknown number");
+    final String state = intent.getExtras().getString(EXTRA_STATE, EXTRA_STATE_IDLE);
+    final String number = intent.getExtras().getString(EXTRA_INCOMING_NUMBER, "Unknown numberOf");
 
     if (!isRinging(state)) {
       return;
     }
 
-    if (Permissions.isReadContactsPermissionGranted(context)) {
-      notifyWithContactName(number);
-    } else {
-      notifyCall(number);
-    }
-  }
-
-  private void notifyCall(@NonNull String from) {
-    notify.send(Formats.callOf(from));
-  }
-
-  private void notifyWithContactName(@NonNull final String number) {
-    contactBook.findNameAsync(number, new AsyncResult<String>() {
-      @Override public void ready(@NonNull String contactName) {
-        notifyCall(Formats.contactNameOf(contactName, number));
-      }
-    });
+    signalRuleSet.consume(new MessageSignal.Builder() //
+        .key(number) //
+        .type(Signals.CALL_RINGING) //
+        .build());
   }
 
   private boolean isRinging(@NonNull String state) {

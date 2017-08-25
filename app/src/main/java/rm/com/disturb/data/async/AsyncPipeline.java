@@ -82,7 +82,7 @@ public final class AsyncPipeline<T> {
       reply = EMPTY_REPLY;
     }
 
-    Builder(AsyncPipeline<T> current) {
+    Builder(@NonNull AsyncPipeline<T> current) {
       executor = current.executor;
       handler = current.handler;
       task = current.task;
@@ -90,32 +90,32 @@ public final class AsyncPipeline<T> {
       defaultResult = current.defaultResult;
     }
 
-    public Builder<T> defaultResult(@NonNull T defaultResult) {
+    @NonNull public Builder<T> defaultResult(@NonNull T defaultResult) {
       this.defaultResult = defaultResult;
       return this;
     }
 
-    public Builder<T> executor(@NonNull ExecutorService executor) {
+    @NonNull public Builder<T> executor(@NonNull ExecutorService executor) {
       this.executor = executor;
       return this;
     }
 
-    public Builder<T> handler(@NonNull Handler handler) {
+    @NonNull public Builder<T> handler(@NonNull Handler handler) {
       this.handler = handler;
       return this;
     }
 
-    public Builder<T> reply(@NonNull AsyncResult<T> reply) {
+    @NonNull public Builder<T> reply(@NonNull AsyncResult<T> reply) {
       this.reply = reply;
       return this;
     }
 
-    public Builder<T> task(@NonNull Callable<T> task) {
+    @NonNull public Builder<T> task(@NonNull Callable<T> task) {
       this.task = task;
       return this;
     }
 
-    public AsyncPipeline<T> build() {
+    @NonNull public AsyncPipeline<T> build() {
       return new AsyncPipeline<>(this);
     }
   }

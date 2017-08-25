@@ -8,7 +8,7 @@ import rm.com.disturb.data.async.AsyncResult;
  */
 
 public interface ContactBook {
-  @NonNull String findName(@NonNull String phoneNumber);
+  @NonNull String findNameBlocking(@NonNull String phoneNumber);
 
   void findNameAsync(@NonNull String phoneNumber, @NonNull AsyncResult<String> resultHook);
 }

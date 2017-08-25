@@ -3,6 +3,7 @@ package rm.com.disturb.data.command.implementation;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
+import android.util.Log;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -39,6 +40,8 @@ public final class TelegramAuth implements Auth {
   @Override public boolean authorizeBlocking(@NonNull String chatId) {
     try {
       final Response<MessageResponse> response = api.sendMessage(chatId, MESSAGE_AUTH).execute();
+
+      Log.e("DBG", "Response " + response.toString());
 
       return isResponseValid(response);
     } catch (IOException e) {

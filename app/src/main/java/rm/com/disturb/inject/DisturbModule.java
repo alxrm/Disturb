@@ -84,14 +84,14 @@ public final class DisturbModule {
     return new LocalContactBook(executor, application.getContentResolver());
   }
 
-  @Provides @Singleton OkHttpClient provideHttpClient() {
+  @Provides @Singleton static OkHttpClient provideHttpClient() {
     return new OkHttpClient.Builder().connectTimeout(5, TimeUnit.SECONDS)
         .writeTimeout(5, TimeUnit.SECONDS)
         .readTimeout(5, TimeUnit.SECONDS)
         .build();
   }
 
-  @Provides @Singleton Retrofit provideRetrofit(@NonNull OkHttpClient httpClient) {
+  @Provides @Singleton static Retrofit provideRetrofit(@NonNull OkHttpClient httpClient) {
     return new Retrofit.Builder().client(httpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(MessageFormat.format("{0}{1}/", TELEGRAM_BASE_URL, BuildConfig.BOT_TOKEN))
@@ -99,7 +99,7 @@ public final class DisturbModule {
         .build();
   }
 
-  @Provides @Singleton TelegramApi provideApi(@NonNull Retrofit retrofit) {
+  @Provides @Singleton static TelegramApi provideApi(@NonNull Retrofit retrofit) {
     return retrofit.create(TelegramApi.class);
   }
 
@@ -108,8 +108,9 @@ public final class DisturbModule {
   }
 
   @Provides @Singleton CallRule provideCallRule(@NonNull Storage<MessageSignal> signalStorage,
-      @NonNull Notify notify, @NonNull Update update, @NonNull Erase erase) {
-    return new CallRule(signalStorage, notify, update, erase);
+      @NonNull ContactBook contactBook, @NonNull Notify notify, @NonNull Update update,
+      @NonNull Erase erase) {
+    return new CallRule(application, signalStorage, contactBook, notify, update, erase);
   }
 
   @Provides @Singleton SmsRule provideSmsRule(@NonNull ContactBook contactBook,
@@ -117,7 +118,7 @@ public final class DisturbModule {
     return new SmsRule(contactBook, application, notify);
   }
 
-  @Provides @Singleton RuleSet<MessageSignal> provideRuleSet(@NonNull CallRule callRule,
+  @Provides @Singleton static RuleSet<MessageSignal> provideRuleSet(@NonNull CallRule callRule,
       @NonNull SmsRule smsRule) {
     return new SignalRuleSet(Arrays.asList(callRule, smsRule));
   }

@@ -3,56 +3,66 @@ package rm.com.disturb.data.contact;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.BaseColumns;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import rm.com.disturb.data.async.AsyncPipeline;
 import rm.com.disturb.data.async.AsyncResult;
+
+import static android.provider.BaseColumns._ID;
+import static android.provider.ContactsContract.PhoneLookup.CONTENT_FILTER_URI;
+import static android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME;
 
 /**
  * Created by alex
  */
 public final class LocalContactBook implements ContactBook {
-  @NonNull private final ExecutorService executor;
-  @NonNull private final ContentResolver contentResolver;
+  private static final String EMPTY_NAME = "";
+
+  private final @NonNull ContentResolver contentResolver;
+  private final @NonNull AsyncPipeline<String> pipeline;
 
   public LocalContactBook(@NonNull ExecutorService executor,
       @NonNull ContentResolver contentResolver) {
-    this.executor = executor;
     this.contentResolver = contentResolver;
+    this.pipeline = new AsyncPipeline.Builder<>(EMPTY_NAME).executor(executor).build();
   }
 
-  @Override public void findNameAsync(@NonNull final String phoneNumber,
-      @NonNull final AsyncResult<String> resultHook) {
-    executor.submit(new Runnable() {
-      @Override public void run() {
-        resultHook.ready(findName(phoneNumber));
-      }
-    });
+  @Override
+  public void findNameAsync(@NonNull String phoneNumber, @NonNull AsyncResult<String> result) {
+    pipeline.newBuilder().task(findNameCallable(phoneNumber)).reply(result).build().invoke();
   }
 
-  @NonNull @Override public String findName(@NonNull String phoneNumber) {
-    final Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,
-        Uri.encode(phoneNumber));
-
+  @NonNull @Override public String findNameBlocking(@NonNull String phoneNumber) {
+    final Uri uri = Uri.withAppendedPath(CONTENT_FILTER_URI, Uri.encode(phoneNumber));
     final Cursor contactLookup = contentResolver.query(uri, new String[] {
-        BaseColumns._ID, ContactsContract.PhoneLookup.DISPLAY_NAME
+        _ID, DISPLAY_NAME
     }, null, null, null);
 
-    String name = "";
-
-    try {
-      if (contactLookup != null && contactLookup.getCount() > 0) {
-        contactLookup.moveToNext();
-        name = contactLookup.getString(
-            contactLookup.getColumnIndex(ContactsContract.Data.DISPLAY_NAME));
-      }
-    } finally {
-      if (contactLookup != null) {
-        contactLookup.close();
-      }
+    if (contactLookup == null) {
+      return EMPTY_NAME;
     }
 
-    return name;
+    try {
+      if (contactLookup.getCount() > 0) {
+        contactLookup.moveToNext();
+        final int columnIndex = contactLookup.getColumnIndex(DISPLAY_NAME);
+        final String name = contactLookup.getString(columnIndex);
+
+        return name == null ? EMPTY_NAME : name;
+      }
+    } finally {
+      contactLookup.close();
+    }
+
+    return EMPTY_NAME;
+  }
+
+  @NonNull private Callable<String> findNameCallable(@NonNull final String phoneNumber) {
+    return new Callable<String>() {
+      @Override public String call() throws Exception {
+        return findNameBlocking(phoneNumber);
+      }
+    };
   }
 }

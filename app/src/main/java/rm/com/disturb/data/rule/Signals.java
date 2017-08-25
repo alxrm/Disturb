@@ -10,4 +10,5 @@ public interface Signals {
   String CALL_ANSWERED = "CALL_ANSWERED";
   String CALL_FINISHED = "CALL_FINISHED";
   String SMS_RECEIVED = "SMS_RECEIVED";
+  String EMPTY = "EMPTY";
 }
