@@ -7,9 +7,9 @@ import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
 import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
-import rm.com.disturb.data.rule.MessageSignal;
-import rm.com.disturb.data.rule.RuleSet;
-import rm.com.disturb.data.rule.Signals;
+import rm.com.disturb.data.signal.MessageSignal;
+import rm.com.disturb.data.signal.RuleSet;
+import rm.com.disturb.data.signal.Signals;
 import rm.com.disturb.utils.Intents;
 
 import static android.telephony.TelephonyManager.EXTRA_INCOMING_NUMBER;
@@ -31,7 +31,7 @@ public final class CallReceiver extends BroadcastReceiver {
     ((DisturbApplication) context.getApplicationContext()).injector().inject(this);
 
     final String state = intent.getExtras().getString(EXTRA_STATE, EXTRA_STATE_IDLE);
-    final String number = intent.getExtras().getString(EXTRA_INCOMING_NUMBER, "Unknown numberOf");
+    final String number = intent.getExtras().getString(EXTRA_INCOMING_NUMBER, "Unknown number");
 
     if (!isRinging(state)) {
       return;

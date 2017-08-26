@@ -41,7 +41,6 @@ dependencies {
   compile supportDeps.design
   compile supportDeps.appCompat
 
-  compile 'com.snappydb:snappydb-lib:0.5.2'
-  compile 'com.esotericsoftware.kryo:kryo:2.24.0'
+  compile 'io.paperdb:paperdb:2.1'
   compile "com.squareup.retrofit2:converter-gson:$versions.retrofit"
 }

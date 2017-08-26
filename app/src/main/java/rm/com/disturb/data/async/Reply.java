@@ -6,6 +6,6 @@ import android.support.annotation.NonNull;
  * Created by alex
  */
 
-public interface AsyncResult<T> {
+public interface Reply<T> {
   void ready(@NonNull T result);
 }

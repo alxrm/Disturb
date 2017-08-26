@@ -18,10 +18,12 @@ import butterknife.OnClick;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import rm.com.disturb.R;
-import rm.com.disturb.data.storage.ChatId;
-import rm.com.disturb.data.storage.Password;
 import rm.com.disturb.data.storage.StringPreference;
-import rm.com.disturb.data.command.Notify;
+import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.data.telegram.command.TelegramParams;
+import rm.com.disturb.inject.qualifier.ChatId;
+import rm.com.disturb.inject.qualifier.Notify;
+import rm.com.disturb.inject.qualifier.Password;
 import rm.com.disturb.utils.Permissions;
 
 /**
@@ -41,11 +43,10 @@ public final class NotifyFragment extends BaseFragment
   @BindView(R.id.notify_description_text) TextView description;
   @BindView(R.id.notify_chat_id_text) TextView chatIdText;
 
-  @Inject Notify notify;
+  @Inject @Notify Command<String> notify;
   @Inject @ChatId StringPreference chatIdPreference;
   @Inject @Password StringPreference passwordPreference;
   @Inject @ChatId Provider<String> chatId;
-  @Inject @Password Provider<String> password;
 
   public static NotifyFragment newInstance() {
     return new NotifyFragment();
@@ -98,7 +99,7 @@ public final class NotifyFragment extends BaseFragment
       return;
     }
 
-    notify.send(messageTestNotification);
+    notify.send(TelegramParams.ofMessage(messageTestNotification)).forget();
   }
 
   @OnClick(R.id.notify_chat_id_change) void onChangeChatId() {

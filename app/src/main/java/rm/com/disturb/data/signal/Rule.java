@@ -1,4 +1,4 @@
-package rm.com.disturb.data.rule;
+package rm.com.disturb.data.signal;
 
 import android.support.annotation.NonNull;
 

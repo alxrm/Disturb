@@ -1,4 +1,4 @@
-package rm.com.disturb.data.rule;
+package rm.com.disturb.data.signal;
 
 import android.support.annotation.NonNull;
 import java.util.Collections;
@@ -24,9 +24,5 @@ public final class SignalRuleSet implements RuleSet<MessageSignal> {
         currentRule.follow(nextItem);
       }
     }
-
-    // how?
-    // type A -> notifySms() -> SmsRule -> Notify -> null key -> not pushing
-    // type !A -> notifyCall() -> CallRule -> Notify -> key -> push -> Erase, Update
   }
 }

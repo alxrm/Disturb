@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import java.util.Collections;
 import java.util.List;
 import javax.inject.Singleton;
-import rm.com.disturb.data.rule.MessageSignal;
+import rm.com.disturb.data.signal.MessageSignal;
 
 /**
  * Created by alex

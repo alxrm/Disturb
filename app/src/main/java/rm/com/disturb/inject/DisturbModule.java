@@ -17,22 +17,21 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rm.com.disturb.BuildConfig;
-import rm.com.disturb.data.command.Erase;
-import rm.com.disturb.data.command.Notify;
-import rm.com.disturb.data.command.Update;
 import rm.com.disturb.data.contact.ContactBook;
 import rm.com.disturb.data.contact.LocalContactBook;
-import rm.com.disturb.data.rule.CallRule;
-import rm.com.disturb.data.rule.MessageSignal;
-import rm.com.disturb.data.rule.RuleSet;
-import rm.com.disturb.data.rule.SignalRuleSet;
-import rm.com.disturb.data.rule.SmsRule;
-import rm.com.disturb.data.storage.ChatId;
-import rm.com.disturb.data.storage.Password;
+import rm.com.disturb.data.signal.CallRingingRule;
+import rm.com.disturb.data.signal.MessageSignal;
+import rm.com.disturb.data.signal.RuleSet;
+import rm.com.disturb.data.signal.SignalRuleSet;
+import rm.com.disturb.data.signal.SmsRule;
 import rm.com.disturb.data.storage.SignalStorage;
 import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.storage.StringPreference;
 import rm.com.disturb.data.telegram.TelegramApi;
+import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.inject.qualifier.ChatId;
+import rm.com.disturb.inject.qualifier.Notify;
+import rm.com.disturb.inject.qualifier.Password;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -107,18 +106,19 @@ public final class DisturbModule {
     return new SignalStorage(application);
   }
 
-  @Provides @Singleton CallRule provideCallRule(@NonNull Storage<MessageSignal> signalStorage,
-      @NonNull ContactBook contactBook, @NonNull Notify notify, @NonNull Update update,
-      @NonNull Erase erase) {
-    return new CallRule(application, signalStorage, contactBook, notify, update, erase);
+  @Provides @Singleton CallRingingRule provideCallRule(
+      @NonNull Storage<MessageSignal> signalStorage, @NonNull ContactBook contactBook,
+      @NonNull @Notify Command<String> notify) {
+    return new CallRingingRule(application, signalStorage, contactBook, notify);
   }
 
   @Provides @Singleton SmsRule provideSmsRule(@NonNull ContactBook contactBook,
-      @NonNull Notify notify) {
+      @NonNull @Notify Command<String> notify) {
     return new SmsRule(contactBook, application, notify);
   }
 
-  @Provides @Singleton static RuleSet<MessageSignal> provideRuleSet(@NonNull CallRule callRule,
+  @Provides @Singleton
+  static RuleSet<MessageSignal> provideRuleSet(@NonNull CallRingingRule callRule,
       @NonNull SmsRule smsRule) {
     return new SignalRuleSet(Arrays.asList(callRule, smsRule));
   }

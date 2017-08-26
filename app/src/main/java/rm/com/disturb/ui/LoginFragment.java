@@ -14,11 +14,13 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import javax.inject.Inject;
 import rm.com.disturb.R;
-import rm.com.disturb.data.async.AsyncResult;
-import rm.com.disturb.data.storage.ChatId;
-import rm.com.disturb.data.storage.Password;
+import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.storage.StringPreference;
-import rm.com.disturb.data.command.Auth;
+import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.data.telegram.command.TelegramParams;
+import rm.com.disturb.inject.qualifier.Auth;
+import rm.com.disturb.inject.qualifier.ChatId;
+import rm.com.disturb.inject.qualifier.Password;
 
 /**
  * Created by alex
@@ -28,7 +30,7 @@ public final class LoginFragment extends BaseFragment {
 
   @Inject @ChatId StringPreference chatIdPreference;
   @Inject @Password StringPreference passwordPreference;
-  @Inject Auth auth;
+  @Inject @Auth Command<Boolean> auth;
 
   private @Nullable ProgressDialog progressDialog;
   private @NonNull String chatId = "";
@@ -61,7 +63,7 @@ public final class LoginFragment extends BaseFragment {
 
     showProgressDialog();
 
-    auth.authorizeAsync(chatId, new AsyncResult<Boolean>() {
+    auth.send(TelegramParams.ofChatId(chatId)).whenReady(new Reply<Boolean>() {
       @Override public void ready(@NonNull Boolean result) {
         if (result) {
           proceedToNotifyFragment();

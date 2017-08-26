@@ -6,8 +6,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import rm.com.disturb.data.async.AsyncPipeline;
-import rm.com.disturb.data.async.AsyncResult;
+import rm.com.disturb.data.async.PendingResult;
 
 import static android.provider.BaseColumns._ID;
 import static android.provider.ContactsContract.PhoneLookup.CONTENT_FILTER_URI;
@@ -20,20 +19,19 @@ public final class LocalContactBook implements ContactBook {
   private static final String EMPTY_NAME = "";
 
   private final @NonNull ContentResolver contentResolver;
-  private final @NonNull AsyncPipeline<String> pipeline;
+  private final @NonNull PendingResult<String> result;
 
   public LocalContactBook(@NonNull ExecutorService executor,
       @NonNull ContentResolver contentResolver) {
     this.contentResolver = contentResolver;
-    this.pipeline = new AsyncPipeline.Builder<>(EMPTY_NAME).executor(executor).build();
+    this.result = new PendingResult.Builder<>(EMPTY_NAME).executor(executor).build();
   }
 
-  @Override
-  public void findNameAsync(@NonNull String phoneNumber, @NonNull AsyncResult<String> result) {
-    pipeline.newBuilder().task(findNameCallable(phoneNumber)).reply(result).build().invoke();
+  @NonNull @Override public PendingResult<String> findName(@NonNull String phoneNumber) {
+    return result.newBuilder().task(findNameCallable(phoneNumber)).build();
   }
 
-  @NonNull @Override public String findNameBlocking(@NonNull String phoneNumber) {
+  @NonNull private String findNameBlocking(@NonNull String phoneNumber) {
     final Uri uri = Uri.withAppendedPath(CONTENT_FILTER_URI, Uri.encode(phoneNumber));
     final Cursor contactLookup = contentResolver.query(uri, new String[] {
         _ID, DISPLAY_NAME

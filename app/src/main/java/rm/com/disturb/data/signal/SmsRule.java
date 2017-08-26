@@ -1,10 +1,11 @@
-package rm.com.disturb.data.rule;
+package rm.com.disturb.data.signal;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import rm.com.disturb.data.async.AsyncResult;
-import rm.com.disturb.data.command.Notify;
+import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.contact.ContactBook;
+import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.data.telegram.command.TelegramParams;
 import rm.com.disturb.utils.Formats;
 import rm.com.disturb.utils.Permissions;
 
@@ -16,10 +17,10 @@ public final class SmsRule implements Rule<MessageSignal> {
 
   private final @NonNull ContactBook contactBook;
   private final @NonNull Context context;
-  private final @NonNull Notify notify;
+  private final @NonNull Command<String> notify;
 
   public SmsRule(@NonNull ContactBook contactBook, @NonNull Context context,
-      @NonNull Notify notify) {
+      @NonNull Command<String> notify) {
     this.contactBook = contactBook;
     this.context = context;
     this.notify = notify;
@@ -41,12 +42,12 @@ public final class SmsRule implements Rule<MessageSignal> {
   }
 
   private void notifySms(@NonNull String from, @NonNull String text) {
-    notify.send(Formats.smsOf(from, text));
+    notify.send(TelegramParams.ofMessage(Formats.smsOf(from, text))).forget();
   }
 
   private void notifyWithContactName(@NonNull final String number,
       @NonNull final String messageText) {
-    contactBook.findNameAsync(number, new AsyncResult<String>() {
+    contactBook.findName(number).whenReady(new Reply<String>() {
       @Override public void ready(@NonNull String contactName) {
         final String from = Formats.contactNameOf(contactName, number);
 

@@ -10,8 +10,8 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.R;
-import rm.com.disturb.data.storage.ChatId;
-import rm.com.disturb.data.storage.Password;
+import rm.com.disturb.inject.qualifier.ChatId;
+import rm.com.disturb.inject.qualifier.Password;
 
 public final class MainActivity extends AppCompatActivity implements Navigator {
   static String KEY_FRAGMENT_SAVE = "KEY_FRAGMENT_SAVE";

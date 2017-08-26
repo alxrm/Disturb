@@ -1,13 +1,13 @@
-package rm.com.disturb.data.rule;
+package rm.com.disturb.data.signal;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import rm.com.disturb.data.async.AsyncResult;
-import rm.com.disturb.data.command.Erase;
-import rm.com.disturb.data.command.Notify;
-import rm.com.disturb.data.command.Update;
+import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.contact.ContactBook;
 import rm.com.disturb.data.storage.Storage;
+import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.data.telegram.command.TelegramParams;
+import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.utils.Formats;
 import rm.com.disturb.utils.Permissions;
 
@@ -15,28 +15,23 @@ import rm.com.disturb.utils.Permissions;
  * Created by alex
  */
 
-public final class CallRule implements Rule<MessageSignal> {
+public final class CallRingingRule implements Rule<MessageSignal> {
 
   private final @NonNull Context context;
   private final @NonNull Storage<MessageSignal> signalStorage;
   private final @NonNull ContactBook contactBook;
-  private final @NonNull Notify notify;
-  private final @NonNull Update update;
-  private final @NonNull Erase erase;
+  private final @NonNull Command<String> notify;
 
-  public CallRule(@NonNull Context context, @NonNull Storage<MessageSignal> signalStorage,
-      @NonNull ContactBook contactBook, @NonNull Notify notify, @NonNull Update update,
-      @NonNull Erase erase) {
+  public CallRingingRule(@NonNull Context context, @NonNull Storage<MessageSignal> signalStorage,
+      @NonNull ContactBook contactBook, @NonNull @Notify Command<String> notify) {
     this.context = context.getApplicationContext();
     this.signalStorage = signalStorage;
     this.contactBook = contactBook;
     this.notify = notify;
-    this.update = update;
-    this.erase = erase;
   }
 
   @Override public boolean shouldFollow(@NonNull MessageSignal item) {
-    return !item.type().equals(Signals.SMS_RECEIVED);
+    return item.type().equals(Signals.CALL_RINGING);
   }
 
   @Override public void follow(@NonNull MessageSignal item) {
@@ -50,11 +45,13 @@ public final class CallRule implements Rule<MessageSignal> {
   }
 
   private void notifyCall(@NonNull String from) {
-    notify.send(Formats.callOf(from));
+    final String message = Formats.callOf(from);
+
+    notify.send(TelegramParams.ofMessage(message)).forget();
   }
 
   private void notifyWithContactName(@NonNull final String number) {
-    contactBook.findNameAsync(number, new AsyncResult<String>() {
+    contactBook.findName(number).whenReady(new Reply<String>() {
       @Override public void ready(@NonNull String contactName) {
         notifyCall(Formats.contactNameOf(contactName, number));
       }

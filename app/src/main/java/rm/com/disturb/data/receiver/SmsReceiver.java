@@ -6,9 +6,9 @@ import android.content.Intent;
 import android.provider.Telephony;
 import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
-import rm.com.disturb.data.rule.MessageSignal;
-import rm.com.disturb.data.rule.RuleSet;
-import rm.com.disturb.data.rule.Signals;
+import rm.com.disturb.data.signal.MessageSignal;
+import rm.com.disturb.data.signal.RuleSet;
+import rm.com.disturb.data.signal.Signals;
 import rm.com.disturb.utils.Intents;
 import rm.com.disturb.utils.Sms;
 
