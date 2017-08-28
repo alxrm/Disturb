@@ -12,6 +12,7 @@ import java.util.concurrent.Executors;
  * Created by alex
  */
 
+@SuppressWarnings("WeakerAccess") //
 public final class PendingResult<T> {
   private final ExecutorService executor;
   private final Handler handler;

@@ -7,6 +7,8 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import dagger.Module;
 import dagger.Provides;
+import io.paperdb.Book;
+import io.paperdb.Paper;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
@@ -24,7 +26,7 @@ import rm.com.disturb.data.signal.MessageSignal;
 import rm.com.disturb.data.signal.RuleSet;
 import rm.com.disturb.data.signal.SignalRuleSet;
 import rm.com.disturb.data.signal.SmsRule;
-import rm.com.disturb.data.storage.SignalStorage;
+import rm.com.disturb.data.storage.PaperSignalStorage;
 import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.storage.StringPreference;
 import rm.com.disturb.data.telegram.TelegramApi;
@@ -32,6 +34,7 @@ import rm.com.disturb.data.telegram.command.Command;
 import rm.com.disturb.inject.qualifier.ChatId;
 import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Password;
+import rm.com.disturb.inject.qualifier.Signals;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -45,7 +48,7 @@ public final class DisturbModule {
 
   private final Application application;
 
-  public DisturbModule(Application application) {
+  public DisturbModule(@NonNull Application application) {
     this.application = application;
   }
 
@@ -90,20 +93,23 @@ public final class DisturbModule {
         .build();
   }
 
-  @Provides @Singleton static Retrofit provideRetrofit(@NonNull OkHttpClient httpClient) {
+  @Provides @Singleton static TelegramApi provideRetrofit(@NonNull OkHttpClient httpClient) {
     return new Retrofit.Builder().client(httpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(MessageFormat.format("{0}{1}/", TELEGRAM_BASE_URL, BuildConfig.BOT_TOKEN))
         .client(httpClient)
-        .build();
+        .build()
+        .create(TelegramApi.class);
   }
 
-  @Provides @Singleton static TelegramApi provideApi(@NonNull Retrofit retrofit) {
-    return retrofit.create(TelegramApi.class);
+  @Provides @Singleton @Signals Book provideDatabase() {
+    Paper.init(application.getApplicationContext());
+    return Paper.book("signals");
   }
 
-  @Provides @Singleton Storage<MessageSignal> provideSignalStorage() {
-    return new SignalStorage(application);
+  @Provides @Singleton
+  static Storage<MessageSignal> provideSignalStorage(@NonNull @Signals Book database) {
+    return new PaperSignalStorage(database);
   }
 
   @Provides @Singleton CallRingingRule provideCallRule(
