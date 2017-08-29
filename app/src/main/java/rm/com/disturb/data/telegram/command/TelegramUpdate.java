@@ -23,16 +23,16 @@ import rm.com.disturb.inject.qualifier.ChatId;
 public final class TelegramUpdate extends TelegramCommand<String> {
   private static final String EMPTY_MESSAGE_ID = "-1";
 
-  private final String chatId;
+  private final Provider<String> chatId;
 
   @Inject TelegramUpdate(@NonNull ExecutorService executor, @NonNull Handler mainThreadHandler,
       @NonNull TelegramApi api, @NonNull @ChatId Provider<String> chatIdProvider) {
     super(executor, mainThreadHandler, api);
-    chatId = chatIdProvider.get();
+    chatId = chatIdProvider;
   }
 
   @NonNull @Override String sendBlocking(@NonNull TelegramParams params) throws IOException {
-    final Map<String, String> nextParams = params.newBuilder().chatId(chatId).build().asMap();
+    final Map<String, String> nextParams = params.newBuilder().chatId(chatId.get()).build().asMap();
     final Call<MessageResponse> editMessage = api.editMessage(nextParams);
 
     final Response<MessageResponse> response = editMessage.execute();

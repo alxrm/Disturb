@@ -19,12 +19,12 @@ import rm.com.disturb.inject.qualifier.ChatId;
 
 @Singleton //
 public final class TelegramErase extends TelegramCommand<Boolean> {
-  private final String chatId;
+  private final Provider<String> chatId;
 
   @Inject TelegramErase(@NonNull ExecutorService executor, @NonNull Handler mainThreadHandler,
       @NonNull TelegramApi api, @NonNull @ChatId Provider<String> chatIdProvider) {
     super(executor, mainThreadHandler, api);
-    this.chatId = chatIdProvider.get();
+    this.chatId = chatIdProvider;
   }
 
   private boolean isResponseValid(@NonNull Response<TelegramResponse> response) {
@@ -33,7 +33,7 @@ public final class TelegramErase extends TelegramCommand<Boolean> {
   }
 
   @NonNull @Override Boolean sendBlocking(@NonNull TelegramParams params) throws IOException {
-    final Map<String, String> nextParams = params.newBuilder().chatId(chatId).build().asMap();
+    final Map<String, String> nextParams = params.newBuilder().chatId(chatId.get()).build().asMap();
     final Response<TelegramResponse> response = api.deleteMessage(nextParams).execute();
 
     return isResponseValid(response);

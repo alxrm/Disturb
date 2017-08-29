@@ -16,13 +16,13 @@ import java.util.concurrent.Executors;
 public final class PendingResult<T> {
   private final ExecutorService executor;
   private final Handler handler;
-  private final Callable<T> task;
+  private final Callable<T> from;
   private final T defaultResult;
 
   private PendingResult(@NonNull PendingResult.Builder<T> builder) {
     executor = builder.executor;
     handler = builder.handler;
-    task = builder.task;
+    from = builder.from;
     defaultResult = builder.defaultResult;
   }
 
@@ -42,7 +42,7 @@ public final class PendingResult<T> {
 
   @NonNull public T await() {
     try {
-      return task.call();
+      return from.call();
     } catch (RuntimeException e) {
       throw new RuntimeException(e);
     } catch (Exception e) {
@@ -78,20 +78,20 @@ public final class PendingResult<T> {
 
     ExecutorService executor;
     Handler handler;
-    Callable<T> task;
+    Callable<T> from;
     T defaultResult;
 
     public Builder(@NonNull T nextDefaultResult) {
       executor = DEFAULT_EXECUTOR;
       handler = HANDLER;
       defaultResult = nextDefaultResult;
-      task = EMPTY_TASK;
+      from = EMPTY_TASK;
     }
 
     Builder(@NonNull PendingResult<T> current) {
       executor = current.executor;
       handler = current.handler;
-      task = current.task;
+      from = current.from;
       defaultResult = current.defaultResult;
     }
 
@@ -110,8 +110,8 @@ public final class PendingResult<T> {
       return this;
     }
 
-    @NonNull public Builder<T> task(@NonNull Callable<T> task) {
-      this.task = task;
+    @NonNull public Builder<T> from(@NonNull Callable<T> from) {
+      this.from = from;
       return this;
     }
 

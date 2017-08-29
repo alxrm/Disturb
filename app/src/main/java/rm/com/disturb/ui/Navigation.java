@@ -7,7 +7,7 @@ import android.support.annotation.NonNull;
  * Created by alex
  */
 
-interface Navigator {
+interface Navigation {
   void to(@NonNull Fragment dest);
 
   void back();

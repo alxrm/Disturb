@@ -28,7 +28,7 @@ public final class LocalContactBook implements ContactBook {
   }
 
   @NonNull @Override public PendingResult<String> findName(@NonNull String phoneNumber) {
-    return result.newBuilder().task(findNameCallable(phoneNumber)).build();
+    return result.newBuilder().from(findNameCallable(phoneNumber)).build();
   }
 
   @NonNull private String findNameBlocking(@NonNull String phoneNumber) {

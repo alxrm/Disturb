@@ -30,7 +30,7 @@ public abstract class TelegramCommand<T> implements Command<T> {
   }
 
   @NonNull @Override public PendingResult<T> send(@NonNull TelegramParams params) {
-    return result.newBuilder().task(asCallable(params)).build();
+    return result.newBuilder().from(asCallable(params)).build();
   }
 
   @NonNull abstract T sendBlocking(@NonNull TelegramParams params) throws IOException;

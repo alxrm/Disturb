@@ -13,7 +13,7 @@ import rm.com.disturb.R;
 import rm.com.disturb.inject.qualifier.ChatId;
 import rm.com.disturb.inject.qualifier.Password;
 
-public final class MainActivity extends AppCompatActivity implements Navigator {
+public final class MainActivity extends AppCompatActivity implements Navigation {
   static String KEY_FRAGMENT_SAVE = "KEY_FRAGMENT_SAVE";
 
   @Inject @ChatId Provider<String> chatId;
@@ -46,7 +46,7 @@ public final class MainActivity extends AppCompatActivity implements Navigator {
     onBackPressed();
   }
 
-  final protected void changeFragment(@NonNull Fragment fragment, boolean isRoot) {
+  private void changeFragment(@NonNull Fragment fragment, boolean isRoot) {
     this.currentFragment = fragment;
 
     final FragmentTransaction fragmentTransaction =
@@ -59,7 +59,7 @@ public final class MainActivity extends AppCompatActivity implements Navigator {
     fragmentTransaction.commit();
   }
 
-  @NonNull final protected Fragment getInitialFragment(@Nullable Bundle state,
+  @NonNull private Fragment getInitialFragment(@Nullable Bundle state,
       @NonNull Fragment defaultFragment) {
     return (state == null) ? defaultFragment
         : getFragmentManager().getFragment(state, KEY_FRAGMENT_SAVE);

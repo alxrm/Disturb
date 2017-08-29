@@ -22,20 +22,16 @@ import rm.com.disturb.inject.qualifier.ChatId;
 public final class TelegramNotify extends TelegramCommand<String> {
   private static final String EMPTY_MESSAGE_ID = "-1";
 
-  private final String chatId;
+  private final Provider<String> chatId;
 
   @Inject TelegramNotify(@NonNull ExecutorService executor, @NonNull Handler mainThreadHandler,
       @NonNull TelegramApi api, @NonNull @ChatId Provider<String> chatIdProvider) {
     super(executor, mainThreadHandler, api);
-    chatId = chatIdProvider.get();
-  }
-
-  private boolean isResponseBodyValid(@Nullable MessageResponse body) {
-    return body != null && body.isOk();
+    chatId = chatIdProvider;
   }
 
   @NonNull @Override String sendBlocking(@NonNull TelegramParams params) throws IOException {
-    final Map<String, String> nextParams = params.newBuilder().chatId(chatId).build().asMap();
+    final Map<String, String> nextParams = params.newBuilder().chatId(chatId.get()).build().asMap();
     final Response<MessageResponse> response = api.sendMessage(nextParams).execute();
     final MessageResponse body = response.body();
     final boolean isOk = isResponseBodyValid(body) && response.isSuccessful();
@@ -49,5 +45,9 @@ public final class TelegramNotify extends TelegramCommand<String> {
 
   @NonNull @Override String defaultResult() {
     return EMPTY_MESSAGE_ID;
+  }
+
+  private boolean isResponseBodyValid(@Nullable MessageResponse body) {
+    return body != null && body.isOk();
   }
 }

@@ -30,22 +30,22 @@ public class BaseFragment extends Fragment {
   }
 
   protected void navigateBack() {
-    final Navigator navigator = navigator();
+    final Navigation navigation = navigator();
 
-    if (navigator != null) {
-      navigator.back();
+    if (navigation != null) {
+      navigation.back();
     }
   }
 
-  @Nullable final protected Navigator navigator() {
-    return (Navigator) getActivity();
+  @Nullable final protected Navigation navigator() {
+    return (Navigation) getActivity();
   }
 
   final protected void navigateTo(@NonNull Fragment fragment) {
-    final Navigator navigator = navigator();
+    final Navigation navigation = navigator();
 
-    if (navigator != null) {
-      navigator.to(fragment);
+    if (navigation != null) {
+      navigation.to(fragment);
     }
   }
 
