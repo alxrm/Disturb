@@ -1,6 +1,5 @@
 package rm.com.disturb.data.signal;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import rm.com.disturb.data.contact.ContactBook;
 import rm.com.disturb.data.storage.Storage;
@@ -13,27 +12,24 @@ import rm.com.disturb.inject.qualifier.Update;
  */
 
 public final class CallAnsweredRule implements Rule<MessageSignal> {
-  private final @NonNull Context context;
-  private final @NonNull ContactBook contactBook;
-  private final @NonNull Command<String> update;
-  private final @NonNull Command<Boolean> erase;
-  private final @NonNull Storage<MessageSignal> signalStorage;
+  private final ContactBook contactBook;
+  private final Command<String> update;
+  private final Command<Boolean> erase;
+  private final Storage<MessageSignal> signalStorage;
 
-  public CallAnsweredRule(@NonNull Context context, @NonNull ContactBook contactBook,
-      @NonNull @Update Command<String> update, @NonNull @Erase Command<Boolean> erase,
-      @NonNull Storage<MessageSignal> signalStorage) {
-    this.context = context;
+  public CallAnsweredRule(@NonNull ContactBook contactBook, @NonNull @Update Command<String> update,
+      @NonNull @Erase Command<Boolean> erase, @NonNull Storage<MessageSignal> signalStorage) {
     this.contactBook = contactBook;
     this.update = update;
     this.erase = erase;
     this.signalStorage = signalStorage;
   }
 
-  @Override public boolean shouldFollow(@NonNull MessageSignal item) {
+  @Override public boolean shouldApply(@NonNull MessageSignal item) {
     return item.type().equals(Signals.CALL_ANSWERED);
   }
 
-  @Override public void follow(@NonNull MessageSignal item) {
+  @Override public void apply(@NonNull MessageSignal item) {
 
   }
 }

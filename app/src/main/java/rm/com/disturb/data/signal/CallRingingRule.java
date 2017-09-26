@@ -17,10 +17,10 @@ import rm.com.disturb.utils.Permissions;
 
 public final class CallRingingRule implements Rule<MessageSignal> {
 
-  private final @NonNull Context context;
-  private final @NonNull Storage<MessageSignal> signalStorage;
-  private final @NonNull ContactBook contactBook;
-  private final @NonNull Command<String> notify;
+  private final Context context;
+  private final Storage<MessageSignal> signalStorage;
+  private final ContactBook contactBook;
+  private final Command<String> notify;
 
   public CallRingingRule(@NonNull Context context, @NonNull Storage<MessageSignal> signalStorage,
       @NonNull ContactBook contactBook, @NonNull @Notify Command<String> notify) {
@@ -30,11 +30,11 @@ public final class CallRingingRule implements Rule<MessageSignal> {
     this.notify = notify;
   }
 
-  @Override public boolean shouldFollow(@NonNull MessageSignal item) {
+  @Override public boolean shouldApply(@NonNull MessageSignal item) {
     return item.type().equals(Signals.CALL_RINGING);
   }
 
-  @Override public void follow(@NonNull MessageSignal item) {
+  @Override public void apply(@NonNull MessageSignal item) {
     final String number = item.key();
 
     if (Permissions.isReadContactsPermissionGranted(context)) {
@@ -47,7 +47,7 @@ public final class CallRingingRule implements Rule<MessageSignal> {
   private void notifyCall(@NonNull String from) {
     final String message = Formats.callOf(from);
 
-    notify.send(TelegramParams.ofMessage(message)).forget();
+    notify.send(TelegramParams.ofMessage(message)).silently();
   }
 
   private void notifyWithContactName(@NonNull final String number) {

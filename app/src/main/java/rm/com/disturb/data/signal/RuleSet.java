@@ -7,9 +7,7 @@ import java.util.List;
  * Created by alex
  */
 
-public interface RuleSet<T> {
+public interface RuleSet<T> extends Rule<T> {
   @NonNull List<Rule<T>> rules();
-
-  void consume(@NonNull T nextItem);
 }
 

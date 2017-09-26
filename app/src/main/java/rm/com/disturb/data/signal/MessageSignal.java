@@ -4,9 +4,9 @@ import android.support.annotation.NonNull;
 
 public final class MessageSignal implements Signal<String> {
 
-  private final @NonNull String type;
-  private final @NonNull String data;
-  private final @NonNull String key;
+  private final String type;
+  private final String data;
+  private final String key;
   private final long time;
 
   private MessageSignal(@NonNull Builder builder) {

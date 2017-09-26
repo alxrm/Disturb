@@ -23,8 +23,7 @@ public final class SmsReceiver extends BroadcastReceiver {
 
     ((DisturbApplication) context.getApplicationContext()).injector().inject(this);
 
-    // slight performance dip here, but it helps readability
-    signalRuleSet.consume(new MessageSignal.Builder() //
+    signalRuleSet.apply(new MessageSignal.Builder() //
         .data(Sms.textOf(intent)) //
         .key(Sms.numberOf(intent)) //
         .type(Signals.SMS_RECEIVED) //

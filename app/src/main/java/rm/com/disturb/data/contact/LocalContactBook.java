@@ -18,8 +18,8 @@ import static android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME;
 public final class LocalContactBook implements ContactBook {
   private static final String EMPTY_NAME = "";
 
-  private final @NonNull ContentResolver contentResolver;
-  private final @NonNull PendingResult<String> result;
+  private final ContentResolver contentResolver;
+  private final PendingResult<String> result;
 
   public LocalContactBook(@NonNull ExecutorService executor,
       @NonNull ContentResolver contentResolver) {

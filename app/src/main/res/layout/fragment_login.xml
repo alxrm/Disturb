@@ -15,6 +15,7 @@
       android:paddingRight="24dp"
       android:paddingTop="64dp"
       android:paddingBottom="64dp"
+      android:focusableInTouchMode="true"
       >
 
     <ImageView

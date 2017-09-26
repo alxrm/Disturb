@@ -16,12 +16,20 @@ public final class SignalRuleSet implements RuleSet<MessageSignal> {
     return rules;
   }
 
-  @Override public void consume(@NonNull MessageSignal nextItem) {
+  @Override public boolean shouldApply(@NonNull MessageSignal item) {
+    return !item.type().equals(Signals.EMPTY);
+  }
+
+  @Override public void apply(@NonNull MessageSignal nextItem) {
+    if (!shouldApply(nextItem)) {
+      return;
+    }
+
     for (int i = 0, size = rules.size(); i < size; i++) {
       final Rule<MessageSignal> currentRule = rules.get(i);
 
-      if (currentRule.shouldFollow(nextItem)) {
-        currentRule.follow(nextItem);
+      if (currentRule.shouldApply(nextItem)) {
+        currentRule.apply(nextItem);
       }
     }
   }

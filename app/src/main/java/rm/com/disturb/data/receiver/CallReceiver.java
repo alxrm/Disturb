@@ -37,7 +37,7 @@ public final class CallReceiver extends BroadcastReceiver {
       return;
     }
 
-    signalRuleSet.consume(new MessageSignal.Builder() //
+    signalRuleSet.apply(new MessageSignal.Builder() //
         .key(number) //
         .type(Signals.CALL_RINGING) //
         .build());

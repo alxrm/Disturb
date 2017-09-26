@@ -13,10 +13,10 @@ import rm.com.disturb.data.telegram.TelegramApi;
  */
 
 public abstract class TelegramCommand<T> implements Command<T> {
-  final @NonNull ExecutorService executor;
-  final @NonNull Handler mainThreadHandler;
-  final @NonNull TelegramApi api;
-  final @NonNull PendingResult<T> result;
+  final ExecutorService executor;
+  final Handler mainThreadHandler;
+  final TelegramApi api;
+  final PendingResult<T> result;
 
   public TelegramCommand(@NonNull ExecutorService executor, @NonNull Handler mainThreadHandler,
       @NonNull TelegramApi api) {

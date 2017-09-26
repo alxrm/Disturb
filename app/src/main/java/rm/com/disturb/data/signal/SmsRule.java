@@ -15,9 +15,9 @@ import rm.com.disturb.utils.Permissions;
 
 public final class SmsRule implements Rule<MessageSignal> {
 
-  private final @NonNull ContactBook contactBook;
-  private final @NonNull Context context;
-  private final @NonNull Command<String> notify;
+  private final ContactBook contactBook;
+  private final Context context;
+  private final Command<String> notify;
 
   public SmsRule(@NonNull ContactBook contactBook, @NonNull Context context,
       @NonNull Command<String> notify) {
@@ -26,11 +26,11 @@ public final class SmsRule implements Rule<MessageSignal> {
     this.notify = notify;
   }
 
-  @Override public boolean shouldFollow(@NonNull MessageSignal item) {
+  @Override public boolean shouldApply(@NonNull MessageSignal item) {
     return item.type().equals(Signals.SMS_RECEIVED);
   }
 
-  @Override public void follow(@NonNull MessageSignal item) {
+  @Override public void apply(@NonNull MessageSignal item) {
     final String number = item.key();
     final String messageText = item.data();
 
@@ -42,7 +42,7 @@ public final class SmsRule implements Rule<MessageSignal> {
   }
 
   private void notifySms(@NonNull String from, @NonNull String text) {
-    notify.send(TelegramParams.ofMessage(Formats.smsOf(from, text))).forget();
+    notify.send(TelegramParams.ofMessage(Formats.smsOf(from, text))).silently();
   }
 
   private void notifyWithContactName(@NonNull final String number,

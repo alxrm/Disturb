@@ -36,7 +36,7 @@ public final class PendingResult<T> {
     });
   }
 
-  public void forget() {
+  public void silently() {
     whenReady(null);
   }
 

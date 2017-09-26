@@ -14,7 +14,7 @@ import rm.com.disturb.utils.Lists.Accumulator;
  */
 
 public final class PaperSignalStorage implements Storage<MessageSignal> {
-  private final @NonNull Book database;
+  private final Book database;
 
   public PaperSignalStorage(@NonNull Book database) {
     this.database = database;

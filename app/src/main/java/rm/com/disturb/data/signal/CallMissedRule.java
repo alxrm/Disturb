@@ -13,10 +13,10 @@ import rm.com.disturb.inject.qualifier.Update;
 
 public final class CallMissedRule implements Rule<MessageSignal> {
 
-  private final @NonNull Context context;
-  private final @NonNull ContactBook contactBook;
-  private final @NonNull Command<String> update;
-  private final @NonNull Storage<MessageSignal> signalStorage;
+  private final Context context;
+  private final ContactBook contactBook;
+  private final Command<String> update;
+  private final Storage<MessageSignal> signalStorage;
 
   public CallMissedRule(@NonNull Context context, @NonNull ContactBook contactBook,
       @NonNull @Update Command<String> update, @NonNull Storage<MessageSignal> signalStorage) {
@@ -26,11 +26,11 @@ public final class CallMissedRule implements Rule<MessageSignal> {
     this.signalStorage = signalStorage;
   }
 
-  @Override public boolean shouldFollow(@NonNull MessageSignal item) {
+  @Override public boolean shouldApply(@NonNull MessageSignal item) {
     return item.type().equals(Signals.CALL_MISSED);
   }
 
-  @Override public void follow(@NonNull MessageSignal item) {
+  @Override public void apply(@NonNull MessageSignal item) {
 
   }
 }
