@@ -2,54 +2,78 @@ package rm.com.disturb.data.signal;
 
 import android.support.annotation.NonNull;
 
-public final class MessageSignal implements Signal<String> {
+public final class MessageSignal {
 
   private final String type;
   private final String data;
-  private final String key;
+  private final String phone;
   private final long time;
+
+  private final String sender;
+  private final String remoteKey;
 
   private MessageSignal(@NonNull Builder builder) {
     this.type = builder.type;
     this.data = builder.data;
     this.time = builder.time;
-    this.key = builder.key;
+    this.phone = builder.phone;
+    this.remoteKey = builder.remoteKey;
+    this.sender = builder.sender;
   }
 
-  @NonNull @Override public String type() {
+  @NonNull public String type() {
     return type;
   }
 
-  @NonNull @Override public String data() {
+  @NonNull public String data() {
     return data;
   }
 
-  @Override public long time() {
+  public long time() {
     return time;
   }
 
-  @NonNull @Override public String key() {
-    return key;
+  @NonNull public String key() {
+    return phone;
+  }
+
+  @NonNull public String remoteKey() {
+    return remoteKey;
+  }
+
+  @NonNull public String sender() {
+    return sender;
+  }
+
+  @NonNull public Builder newBuilder() {
+    return new Builder(this);
   }
 
   public static final class Builder {
-    String type;
-    String data;
-    String key;
-    long time;
+    private String type;
+    private String data;
+    private String phone;
+    private long time;
+
+    private String remoteKey;
+    private String sender;
 
     public Builder() {
       type = Signals.EMPTY;
       data = Signals.EMPTY;
-      key = Signals.EMPTY;
+      phone = Signals.EMPTY;
+      remoteKey = Signals.EMPTY;
+      sender = Signals.EMPTY;
       time = System.nanoTime();
     }
 
     Builder(@NonNull MessageSignal current) {
       type = current.type;
       data = current.data;
-      key = current.key;
+      phone = current.phone;
       time = current.time;
+      remoteKey = current.remoteKey;
+      sender = current.sender;
     }
 
     @NonNull public Builder type(@NonNull String type) {
@@ -62,13 +86,23 @@ public final class MessageSignal implements Signal<String> {
       return this;
     }
 
-    @NonNull public Builder key(@NonNull String key) {
-      this.key = key;
+    @NonNull public Builder phone(@NonNull String key) {
+      this.phone = key;
       return this;
     }
 
     @NonNull public Builder time(long time) {
       this.time = time;
+      return this;
+    }
+
+    @NonNull public Builder remoteKey(@NonNull String remoteKey) {
+      this.remoteKey = remoteKey;
+      return this;
+    }
+
+    @NonNull public Builder sender(@NonNull String sender) {
+      this.sender = sender;
       return this;
     }
 

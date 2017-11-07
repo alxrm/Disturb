@@ -37,7 +37,7 @@ public abstract class TelegramCommand<T> implements Command<T> {
 
   @NonNull abstract T defaultResult();
 
-  @NonNull final Callable<T> asCallable(@NonNull final TelegramParams params) {
+  @NonNull private Callable<T> asCallable(@NonNull final TelegramParams params) {
     return new Callable<T>() {
       @Override public T call() throws Exception {
         return sendBlocking(params);

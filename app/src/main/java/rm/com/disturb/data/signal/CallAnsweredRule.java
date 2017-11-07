@@ -12,6 +12,7 @@ import rm.com.disturb.inject.qualifier.Update;
  */
 
 public final class CallAnsweredRule implements Rule<MessageSignal> {
+
   private final ContactBook contactBook;
   private final Command<String> update;
   private final Command<Boolean> erase;

@@ -31,6 +31,5 @@ public final class CallMissedRule implements Rule<MessageSignal> {
   }
 
   @Override public void apply(@NonNull MessageSignal item) {
-
   }
 }

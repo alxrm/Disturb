@@ -28,9 +28,22 @@ public final class Formats {
     return String.format(Locale.getDefault(), "%s\n%s", boldOf(from), text);
   }
 
-  @NonNull public static String callOf(@NonNull String from) {
+  @NonNull public static String callRingingOf(@NonNull String from) {
     return String.format(Locale.getDefault(), "%s is calling...", boldOf(from));
   }
+
+  @NonNull public static String callMissedOf(@NonNull String from) {
+    return String.format(Locale.getDefault(), "Call from %s is missed", boldOf(from));
+  }
+
+  @NonNull public static String callFinishedOf(@NonNull String from) {
+    return String.format(Locale.getDefault(), "Call from %s is finished", boldOf(from));
+  }
+
+  @NonNull public static String callAnsweredOf(@NonNull String from) {
+    return String.format(Locale.getDefault(), "Answered to %s", boldOf(from));
+  }
+
 
   @NonNull public static String contactNameOf(@NonNull String name, @NonNull String phone) {
     return name.isEmpty() ? phone : (name + ", " + phone);

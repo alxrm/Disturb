@@ -44,16 +44,20 @@ public final class CallRingingRule implements Rule<MessageSignal> {
     }
   }
 
-  private void notifyCall(@NonNull String from) {
-    final String message = Formats.callOf(from);
-
-    notify.send(TelegramParams.ofMessage(message)).silently();
-  }
-
   private void notifyWithContactName(@NonNull final String number) {
     contactBook.findName(number).whenReady(new Reply<String>() {
       @Override public void ready(@NonNull String contactName) {
         notifyCall(Formats.contactNameOf(contactName, number));
+      }
+    });
+  }
+
+  private void notifyCall(@NonNull String from) {
+    final String message = Formats.callRingingOf(from);
+
+    notify.send(TelegramParams.ofMessage(message)).whenReady(new Reply<String>() {
+      @Override public void ready(@NonNull String result) {
+
       }
     });
   }
