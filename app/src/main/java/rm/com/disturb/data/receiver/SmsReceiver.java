@@ -25,7 +25,7 @@ public final class SmsReceiver extends BroadcastReceiver {
 
     signalRuleSet.apply(new MessageSignal.Builder() //
         .data(Sms.textOf(intent)) //
-        .key(Sms.numberOf(intent)) //
+        .phone(Sms.numberOf(intent)) //
         .type(Signals.SMS_RECEIVED) //
         .build());
   }
