@@ -38,26 +38,30 @@ public final class CallRingingRule implements Rule<MessageSignal> {
     final String number = item.key();
 
     if (Permissions.isReadContactsPermissionGranted(context)) {
-      notifyWithContactName(number);
+      notifyWithContactName(number, item);
     } else {
-      notifyCall(number);
+      notifyCall(number, item);
     }
   }
 
-  private void notifyWithContactName(@NonNull final String number) {
+  private void notifyWithContactName(@NonNull final String number,
+      @NonNull final MessageSignal item) {
     contactBook.findName(number).whenReady(new Reply<String>() {
       @Override public void ready(@NonNull String contactName) {
-        notifyCall(Formats.contactNameOf(contactName, number));
+        notifyCall(Formats.contactNameOf(contactName, number), item);
       }
     });
   }
 
-  private void notifyCall(@NonNull String from) {
+  private void notifyCall(@NonNull final String from, @NonNull final MessageSignal item) {
     final String message = Formats.callRingingOf(from);
 
     notify.send(TelegramParams.ofMessage(message)).whenReady(new Reply<String>() {
       @Override public void ready(@NonNull String result) {
+        final MessageSignal consistentSignal =
+            item.newBuilder().remoteKey(result).sender(from).build();
 
+        signalStorage.put(item.key(), consistentSignal);
       }
     });
   }
