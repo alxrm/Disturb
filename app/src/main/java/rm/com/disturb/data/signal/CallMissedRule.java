@@ -1,11 +1,11 @@
 package rm.com.disturb.data.signal;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
-import rm.com.disturb.data.contact.ContactBook;
 import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.data.telegram.command.TelegramParams;
 import rm.com.disturb.inject.qualifier.Update;
+import rm.com.disturb.utils.Formats;
 
 /**
  * Created by alex
@@ -13,15 +13,11 @@ import rm.com.disturb.inject.qualifier.Update;
 
 public final class CallMissedRule implements Rule<MessageSignal> {
 
-  private final Context context;
-  private final ContactBook contactBook;
   private final Command<String> update;
   private final Storage<MessageSignal> signalStorage;
 
-  public CallMissedRule(@NonNull Context context, @NonNull ContactBook contactBook,
-      @NonNull @Update Command<String> update, @NonNull Storage<MessageSignal> signalStorage) {
-    this.context = context;
-    this.contactBook = contactBook;
+  public CallMissedRule(@NonNull @Update Command<String> update,
+      @NonNull Storage<MessageSignal> signalStorage) {
     this.update = update;
     this.signalStorage = signalStorage;
   }
@@ -30,6 +26,19 @@ public final class CallMissedRule implements Rule<MessageSignal> {
     return item.type().equals(Signals.CALL_MISSED);
   }
 
-  @Override public void apply(@NonNull MessageSignal item) {
+  @Override public void apply(@NonNull final MessageSignal item) {
+    final MessageSignal signal = signalStorage.get(item.key());
+
+    if (signal.key().equals(Signals.EMPTY) && !signal.type().equals(Signals.CALL_RINGING)) {
+      return;
+    }
+
+    signalStorage.delete(item.key());
+
+    final TelegramParams params = new TelegramParams.Builder().messageId(signal.remoteKey())
+        .text(Formats.callMissedOf(signal.sender()))
+        .build();
+
+    update.send(params).completeSilently();
   }
 }

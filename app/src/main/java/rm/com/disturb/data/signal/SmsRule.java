@@ -42,7 +42,7 @@ public final class SmsRule implements Rule<MessageSignal> {
   }
 
   private void notifySms(@NonNull String from, @NonNull String text) {
-    notify.send(TelegramParams.ofMessage(Formats.smsOf(from, text))).silently();
+    notify.send(TelegramParams.ofMessage(Formats.smsOf(from, text))).completeSilently();
   }
 
   private void notifyWithContactName(@NonNull final String number,

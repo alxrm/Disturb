@@ -99,7 +99,7 @@ public final class NotifyFragment extends BaseFragment
       return;
     }
 
-    notify.send(TelegramParams.ofMessage(messageTestNotification)).silently();
+    notify.send(TelegramParams.ofMessage(messageTestNotification)).completeSilently();
   }
 
   @OnClick(R.id.notify_chat_id_change) void onChangeChatId() {
