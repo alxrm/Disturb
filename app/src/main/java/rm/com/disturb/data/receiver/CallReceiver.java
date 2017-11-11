@@ -10,6 +10,7 @@ import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.data.signal.MessageSignal;
 import rm.com.disturb.data.signal.RuleSet;
 import rm.com.disturb.data.signal.Signals;
+import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.utils.Intents;
 
 import static android.telephony.TelephonyManager.EXTRA_INCOMING_NUMBER;
@@ -22,6 +23,7 @@ import static android.telephony.TelephonyManager.EXTRA_STATE_IDLE;
 public final class CallReceiver extends BroadcastReceiver {
 
   @Inject RuleSet<MessageSignal> signalRuleSet;
+  @Inject Storage<MessageSignal> signalStorage;
 
   @Override public void onReceive(Context context, Intent intent) {
     if (!Intents.matches(intent, TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
@@ -39,8 +41,13 @@ public final class CallReceiver extends BroadcastReceiver {
 
     signalRuleSet.apply(new MessageSignal.Builder() //
         .phone(number) //
-        .type(Signals.CALL_RINGING) //
+        .type(nextSignalTypeForState(signalStorage.get(number), state)) //
         .build());
+  }
+
+  @NonNull
+  private String nextSignalTypeForState(@NonNull MessageSignal current, @NonNull String state) {
+    return Signals.CALL_RINGING;
   }
 
   private boolean isRinging(@NonNull String state) {
