@@ -64,8 +64,11 @@ public final class RulesModule {
   }
 
   @Provides @Singleton
-  static RuleSet<MessageSignal> provideRuleSet(@NonNull CallRingingRule callRule,
-      @NonNull SmsRule smsRule) {
-    return new SignalRuleSet(Arrays.asList(callRule, smsRule));
+  static RuleSet<MessageSignal> provideRuleSet(@NonNull CallRingingRule callRingingRule,
+      @NonNull CallMissedRule callMissedRule, @NonNull CallFinishedRule callFinishedRule,
+      @NonNull CallAnsweredRule callAnsweredRule, @NonNull SmsRule smsRule) {
+    return new SignalRuleSet(
+        Arrays.asList(callRingingRule, callMissedRule, callFinishedRule, callAnsweredRule,
+            smsRule));
   }
 }

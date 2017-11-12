@@ -36,13 +36,16 @@ public final class CallAnsweredRule implements Rule<MessageSignal> {
       return;
     }
 
-    signalStorage.delete(item.key());
-
     final TelegramParams params = new TelegramParams.Builder().messageId(signal.remoteKey())
         .text(Formats.callAnsweredOf(signal.sender()))
         .build();
 
+    signalStorage.put(signal.key(), signal.newBuilder().type(Signals.CALL_ANSWERED).build());
+
     // TODO later implement deletion by preference
-    update.send(params).completeSilently();
+    //update.send(params).whenReady(new Reply<String>() {
+    //  @Override public void ready(@NonNull String result) {
+    //  }
+    //});
   }
 }

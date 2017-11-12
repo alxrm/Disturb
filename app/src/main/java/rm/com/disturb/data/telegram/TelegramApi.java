@@ -22,6 +22,6 @@ public interface TelegramApi {
   @GET("deleteMessage") //
   Call<TelegramResponse> deleteMessage(@QueryMap Map<String, String> params);
 
-  @GET("editMessageText") //
+  @GET("editMessageText?parse_mode=Markdown") //
   Call<MessageResponse> editMessage(@QueryMap Map<String, String> params);
 }

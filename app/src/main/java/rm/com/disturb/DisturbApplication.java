@@ -4,6 +4,7 @@ import android.app.Application;
 import rm.com.disturb.inject.DaggerDisturbComponent;
 import rm.com.disturb.inject.DisturbComponent;
 import rm.com.disturb.inject.DisturbModule;
+import rm.com.disturb.inject.RulesModule;
 
 /**
  * Created by alex
@@ -15,7 +16,10 @@ public final class DisturbApplication extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
-    component = DaggerDisturbComponent.builder().disturbModule(new DisturbModule(this)).build();
+    component = DaggerDisturbComponent.builder()
+        .disturbModule(new DisturbModule(this))
+        .rulesModule(new RulesModule(this))
+        .build();
   }
 
   public DisturbComponent injector() {

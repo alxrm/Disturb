@@ -15,7 +15,8 @@ import rm.com.disturb.ui.PasswordDialogFragment;
 
 @Singleton //
 @Component(modules = {
-    DisturbModule.class
+    DisturbModule.class,
+    RulesModule.class
 }) //
 public interface DisturbComponent {
   void inject(MainActivity activity);
