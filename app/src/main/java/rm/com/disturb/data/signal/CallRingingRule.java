@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.contact.ContactBook;
 import rm.com.disturb.data.storage.Storage;
-import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
 import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.utils.Formats;
@@ -20,10 +20,10 @@ public final class CallRingingRule implements Rule<MessageSignal> {
   private final Context context;
   private final Storage<MessageSignal> signalStorage;
   private final ContactBook contactBook;
-  private final Command<String> notify;
+  private final TelegramCommand<String> notify;
 
   public CallRingingRule(@NonNull Context context, @NonNull Storage<MessageSignal> signalStorage,
-      @NonNull ContactBook contactBook, @NonNull @Notify Command<String> notify) {
+      @NonNull ContactBook contactBook, @NonNull @Notify TelegramCommand<String> notify) {
     this.context = context.getApplicationContext();
     this.signalStorage = signalStorage;
     this.contactBook = contactBook;

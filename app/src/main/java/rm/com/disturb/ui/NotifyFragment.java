@@ -19,7 +19,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import rm.com.disturb.R;
 import rm.com.disturb.data.storage.StringPreference;
-import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
 import rm.com.disturb.inject.qualifier.ChatId;
 import rm.com.disturb.inject.qualifier.Notify;
@@ -43,7 +43,7 @@ public final class NotifyFragment extends BaseFragment
   @BindView(R.id.notify_description_text) TextView description;
   @BindView(R.id.notify_chat_id_text) TextView chatIdText;
 
-  @Inject @Notify Command<String> notify;
+  @Inject @Notify TelegramCommand<String> notify;
   @Inject @ChatId StringPreference chatIdPreference;
   @Inject @Password StringPreference passwordPreference;
   @Inject @ChatId Provider<String> chatId;

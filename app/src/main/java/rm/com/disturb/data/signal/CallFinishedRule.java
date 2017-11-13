@@ -2,7 +2,7 @@ package rm.com.disturb.data.signal;
 
 import android.support.annotation.NonNull;
 import rm.com.disturb.data.storage.Storage;
-import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
 import rm.com.disturb.inject.qualifier.Erase;
 import rm.com.disturb.inject.qualifier.Update;
@@ -14,12 +14,12 @@ import rm.com.disturb.utils.Formats;
 
 public final class CallFinishedRule implements Rule<MessageSignal> {
 
-  private final Command<String> update;
-  private final Command<Boolean> erase;
+  private final TelegramCommand<String> update;
+  private final TelegramCommand<Boolean> erase;
   private final Storage<MessageSignal> signalStorage;
 
-  public CallFinishedRule(@NonNull @Update Command<String> update,
-      @NonNull @Erase Command<Boolean> erase, @NonNull Storage<MessageSignal> signalStorage) {
+  public CallFinishedRule(@NonNull @Update TelegramCommand<String> update,
+      @NonNull @Erase TelegramCommand<Boolean> erase, @NonNull Storage<MessageSignal> signalStorage) {
     this.update = update;
     this.erase = erase;
     this.signalStorage = signalStorage;

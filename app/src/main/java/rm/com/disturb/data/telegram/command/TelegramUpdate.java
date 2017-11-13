@@ -20,7 +20,7 @@ import rm.com.disturb.inject.qualifier.ChatId;
  */
 
 @Singleton //
-public final class TelegramUpdate extends TelegramCommand<String> {
+public final class TelegramUpdate extends AbstractTelegramCommand<String> {
   private static final String EMPTY_MESSAGE_ID = "-1";
 
   private final Provider<String> chatId;
@@ -43,7 +43,7 @@ public final class TelegramUpdate extends TelegramCommand<String> {
       return EMPTY_MESSAGE_ID;
     }
 
-    return String.valueOf(body.message().messageId());
+    return String.valueOf(body.data().messageId());
   }
 
   @NonNull @Override String defaultResult() {
@@ -51,6 +51,6 @@ public final class TelegramUpdate extends TelegramCommand<String> {
   }
 
   private boolean isResponseBodyValid(@Nullable MessageResponse body) {
-    return body != null && body.isOk() && body.message() != null;
+    return body != null && body.isOk() && body.data() != null;
   }
 }

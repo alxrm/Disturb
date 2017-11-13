@@ -18,7 +18,7 @@ import rm.com.disturb.inject.qualifier.ChatId;
  */
 
 @Singleton //
-public final class TelegramErase extends TelegramCommand<Boolean> {
+public final class TelegramErase extends AbstractTelegramCommand<Boolean> {
   private final Provider<String> chatId;
 
   @Inject TelegramErase(@NonNull ExecutorService executor, @NonNull Handler mainThreadHandler,

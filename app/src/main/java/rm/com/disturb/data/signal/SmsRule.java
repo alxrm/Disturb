@@ -4,7 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.contact.ContactBook;
-import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
 import rm.com.disturb.utils.Formats;
 import rm.com.disturb.utils.Permissions;
@@ -17,10 +17,10 @@ public final class SmsRule implements Rule<MessageSignal> {
 
   private final ContactBook contactBook;
   private final Context context;
-  private final Command<String> notify;
+  private final TelegramCommand<String> notify;
 
   public SmsRule(@NonNull ContactBook contactBook, @NonNull Context context,
-      @NonNull Command<String> notify) {
+      @NonNull TelegramCommand<String> notify) {
     this.contactBook = contactBook;
     this.context = context;
     this.notify = notify;

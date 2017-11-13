@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import rm.com.disturb.R;
 import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.storage.StringPreference;
-import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
 import rm.com.disturb.inject.qualifier.Auth;
 import rm.com.disturb.inject.qualifier.ChatId;
@@ -30,7 +30,7 @@ public final class LoginFragment extends BaseFragment {
 
   @Inject @ChatId StringPreference chatIdPreference;
   @Inject @Password StringPreference passwordPreference;
-  @Inject @Auth Command<Boolean> auth;
+  @Inject @Auth TelegramCommand<Boolean> auth;
 
   private @Nullable ProgressDialog progressDialog;
   private @NonNull String chatId = "";

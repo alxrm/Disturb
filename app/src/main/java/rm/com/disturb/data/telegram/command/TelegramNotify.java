@@ -19,7 +19,7 @@ import rm.com.disturb.inject.qualifier.ChatId;
  */
 
 @Singleton //
-public final class TelegramNotify extends TelegramCommand<String> {
+public final class TelegramNotify extends AbstractTelegramCommand<String> {
   private static final String EMPTY_MESSAGE_ID = "-1";
 
   private final Provider<String> chatId;
@@ -40,7 +40,7 @@ public final class TelegramNotify extends TelegramCommand<String> {
       return EMPTY_MESSAGE_ID;
     }
 
-    return String.valueOf(body.message().messageId());
+    return String.valueOf(body.data().messageId());
   }
 
   @NonNull @Override String defaultResult() {

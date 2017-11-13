@@ -3,7 +3,10 @@ package rm.com.disturb.data.telegram;
 import java.util.Map;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
+import rm.com.disturb.data.telegram.response.ChatResponse;
+import rm.com.disturb.data.telegram.response.FileResponse;
 import rm.com.disturb.data.telegram.response.MessageResponse;
 import rm.com.disturb.data.telegram.response.TelegramResponse;
 
@@ -24,4 +27,10 @@ public interface TelegramApi {
 
   @GET("editMessageText?parse_mode=Markdown") //
   Call<MessageResponse> editMessage(@QueryMap Map<String, String> params);
+
+  @GET("getFile") //
+  Call<FileResponse> file(@Query("file_id") String fileId);
+
+  @GET("getChat") //
+  Call<ChatResponse> chat(@Query("chat_id") String chatId);
 }

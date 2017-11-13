@@ -16,7 +16,7 @@ import rm.com.disturb.data.telegram.response.MessageResponse;
  */
 
 @Singleton //
-public final class TelegramAuth extends TelegramCommand<Boolean> {
+public final class TelegramAuth extends AbstractTelegramCommand<Boolean> {
   private static final String MESSAGE_AUTH = "Authorized!";
 
   @Inject public TelegramAuth(@NonNull ExecutorService executor, @NonNull Handler mainThreadHandler,

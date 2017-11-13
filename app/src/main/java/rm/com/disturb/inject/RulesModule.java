@@ -16,7 +16,7 @@ import rm.com.disturb.data.signal.RuleSet;
 import rm.com.disturb.data.signal.SignalRuleSet;
 import rm.com.disturb.data.signal.SmsRule;
 import rm.com.disturb.data.storage.Storage;
-import rm.com.disturb.data.telegram.command.Command;
+import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.inject.qualifier.Erase;
 import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Update;
@@ -36,30 +36,32 @@ public final class RulesModule {
 
   @Provides @Singleton CallRingingRule provideCallRingingRule(
       @NonNull Storage<MessageSignal> signalStorage, @NonNull ContactBook contactBook,
-      @NonNull @Notify Command<String> notify) {
+      @NonNull @Notify TelegramCommand<String> notify) {
     return new CallRingingRule(application, signalStorage, contactBook, notify);
   }
 
   @Provides @Singleton
   static CallAnsweredRule provideCallAnsweredRule(@NonNull Storage<MessageSignal> signalStorage,
-      @NonNull @Update Command<String> update, @NonNull @Erase Command<Boolean> erase) {
+      @NonNull @Update TelegramCommand<String> update, @NonNull @Erase
+      TelegramCommand<Boolean> erase) {
     return new CallAnsweredRule(update, erase, signalStorage);
   }
 
   @Provides @Singleton
   static CallMissedRule provideCallMissedRule(@NonNull Storage<MessageSignal> signalStorage,
-      @NonNull @Update Command<String> update) {
+      @NonNull @Update TelegramCommand<String> update) {
     return new CallMissedRule(update, signalStorage);
   }
 
   @Provides @Singleton
   static CallFinishedRule provideCallFinishedRule(@NonNull Storage<MessageSignal> signalStorage,
-      @NonNull @Update Command<String> update, @NonNull @Erase Command<Boolean> erase) {
+      @NonNull @Update TelegramCommand<String> update, @NonNull @Erase
+      TelegramCommand<Boolean> erase) {
     return new CallFinishedRule(update, erase, signalStorage);
   }
 
   @Provides @Singleton SmsRule provideSmsRule(@NonNull ContactBook contactBook,
-      @NonNull @Notify Command<String> notify) {
+      @NonNull @Notify TelegramCommand<String> notify) {
     return new SmsRule(contactBook, application, notify);
   }
 
