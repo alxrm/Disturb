@@ -53,7 +53,7 @@ public final class LoginFragment extends BaseFragment {
   }
 
   @OnClick(R.id.login_save) void onSave() {
-    if (password.isEmpty() || chatId.isEmpty()) {
+    if (chatId.isEmpty()) {
       return;
     }
 

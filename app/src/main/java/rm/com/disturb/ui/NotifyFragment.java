@@ -103,6 +103,11 @@ public final class NotifyFragment extends BaseFragment
   }
 
   @OnClick(R.id.notify_chat_id_change) void onChangeChatId() {
+    if (passwordPreference.get().isEmpty()) {
+      onPasswordConfirmed();
+      return;
+    }
+
     PasswordDialogFragment.show(getFragmentManager(), this);
   }
 

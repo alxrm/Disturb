@@ -51,7 +51,7 @@ public final class CallReceiver extends BroadcastReceiver {
   private String nextSignalTypeForState(@NonNull MessageSignal current, @NonNull String state) {
     final String prevType = current.type();
 
-    if (prevType.equals(Signals.EMPTY) || state.equals(EXTRA_STATE_RINGING)) {
+    if (prevType.equals(Signals.EMPTY) && state.equals(EXTRA_STATE_RINGING)) {
       return Signals.CALL_RINGING;
     }
 
@@ -67,6 +67,6 @@ public final class CallReceiver extends BroadcastReceiver {
       return Signals.CALL_FINISHED;
     }
 
-    return Signals.CALL_RINGING;
+    return Signals.EMPTY;
   }
 }
