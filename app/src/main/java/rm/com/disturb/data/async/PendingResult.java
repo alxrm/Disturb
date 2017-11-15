@@ -26,6 +26,19 @@ public final class PendingResult<T> {
     defaultResult = builder.defaultResult;
   }
 
+  public <R> PendingResult<R> map(@NonNull R orElse,
+      @NonNull final Transform<T, R> transformer) {
+    return new PendingResult.Builder<>(orElse) //
+        .handler(handler) //
+        .executor(executor) //
+        .from(new Callable<R>() {
+          public R call() throws Exception {
+            return transformer.apply(PendingResult.this.from.call());
+          }
+        }) //
+        .build();
+  }
+
   public void whenReady(@Nullable final Reply<T> reply) {
     executor.submit(new Runnable() {
       @Override public void run() {

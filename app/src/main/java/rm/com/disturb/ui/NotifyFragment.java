@@ -128,7 +128,7 @@ public final class NotifyFragment extends BaseFragment
   }
 
   private void requestAllPermissions() {
-    if (Build.VERSION.SDK_INT < 23) {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
       return;
     }
 

@@ -7,17 +7,17 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import javax.inject.Inject;
-import javax.inject.Provider;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.R;
+import rm.com.disturb.data.storage.StringPreference;
 import rm.com.disturb.inject.qualifier.ChatId;
 import rm.com.disturb.inject.qualifier.Password;
 
 public final class MainActivity extends AppCompatActivity implements Navigation {
   static String KEY_FRAGMENT_SAVE = "KEY_FRAGMENT_SAVE";
 
-  @Inject @ChatId Provider<String> chatId;
-  @Inject @Password Provider<String> password;
+  @Inject @ChatId StringPreference chatId;
+  @Inject @Password StringPreference password;
 
   protected Fragment currentFragment;
 
@@ -66,6 +66,6 @@ public final class MainActivity extends AppCompatActivity implements Navigation 
   }
 
   private boolean areFieldsEmpty() {
-    return chatId.get().isEmpty() || password.get().isEmpty();
+    return !chatId.isSet() || !password.isSet();
   }
 }
