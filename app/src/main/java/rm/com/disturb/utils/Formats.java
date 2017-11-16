@@ -33,11 +33,11 @@ public final class Formats {
   }
 
   @NonNull public static String callMissedOf(@NonNull String from) {
-    return String.format(Locale.getDefault(), "Missed call from %s", boldOf(from));
+    return String.format(Locale.getDefault(), "Missed call: %s", boldOf(from));
   }
 
   @NonNull public static String callFinishedOf(@NonNull String from) {
-    return String.format(Locale.getDefault(), "Finished call from %s", boldOf(from));
+    return String.format(Locale.getDefault(), "Finished call: %s", boldOf(from));
   }
 
   @NonNull public static String contactNameOf(@NonNull String name, @NonNull String phone) {
