@@ -1,21 +1,26 @@
 package rm.com.disturb.utils;
 
 import android.support.annotation.NonNull;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by alex
  */
 
 public final class Formats {
-  private static final List<String> KEYWORDS =
+  private static final String WORDS_PATTERN = "[А-Яа-яA-Za-z0-9]{3,}";
+  private static final HashSet<String> KEYWORDS = new HashSet<>(
       Arrays.asList("код", "kod", "code", "пароль", "password", "parol", "ключ", "key", "kluch",
-          "klyuch", "klutch", "klyutch", "token", "токен");
+          "klyuch", "klutch", "klyutch", "token", "токен"));
 
   private Formats() {
+    throw new IllegalStateException("No instances");
   }
 
   @NonNull public static String smsOf(@NonNull String from, @NonNull String text) {
@@ -53,36 +58,33 @@ public final class Formats {
   }
 
   @NonNull private static String extractCodeFrom(@NonNull String text) {
-    final int startIndex = firstKeyWordIndex(text);
+    final List<String> words = asWords(text);
+    boolean keywordMet = false;
 
-    if (startIndex == -1) {
-      return "";
+    for (String word : words) {
+      if (KEYWORDS.contains(word)) {
+        keywordMet = true;
+        continue;
+      }
+
+      if (keywordMet && isNonOnlyLetterWord(word)) {
+        return word;
+      }
     }
 
-    final List<String> words = Lists.listOfArray(text.substring(startIndex).split("(\\s|,|\\.)"));
-
-    return Lists.first(words, "", new Lists.Predicate<String>() {
-      @Override public boolean test(String item) {
-        return isNonOnlyLetterWord(item);
-      }
-    });
+    return "";
   }
 
-  private static int firstKeyWordIndex(@NonNull String text) {
-    final String lowered = text.toLowerCase();
-    final List<Integer> indices = Lists.map(KEYWORDS, new Lists.Transformer<String, Integer>() {
-      @Override public Integer invoke(String item) {
-        return lowered.indexOf(item);
-      }
-    });
+  @NonNull private static List<String> asWords(@NonNull String text) {
+    final Pattern pattern = Pattern.compile(WORDS_PATTERN, Pattern.CASE_INSENSITIVE);
+    final List<String> words = new ArrayList<>(text.length() / 2);
+    final Matcher matcher = pattern.matcher(text);
 
-    Collections.sort(indices);
+    while (matcher.find()) {
+      words.add(matcher.group());
+    }
 
-    return Lists.first(indices, -1, new Lists.Predicate<Integer>() {
-      @Override public boolean test(Integer item) {
-        return item > -1;
-      }
-    });
+    return words;
   }
 
   private static boolean isNonOnlyLetterWord(@NonNull String word) {
