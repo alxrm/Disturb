@@ -18,8 +18,8 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rm.com.disturb.BuildConfig;
-import rm.com.disturb.data.contact.ContactBook;
-import rm.com.disturb.data.contact.LocalContactBook;
+import rm.com.disturb.data.resource.ContactResource;
+import rm.com.disturb.data.resource.Resource;
 import rm.com.disturb.data.signal.MessageSignal;
 import rm.com.disturb.data.storage.PaperSignalStorage;
 import rm.com.disturb.data.storage.Storage;
@@ -75,8 +75,9 @@ public final class DisturbModule {
     return pref.get();
   }
 
-  @Provides @Singleton ContactBook provideAsyncContactBook(@NonNull ExecutorService executor) {
-    return new LocalContactBook(executor, application.getContentResolver());
+  @Provides @Singleton Resource<String, String> provideContactResource(
+      @NonNull ExecutorService executor) {
+    return new ContactResource(executor);
   }
 
   @Provides @Singleton static OkHttpClient provideHttpClient() {

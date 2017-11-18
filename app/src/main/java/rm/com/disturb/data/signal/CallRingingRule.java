@@ -3,7 +3,7 @@ package rm.com.disturb.data.signal;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import rm.com.disturb.data.async.Reply;
-import rm.com.disturb.data.contact.ContactBook;
+import rm.com.disturb.data.resource.Resource;
 import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
@@ -19,14 +19,15 @@ public final class CallRingingRule implements Rule<MessageSignal> {
 
   private final Context context;
   private final Storage<MessageSignal> signalStorage;
-  private final ContactBook contactBook;
+  private final Resource<String, String> contactResource;
   private final TelegramCommand<String> notify;
 
   public CallRingingRule(@NonNull Context context, @NonNull Storage<MessageSignal> signalStorage,
-      @NonNull ContactBook contactBook, @NonNull @Notify TelegramCommand<String> notify) {
+      @NonNull Resource<String, String> contactResource,
+      @NonNull @Notify TelegramCommand<String> notify) {
     this.context = context.getApplicationContext();
     this.signalStorage = signalStorage;
-    this.contactBook = contactBook;
+    this.contactResource = contactResource;
     this.notify = notify;
   }
 
@@ -46,7 +47,7 @@ public final class CallRingingRule implements Rule<MessageSignal> {
 
   private void notifyWithContactName(@NonNull final String number,
       @NonNull final MessageSignal item) {
-    contactBook.findName(number).whenReady(new Reply<String>() {
+    contactResource.load(context, number).whenReady(new Reply<String>() {
       @Override public void ready(@NonNull String contactName) {
         notifyCall(Formats.contactNameOf(contactName, number), item);
       }

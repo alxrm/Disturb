@@ -41,7 +41,6 @@ public final class NotifyFragment extends BaseFragment
 
   @BindView(R.id.notify_test_send) ImageView testCall;
   @BindView(R.id.notify_description_text) TextView description;
-  @BindView(R.id.notify_chat_id_text) TextView chatIdText;
 
   @Inject @Notify TelegramCommand<String> notify;
   @Inject @ChatId StringPreference chatIdPreference;
@@ -61,9 +60,7 @@ public final class NotifyFragment extends BaseFragment
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     injector().inject(this);
-    toggleActionBar(true);
-
-    chatIdText.setText(getString(R.string.text_chat_id, chatId.get()));
+    attachToolbar();
 
     if (areAnyPermissionsGranted()) {
       indicateNotificationsAvailable();
@@ -101,15 +98,15 @@ public final class NotifyFragment extends BaseFragment
 
     notify.send(TelegramParams.ofMessage(messageTestNotification)).completeSilently();
   }
-
-  @OnClick(R.id.notify_chat_id_change) void onChangeChatId() {
-    if (passwordPreference.get().isEmpty()) {
-      onPasswordConfirmed();
-      return;
-    }
-
-    PasswordDialogFragment.show(getFragmentManager(), this);
-  }
+  // TODO We will need this later
+  //@OnClick(R.id.notify_chat_id_change) void onChangeChatId() {
+  //  if (passwordPreference.get().isEmpty()) {
+  //    onPasswordConfirmed();
+  //    return;
+  //  }
+  //
+  //  PasswordDialogFragment.show(getFragmentManager(), this);
+  //}
 
   private boolean areAnyPermissionsGranted() {
     return Permissions.isReadPhoneStatePermissionGranted(getActivity())

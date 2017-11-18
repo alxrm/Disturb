@@ -5,6 +5,9 @@
   <color name="color_accent">#1086D7</color>
   <color name="color_icon_activated">#1086D7</color>
 
+  <color name="color_text_primary">#FFFFFFFF</color>
+  <color name="color_text_secondary">#B3FFFFFF</color>
+
   <!-- Opaque values: http://stackoverflow.com/a/25170174/2270722
  100% — FF
  95% — F2

@@ -49,7 +49,6 @@ public final class LoginFragment extends BaseFragment {
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     injector().inject(this);
-    toggleActionBar(false);
   }
 
   @OnClick(R.id.login_save) void onSave() {

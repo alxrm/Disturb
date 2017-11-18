@@ -4,19 +4,30 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rm.com.disturb.DisturbApplication;
+import rm.com.disturb.R;
 import rm.com.disturb.inject.DisturbComponent;
+import rm.com.disturb.utils.Preconditions;
 
 /**
  * Created by alex
  */
 
 public class BaseFragment extends Fragment {
+
+  @BindView(R.id.toolbar) @Nullable Toolbar toolbar;
+  @BindView(R.id.toolbar_avatar) @Nullable ImageView avatar;
+  @BindView(R.id.toolbar_title) @Nullable TextView title;
+  @BindView(R.id.toolbar_subtitle) @Nullable TextView subtitle;
+
   protected Unbinder unbinder;
 
   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -53,17 +64,16 @@ public class BaseFragment extends Fragment {
     return ((DisturbApplication) getActivity().getApplication()).injector();
   }
 
-  final protected void toggleActionBar(boolean show) {
-    final ActionBar actionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+  @NonNull final protected AppCompatActivity parent() {
+    final AppCompatActivity activity = (AppCompatActivity) getActivity();
 
-    if (actionBar == null) {
-      return;
-    }
+    Preconditions.checkNotNull(activity, "Parent activity was null, you are doing something wrong");
 
-    if (show) {
-      actionBar.show();
-    } else {
-      actionBar.hide();
-    }
+    return activity;
+  }
+
+  final protected void attachToolbar() {
+    Preconditions.checkNotNull(toolbar, "Toolbar was null, please add <Toolbar/> in your layout");
+    parent().setSupportActionBar(toolbar);
   }
 }

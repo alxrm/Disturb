@@ -1,6 +1,7 @@
-package rm.com.disturb.data.contact;
+package rm.com.disturb.data.resource;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -15,23 +16,21 @@ import static android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME;
 /**
  * Created by alex
  */
-public final class LocalContactBook implements ContactBook {
+public final class ContactResource implements Resource<String, String> {
   private static final String EMPTY_NAME = "";
 
-  private final ContentResolver contentResolver;
   private final PendingResult<String> result;
 
-  public LocalContactBook(@NonNull ExecutorService executor,
-      @NonNull ContentResolver contentResolver) {
-    this.contentResolver = contentResolver;
+  public ContactResource(@NonNull ExecutorService executor) {
     this.result = new PendingResult.Builder<>(EMPTY_NAME).executor(executor).build();
   }
 
-  @NonNull @Override public PendingResult<String> findName(@NonNull String phoneNumber) {
-    return result.newBuilder().from(findNameCallable(phoneNumber)).build();
+  @Override public PendingResult<String> load(@NonNull Context context, @NonNull String phone) {
+    return result.newBuilder().from(findNameCallable(context.getContentResolver(), phone)).build();
   }
 
-  @NonNull private String findNameBlocking(@NonNull String phoneNumber) {
+  @NonNull private String findNameBlocking(@NonNull ContentResolver contentResolver,
+      @NonNull String phoneNumber) {
     final Uri uri = Uri.withAppendedPath(CONTENT_FILTER_URI, Uri.encode(phoneNumber));
     final Cursor contactLookup = contentResolver.query(uri, new String[] {
         _ID, DISPLAY_NAME
@@ -56,10 +55,11 @@ public final class LocalContactBook implements ContactBook {
     return EMPTY_NAME;
   }
 
-  @NonNull private Callable<String> findNameCallable(@NonNull final String phoneNumber) {
+  @NonNull private Callable<String> findNameCallable(@NonNull final ContentResolver contentResolver,
+      @NonNull final String phoneNumber) {
     return new Callable<String>() {
       @Override public String call() throws Exception {
-        return findNameBlocking(phoneNumber);
+        return findNameBlocking(contentResolver, phoneNumber);
       }
     };
   }

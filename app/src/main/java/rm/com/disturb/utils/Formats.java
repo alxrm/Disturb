@@ -14,7 +14,10 @@ import java.util.regex.Pattern;
  */
 
 public final class Formats {
+
+  // weird thing is done on purpose, bc \w doesn't work with Russian
   private static final String WORDS_PATTERN = "[А-Яа-яA-Za-z0-9]{3,}";
+
   private static final HashSet<String> KEYWORDS = new HashSet<>(
       Arrays.asList("код", "kod", "code", "пароль", "password", "parol", "ключ", "key", "kluch",
           "klyuch", "klutch", "klyutch", "token", "токен"));

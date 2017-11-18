@@ -6,7 +6,7 @@ import dagger.Module;
 import dagger.Provides;
 import java.util.Arrays;
 import javax.inject.Singleton;
-import rm.com.disturb.data.contact.ContactBook;
+import rm.com.disturb.data.resource.Resource;
 import rm.com.disturb.data.signal.CallAnsweredRule;
 import rm.com.disturb.data.signal.CallFinishedRule;
 import rm.com.disturb.data.signal.CallMissedRule;
@@ -35,15 +35,16 @@ public final class RulesModule {
   }
 
   @Provides @Singleton CallRingingRule provideCallRingingRule(
-      @NonNull Storage<MessageSignal> signalStorage, @NonNull ContactBook contactBook,
+      @NonNull Storage<MessageSignal> signalStorage,
+      @NonNull Resource<String, String> contactResource,
       @NonNull @Notify TelegramCommand<String> notify) {
-    return new CallRingingRule(application, signalStorage, contactBook, notify);
+    return new CallRingingRule(application, signalStorage, contactResource, notify);
   }
 
   @Provides @Singleton
   static CallAnsweredRule provideCallAnsweredRule(@NonNull Storage<MessageSignal> signalStorage,
-      @NonNull @Update TelegramCommand<String> update, @NonNull @Erase
-      TelegramCommand<Boolean> erase) {
+      @NonNull @Update TelegramCommand<String> update,
+      @NonNull @Erase TelegramCommand<Boolean> erase) {
     return new CallAnsweredRule(update, erase, signalStorage);
   }
 
@@ -55,14 +56,14 @@ public final class RulesModule {
 
   @Provides @Singleton
   static CallFinishedRule provideCallFinishedRule(@NonNull Storage<MessageSignal> signalStorage,
-      @NonNull @Update TelegramCommand<String> update, @NonNull @Erase
-      TelegramCommand<Boolean> erase) {
+      @NonNull @Update TelegramCommand<String> update,
+      @NonNull @Erase TelegramCommand<Boolean> erase) {
     return new CallFinishedRule(update, erase, signalStorage);
   }
 
-  @Provides @Singleton SmsRule provideSmsRule(@NonNull ContactBook contactBook,
+  @Provides @Singleton SmsRule provideSmsRule(@NonNull Resource<String, String> contactResource,
       @NonNull @Notify TelegramCommand<String> notify) {
-    return new SmsRule(contactBook, application, notify);
+    return new SmsRule(contactResource, application, notify);
   }
 
   @Provides @Singleton
