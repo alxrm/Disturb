@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -21,8 +22,11 @@ public final class ContactResource implements Resource<String, String> {
 
   private final PendingResult<String> result;
 
-  public ContactResource(@NonNull ExecutorService executor) {
-    this.result = new PendingResult.Builder<>(EMPTY_NAME).executor(executor).build();
+  public ContactResource(@NonNull ExecutorService executor, @NonNull Handler handler) {
+    this.result = new PendingResult.Builder<>(EMPTY_NAME) //
+        .executor(executor) //
+        .handler(handler) //
+        .build();
   }
 
   @Override public PendingResult<String> load(@NonNull Context context, @NonNull String phone) {

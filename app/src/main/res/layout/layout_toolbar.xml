@@ -26,20 +26,21 @@
 
       <ImageView
           android:id="@+id/toolbar_avatar"
-          android:layout_width="32dp"
-          android:layout_height="32dp"
-          android:background="@android:color/white"
+          android:layout_width="38dp"
+          android:layout_height="38dp"
+          android:layout_marginEnd="10dp"
+          android:layout_marginRight="10dp"
+          android:src="@drawable/white_circle"
           android:scaleType="centerInside"
-          android:layout_marginRight="8dp"
-          android:layout_marginEnd="8dp"
           android:visibility="visible"
           />
 
       <LinearLayout
           android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_vertical"
+          android:layout_height="48dp"
+          android:layout_marginTop="-2dp"
           android:orientation="vertical"
+          android:gravity="center_vertical"
           >
 
         <TextView
@@ -48,9 +49,11 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Name Surname"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Alexey Derbyshev"
             android:textColor="@color/color_text_primary"
+            android:textSize="18sp"
+            android:layout_marginTop="-0.5dp"
+            android:layout_marginBottom="-2dp"
             />
 
         <TextView
@@ -59,10 +62,9 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="\@dude"
+            android:text="\@alxrm"
             android:textColor="@color/color_text_secondary"
             android:textSize="14sp"
-            android:visibility="gone"
             />
 
       </LinearLayout>

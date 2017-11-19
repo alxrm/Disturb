@@ -2,6 +2,7 @@ package rm.com.disturb.inject;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import rm.com.disturb.BuildConfig;
 import rm.com.disturb.data.resource.ContactResource;
 import rm.com.disturb.data.resource.Resource;
+import rm.com.disturb.data.resource.TypefaceResource;
 import rm.com.disturb.data.signal.MessageSignal;
 import rm.com.disturb.data.storage.PaperSignalStorage;
 import rm.com.disturb.data.storage.Storage;
@@ -75,9 +77,16 @@ public final class DisturbModule {
     return pref.get();
   }
 
-  @Provides @Singleton Resource<String, String> provideContactResource(
-      @NonNull ExecutorService executor) {
-    return new ContactResource(executor);
+  @Provides @Singleton
+  static Resource<String, String> provideContactResource(@NonNull ExecutorService executor,
+      @NonNull Handler handler) {
+    return new ContactResource(executor, handler);
+  }
+
+  @Provides @Singleton
+  static Resource<Typeface, String> provideTypefaceResource(@NonNull ExecutorService executor,
+      @NonNull Handler handler) {
+    return new TypefaceResource(executor, handler);
   }
 
   @Provides @Singleton static OkHttpClient provideHttpClient() {

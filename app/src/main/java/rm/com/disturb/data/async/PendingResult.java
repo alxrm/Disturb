@@ -4,9 +4,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import rm.com.disturb.utils.Preconditions;
 
 /**
  * Created by alex
@@ -26,8 +28,7 @@ public final class PendingResult<T> {
     defaultResult = builder.defaultResult;
   }
 
-  public <R> PendingResult<R> map(@NonNull R orElse,
-      @NonNull final Transform<T, R> transformer) {
+  public <R> PendingResult<R> map(@NonNull R orElse, @NonNull final Transform<T, R> transformer) {
     return new PendingResult.Builder<>(orElse) //
         .handler(handler) //
         .executor(executor) //
@@ -57,8 +58,10 @@ public final class PendingResult<T> {
     try {
       return from.call();
     } catch (RuntimeException e) {
+      logError(e);
       throw new RuntimeException(e);
     } catch (Exception e) {
+      logError(e);
       return defaultResult;
     }
   }
@@ -79,6 +82,12 @@ public final class PendingResult<T> {
     });
   }
 
+  private void logError(@NonNull Exception e) {
+    Log.e("DBG",
+        String.format("Exception %s occurred in PendingResult %s", e.getClass().getSimpleName(),
+            e.getMessage().isEmpty() ? "" : String.format("with message: %s", e.getMessage())));
+  }
+
   public static final class Builder<T> {
     private static final ExecutorService DEFAULT_EXECUTOR = Executors.newSingleThreadExecutor();
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
@@ -95,6 +104,9 @@ public final class PendingResult<T> {
     T defaultResult;
 
     public Builder(@NonNull T nextDefaultResult) {
+      Preconditions.checkNotNull(nextDefaultResult,
+          "Default value in PendingResult cannot be null");
+
       executor = DEFAULT_EXECUTOR;
       handler = HANDLER;
       defaultResult = nextDefaultResult;

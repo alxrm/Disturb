@@ -4,6 +4,7 @@ import dagger.Component;
 import javax.inject.Singleton;
 import rm.com.disturb.data.receiver.CallReceiver;
 import rm.com.disturb.data.receiver.SmsReceiver;
+import rm.com.disturb.ui.BaseFragment;
 import rm.com.disturb.ui.LoginFragment;
 import rm.com.disturb.ui.MainActivity;
 import rm.com.disturb.ui.NotifyFragment;
@@ -15,11 +16,12 @@ import rm.com.disturb.ui.PasswordDialogFragment;
 
 @Singleton //
 @Component(modules = {
-    DisturbModule.class,
-    RulesModule.class
+    DisturbModule.class, RulesModule.class
 }) //
 public interface DisturbComponent {
   void inject(MainActivity activity);
+
+  void inject(BaseFragment fragment);
 
   void inject(NotifyFragment fragment);
 
