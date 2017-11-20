@@ -30,8 +30,10 @@ import rm.com.disturb.data.telegram.TelegramApi;
 import rm.com.disturb.inject.qualifier.ChatId;
 import rm.com.disturb.inject.qualifier.Password;
 import rm.com.disturb.inject.qualifier.Signals;
+import rm.com.disturb.inject.qualifier.Users;
 
 import static android.content.Context.MODE_PRIVATE;
+import static rm.com.disturb.data.telegram.TelegramApi.TELEGRAM_BASE_URL;
 
 /**
  * Created by alex
@@ -39,11 +41,12 @@ import static android.content.Context.MODE_PRIVATE;
 @Module(includes = { CommandModule.class }) //
 public final class DisturbModule {
   private static final String PREFERENCES_NAME = "disturb";
-  private static final String TELEGRAM_BASE_URL = "https://api.telegram.org/bot";
 
   private final Application application;
 
   public DisturbModule(@NonNull Application application) {
+    Paper.init(application.getApplicationContext());
+
     this.application = application;
   }
 
@@ -105,9 +108,12 @@ public final class DisturbModule {
         .create(TelegramApi.class);
   }
 
-  @Provides @Singleton @Signals Book provideDatabase() {
-    Paper.init(application.getApplicationContext());
+  @Provides @Singleton @Signals Book provideSignalsDatabase() {
     return Paper.book("signals");
+  }
+
+  @Provides @Singleton @Users Book provideUsersDatabase() {
+    return Paper.book("users");
   }
 
   @Provides @Singleton

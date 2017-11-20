@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 
 public final class FileData {
   private String file_id;
+
+  // https://api.telegram.org/file/bot{TOKEN}/profile_photos/file_2.jpg
   private String file_path;
   private long file_size;
 

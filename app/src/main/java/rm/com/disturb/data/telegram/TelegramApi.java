@@ -15,6 +15,8 @@ import rm.com.disturb.data.telegram.response.TelegramResponse;
  */
 
 public interface TelegramApi {
+  String TELEGRAM_BASE_URL = "https://api.telegram.org/bot";
+  String TELEGRAM_FILE_URL = "https://api.telegram.org/file/bot";
   String KEY_CHAT_ID = "chat_id";
   String KEY_MESSAGE_ID = "message_id";
   String KEY_TEXT = "text";

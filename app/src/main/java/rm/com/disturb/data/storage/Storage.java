@@ -11,7 +11,9 @@ import java.util.List;
 public interface Storage<T> {
   void put(@NonNull String key, @Nullable T value);
 
-  @NonNull T get(@NonNull String key);
+  @Nullable T get(@NonNull String key);
+
+  @NonNull T get(@NonNull String key, @NonNull T defaultValue);
 
   void delete(@NonNull String key);
 

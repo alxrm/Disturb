@@ -8,5 +8,5 @@ import android.support.annotation.WorkerThread;
  */
 
 public interface Transform<T, R> {
-  @WorkerThread @NonNull R apply(@NonNull T input);
+  @WorkerThread @NonNull R apply(@NonNull T input) throws Exception;
 }
