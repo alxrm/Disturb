@@ -33,21 +33,15 @@ public final class Sms {
   }
 
   @NonNull private static String unwrapMessageText(@NonNull List<SmsMessage> receivedChunks) {
-    return reduce(receivedChunks, "", new Lists.Accumulator<SmsMessage, String>() {
-      @Override public String collect(String result, SmsMessage item) {
-        return result + item.getMessageBody();
-      }
-    });
+    return reduce(receivedChunks, "", (result, item) -> result + item.getMessageBody());
   }
 
   @NonNull private static List<SmsMessage> unwrapMessage(@NonNull Intent intent) {
     final List<Object> pduChunks = listOfArray((Object[]) intent.getExtras().get(KEY_PDU_CHUNKS));
 
-    return map(pduChunks, new Lists.Transformer<Object, SmsMessage>() {
-      @Override public SmsMessage invoke(Object item) {
-        //noinspection deprecation
-        return SmsMessage.createFromPdu((byte[]) item);
-      }
+    return map(pduChunks, item -> {
+      //noinspection deprecation
+      return SmsMessage.createFromPdu((byte[]) item);
     });
   }
 }

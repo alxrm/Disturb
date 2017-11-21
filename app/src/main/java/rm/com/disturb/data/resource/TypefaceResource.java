@@ -32,19 +32,17 @@ public final class TypefaceResource implements Resource<Typeface, String> {
 
   @NonNull
   private Callable<Typeface> asCallable(@NonNull final Context context, @NonNull final String path) {
-    return new Callable<Typeface>() {
-      @Override public Typeface call() throws Exception {
-        if (typefaceCache.containsKey(path)) {
-          return typefaceCache.get(path);
-        }
-
-        final Typeface typeface = Typeface.createFromAsset(context.getAssets(), path);
-        Preconditions.checkNotNull(typeface, "Could not load typeface from this path: " + path);
-
-        typefaceCache.put(path, typeface);
-
-        return typeface;
+    return () -> {
+      if (typefaceCache.containsKey(path)) {
+        return typefaceCache.get(path);
       }
+
+      final Typeface typeface = Typeface.createFromAsset(context.getAssets(), path);
+      Preconditions.checkNotNull(typeface, "Could not load typeface from this path: " + path);
+
+      typefaceCache.put(path, typeface);
+
+      return typeface;
     };
   }
 }

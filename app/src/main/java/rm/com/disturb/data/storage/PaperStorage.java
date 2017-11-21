@@ -47,14 +47,12 @@ public class PaperStorage<T> implements Storage<T> {
     final List<String> allKeys = database.getAllKeys();
     final List<T> signals = new ArrayList<>(allKeys.size());
 
-    return Lists.reduce(allKeys, signals, new Lists.Accumulator<String, List<T>>() {
-      @Override public List<T> collect(List<T> result, String item) {
-        if (database.contains(item)) {
-          result.add(get(item));
-        }
-
-        return result;
+    return Lists.reduce(allKeys, signals, (result, item) -> {
+      if (database.contains(item)) {
+        result.add(get(item));
       }
+
+      return result;
     });
   }
 

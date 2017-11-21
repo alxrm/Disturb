@@ -2,7 +2,6 @@ package rm.com.disturb.data.signal;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.resource.Resource;
 import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
@@ -45,25 +44,19 @@ public final class CallRingingRule implements Rule<MessageSignal> {
     }
   }
 
-  private void notifyWithContactName(@NonNull final String number,
-      @NonNull final MessageSignal item) {
-    contactResource.load(context, number).whenReady(new Reply<String>() {
-      @Override public void ready(@NonNull String contactName) {
-        notifyCall(Formats.contactNameOf(contactName, number), item);
-      }
-    });
+  private void notifyWithContactName(@NonNull String number, @NonNull MessageSignal item) {
+    contactResource.load(context, number)
+        .whenReady(contactName -> notifyCall(Formats.contactNameOf(contactName, number), item));
   }
 
-  private void notifyCall(@NonNull final String from, @NonNull final MessageSignal item) {
+  private void notifyCall(@NonNull String from, @NonNull MessageSignal item) {
     final String message = Formats.callRingingOf(from);
 
-    notify.send(TelegramParams.ofMessage(message)).whenReady(new Reply<String>() {
-      @Override public void ready(@NonNull String result) {
-        final MessageSignal consistentSignal =
-            item.newBuilder().remoteKey(result).sender(from).build();
+    notify.send(TelegramParams.ofMessage(message)).whenReady(result -> {
+      final MessageSignal consistentSignal =
+          item.newBuilder().remoteKey(result).sender(from).build();
 
-        signalStorage.put(item.key(), consistentSignal);
-      }
+      signalStorage.put(item.key(), consistentSignal);
     });
   }
 }

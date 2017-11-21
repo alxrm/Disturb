@@ -32,21 +32,15 @@ public final class PendingResult<T> {
     return new PendingResult.Builder<>(orElse) //
         .handler(handler) //
         .executor(executor) //
-        .from(new Callable<R>() {
-          public R call() throws Exception {
-            return transformer.apply(PendingResult.this.from.call());
-          }
-        }) //
+        .from(() -> transformer.apply(PendingResult.this.from.call())) //
         .build();
   }
 
   public void whenReady(@Nullable final Reply<T> reply) {
-    executor.submit(new Runnable() {
-      @Override public void run() {
-        final T result = await();
+    executor.submit(() -> {
+      final T result = await();
 
-        replyToHandler(reply, result);
-      }
+      replyToHandler(reply, result);
     });
   }
 
@@ -75,11 +69,7 @@ public final class PendingResult<T> {
       return;
     }
 
-    handler.post(new Runnable() {
-      @Override public void run() {
-        reply.ready(result);
-      }
-    });
+    handler.post(() -> reply.ready(result));
   }
 
   private void logError(@NonNull Exception e) {

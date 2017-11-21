@@ -3,7 +3,6 @@ package rm.com.disturb.data.telegram.source;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import java.io.IOException;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import rm.com.disturb.data.async.PendingResult;
 import rm.com.disturb.data.async.Transform;
@@ -40,11 +39,7 @@ public final class UserSource implements Source<User, String> {
   @NonNull @Override public PendingResult<User> retrieve(@NonNull final String chatId) {
     if (userStorage.contains(chatId)) {
       return result.newBuilder() //
-          .from(new Callable<User>() {
-            @Override public User call() throws Exception {
-              return userStorage.get(chatId);
-            }
-          }) //
+          .from(() -> userStorage.get(chatId)) //
           .build();
     }
 
@@ -54,49 +49,45 @@ public final class UserSource implements Source<User, String> {
   }
 
   @NonNull private Transform<User, Chat> toChat(@NonNull final String chatId) {
-    return new Transform<User, Chat>() {
-      @NonNull @Override public Chat apply(@NonNull User input) throws Exception {
-        final ChatResponse response = api.chat(chatId).execute().body();
+    return input -> {
+      final ChatResponse response = api.chat(chatId).execute().body();
 
-        if (response == null || response.data() == null || !response.isOk()) {
-          throw new IOException("Response was unsuccessful");
-        }
-
-        final Chat chat = response.data();
-        final User user = Users.ofChat(chat);
-
-        userStorage.put(chatId, user);
-
-        return chat;
+      if (response == null || response.data() == null || !response.isOk()) {
+        throw new IOException("Response was unsuccessful");
       }
+
+      final Chat chat = response.data();
+      final User user = Users.ofChat(chat);
+
+      userStorage.put(chatId, user);
+
+      return chat;
     };
   }
 
   @NonNull private Transform<Chat, User> toUser(@NonNull final String chatId) {
-    return new Transform<Chat, User>() {
-      @NonNull @Override public User apply(@NonNull Chat input) throws Exception {
-        final Photo userPhoto = input.photo();
+    return input -> {
+      final Photo userPhoto = input.photo();
 
-        if (userPhoto == null) {
-          return userStorage.get(String.valueOf(chatId), EMPTY_USER);
-        }
-
-        final FileResponse response = api.file(userPhoto.smallFileId()).execute().body();
-
-        if (response == null || response.data() == null || !response.isOk()) {
-          return userStorage.get(String.valueOf(chatId), EMPTY_USER);
-        }
-
-        //noinspection ConstantConditions
-        final User updated = userStorage.get(String.valueOf(chatId))
-            .newBuilder()
-            .photoUrl(Users.photoLinkOf(response.data().filePath()))
-            .build();
-
-        userStorage.put(chatId, updated);
-
-        return updated;
+      if (userPhoto == null) {
+        return userStorage.get(String.valueOf(chatId), EMPTY_USER);
       }
+
+      final FileResponse response = api.file(userPhoto.smallFileId()).execute().body();
+
+      if (response == null || response.data() == null || !response.isOk()) {
+        return userStorage.get(String.valueOf(chatId), EMPTY_USER);
+      }
+
+      //noinspection ConstantConditions
+      final User updated = userStorage.get(String.valueOf(chatId))
+          .newBuilder()
+          .photoUrl(Users.photoLinkOf(response.data().filePath()))
+          .build();
+
+      userStorage.put(chatId, updated);
+
+      return updated;
     };
   }
 }

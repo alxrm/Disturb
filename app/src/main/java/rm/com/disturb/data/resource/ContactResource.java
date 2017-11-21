@@ -61,10 +61,6 @@ public final class ContactResource implements Resource<String, String> {
 
   @NonNull private Callable<String> findNameCallable(@NonNull final ContentResolver contentResolver,
       @NonNull final String phoneNumber) {
-    return new Callable<String>() {
-      @Override public String call() throws Exception {
-        return findNameBlocking(contentResolver, phoneNumber);
-      }
-    };
+    return () -> findNameBlocking(contentResolver, phoneNumber);
   }
 }

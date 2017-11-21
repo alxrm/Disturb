@@ -20,7 +20,6 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import rm.com.disturb.R;
-import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.storage.StringPreference;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
@@ -118,21 +117,19 @@ public final class NotifyFragment extends BaseFragment
 
   @SuppressWarnings("ConstantConditions") //
   private void loadUser() {
-    userSource.retrieve(chatId.get()).whenReady(new Reply<User>() {
-      @Override public void ready(@NonNull User result) {
-        title.setText(result.firstName() + " " + result.lastName());
-        subtitle.setText(String.format("@%s", result.username()));
+    userSource.retrieve(chatId.get()).whenReady(result -> {
+      title.setText(result.firstName() + " " + result.lastName());
+      subtitle.setText(String.format("@%s", result.username()));
 
-        if (result.username().isEmpty()) {
-          subtitle.setVisibility(View.GONE);
-          title.setTextSize(20);
-        }
-
-        Glide.with(parent())
-            .load(result.photoUrl())
-            .transition(DrawableTransitionOptions.withCrossFade())
-            .into(avatar);
+      if (result.username().isEmpty()) {
+        subtitle.setVisibility(View.GONE);
+        title.setTextSize(20);
       }
+
+      Glide.with(parent())
+          .load(result.photoUrl())
+          .transition(DrawableTransitionOptions.withCrossFade())
+          .into(avatar);
     });
   }
 

@@ -3,7 +3,6 @@ package rm.com.disturb.data.telegram.command;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import java.io.IOException;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import rm.com.disturb.data.async.PendingResult;
 import rm.com.disturb.data.telegram.TelegramApi;
@@ -30,18 +29,10 @@ public abstract class AbstractTelegramCommand<T> implements TelegramCommand<T> {
   }
 
   @NonNull @Override public PendingResult<T> send(@NonNull TelegramParams params) {
-    return result.newBuilder().from(asCallable(params)).build();
+    return result.newBuilder().from(() -> sendBlocking(params)).build();
   }
 
   @NonNull abstract T sendBlocking(@NonNull TelegramParams params) throws IOException;
 
   @NonNull abstract T defaultResult();
-
-  @NonNull private Callable<T> asCallable(@NonNull final TelegramParams params) {
-    return new Callable<T>() {
-      @Override public T call() throws Exception {
-        return sendBlocking(params);
-      }
-    };
-  }
 }

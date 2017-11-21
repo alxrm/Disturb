@@ -3,6 +3,7 @@ package rm.com.disturb.data.signal;
 import android.support.annotation.NonNull;
 
 public final class MessageSignal {
+  public static final MessageSignal EMPTY_MESSAGE = new MessageSignal.Builder().build();
 
   private final String type;
   private final String data;

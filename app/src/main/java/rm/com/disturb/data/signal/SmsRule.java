@@ -2,7 +2,6 @@ package rm.com.disturb.data.signal;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.resource.Resource;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
@@ -45,14 +44,11 @@ public final class SmsRule implements Rule<MessageSignal> {
     notify.send(TelegramParams.ofMessage(Formats.smsOf(from, text))).completeSilently();
   }
 
-  private void notifyWithContactName(@NonNull final String number,
-      @NonNull final String messageText) {
-    contactResource.load(context, number).whenReady(new Reply<String>() {
-      @Override public void ready(@NonNull String contactName) {
-        final String from = Formats.contactNameOf(contactName, number);
+  private void notifyWithContactName(@NonNull String number, @NonNull String messageText) {
+    contactResource.load(context, number).whenReady(contactName -> {
+      final String from = Formats.contactNameOf(contactName, number);
 
-        notifySms(from, messageText);
-      }
+      notifySms(from, messageText);
     });
   }
 }

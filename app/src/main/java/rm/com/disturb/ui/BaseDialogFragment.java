@@ -25,17 +25,8 @@ import rm.com.disturb.inject.DisturbComponent;
 public abstract class BaseDialogFragment extends DialogFragment
     implements DialogInterface.OnShowListener {
 
-  final View.OnClickListener CANCEL = new View.OnClickListener() {
-    @Override public void onClick(View v) {
-      onCancelClick();
-    }
-  };
-
-  final View.OnClickListener SUBMIT = new View.OnClickListener() {
-    @Override public void onClick(View v) {
-      onSubmitClick();
-    }
-  };
+  final View.OnClickListener CANCEL = v -> onCancelClick();
+  final View.OnClickListener SUBMIT = v -> onSubmitClick();
 
   private View rootView;
   private Unbinder unbinder;

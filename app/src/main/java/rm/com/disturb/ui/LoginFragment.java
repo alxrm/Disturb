@@ -14,7 +14,6 @@ import butterknife.OnClick;
 import butterknife.OnTextChanged;
 import javax.inject.Inject;
 import rm.com.disturb.R;
-import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.storage.StringPreference;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
@@ -62,13 +61,11 @@ public final class LoginFragment extends BaseFragment {
 
     showProgressDialog();
 
-    auth.send(TelegramParams.ofChatId(chatId)).whenReady(new Reply<Boolean>() {
-      @Override public void ready(@NonNull Boolean result) {
-        if (result) {
-          proceedToNotifyFragment();
-        } else {
-          showError();
-        }
+    auth.send(TelegramParams.ofChatId(chatId)).whenReady(result -> {
+      if (result) {
+        proceedToNotifyFragment();
+      } else {
+        showError();
       }
     });
   }

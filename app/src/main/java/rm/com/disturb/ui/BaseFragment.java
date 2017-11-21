@@ -16,7 +16,6 @@ import com.mikhaellopez.circularimageview.CircularImageView;
 import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.R;
-import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.resource.Resource;
 import rm.com.disturb.inject.DisturbComponent;
 import rm.com.disturb.utils.Preconditions;
@@ -86,10 +85,7 @@ public class BaseFragment extends Fragment {
 
     parent().setSupportActionBar(toolbar);
 
-    typefaceResource.load(parent(), PATH_TOOLBAR_TYPEFACE).whenReady(new Reply<Typeface>() {
-      @Override public void ready(@NonNull Typeface result) {
-        title.setTypeface(result);
-      }
-    });
+    typefaceResource.load(parent(), PATH_TOOLBAR_TYPEFACE)
+        .whenReady(result -> title.setTypeface(result));
   }
 }

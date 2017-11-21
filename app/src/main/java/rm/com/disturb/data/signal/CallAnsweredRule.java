@@ -28,7 +28,7 @@ public final class CallAnsweredRule implements Rule<MessageSignal> {
   }
 
   @Override public void apply(@NonNull final MessageSignal item) {
-    final MessageSignal signal = signalStorage.get(item.key());
+    final MessageSignal signal = signalStorage.get(item.key(), MessageSignal.EMPTY_MESSAGE);
 
     if (signal.key().equals(Signals.EMPTY) && !signal.type().equals(Signals.CALL_RINGING)) {
       return;
