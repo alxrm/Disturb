@@ -7,13 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.mikhaellopez.circularimageview.CircularImageView;
 import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.R;
@@ -30,7 +29,7 @@ public class BaseFragment extends Fragment {
   private static final String PATH_TOOLBAR_TYPEFACE = "Roboto-Medium.ttf";
 
   @BindView(R.id.toolbar) @Nullable Toolbar toolbar;
-  @BindView(R.id.toolbar_avatar) @Nullable ImageView avatar;
+  @BindView(R.id.toolbar_avatar) @Nullable CircularImageView avatar;
   @BindView(R.id.toolbar_title) @Nullable TextView title;
   @BindView(R.id.toolbar_subtitle) @Nullable TextView subtitle;
 
@@ -85,11 +84,11 @@ public class BaseFragment extends Fragment {
     Preconditions.checkNotNull(toolbar, "Toolbar was null, please add <Toolbar/> in your layout");
     Preconditions.checkNotNull(title, "Title was null, please take a look at the code");
 
+    parent().setSupportActionBar(toolbar);
+
     typefaceResource.load(parent(), PATH_TOOLBAR_TYPEFACE).whenReady(new Reply<Typeface>() {
       @Override public void ready(@NonNull Typeface result) {
         title.setTypeface(result);
-
-        parent().setSupportActionBar(toolbar);
       }
     });
   }

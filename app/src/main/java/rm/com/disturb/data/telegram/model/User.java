@@ -7,15 +7,15 @@ import android.support.annotation.Nullable;
  * Created by alex
  */
 
-public final class UserFull {
-  public static final UserFull EMPTY = new UserFull.Builder().build();
+public final class User {
+  public static final User EMPTY_USER = new User.Builder().build();
 
   private final String firstName;
   private final String lastName;
   private final String username;
   private final String photoUrl;
 
-  private UserFull(@NonNull Builder builder) {
+  private User(@NonNull Builder builder) {
     this.firstName = builder.firstName;
     this.lastName = builder.lastName;
     this.username = builder.username;
@@ -55,7 +55,7 @@ public final class UserFull {
       photoUrl = "";
     }
 
-    Builder(@NonNull UserFull current) {
+    Builder(@NonNull User current) {
       firstName = current.firstName;
       lastName = current.lastName;
       username = current.username;
@@ -82,8 +82,8 @@ public final class UserFull {
       return this;
     }
 
-    @NonNull public UserFull build() {
-      return new UserFull(this);
+    @NonNull public User build() {
+      return new User(this);
     }
   }
 }

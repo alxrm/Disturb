@@ -24,9 +24,13 @@ import rm.com.disturb.data.resource.Resource;
 import rm.com.disturb.data.resource.TypefaceResource;
 import rm.com.disturb.data.signal.MessageSignal;
 import rm.com.disturb.data.storage.PaperSignalStorage;
+import rm.com.disturb.data.storage.PaperUserStorage;
 import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.storage.StringPreference;
 import rm.com.disturb.data.telegram.TelegramApi;
+import rm.com.disturb.data.telegram.model.User;
+import rm.com.disturb.data.telegram.source.Source;
+import rm.com.disturb.data.telegram.source.UserSource;
 import rm.com.disturb.inject.qualifier.ChatId;
 import rm.com.disturb.inject.qualifier.Password;
 import rm.com.disturb.inject.qualifier.Signals;
@@ -119,5 +123,16 @@ public final class DisturbModule {
   @Provides @Singleton
   static Storage<MessageSignal> provideSignalStorage(@NonNull @Signals Book database) {
     return new PaperSignalStorage(database);
+  }
+
+  @Provides @Singleton static Storage<User> provideUserStorage(@NonNull @Users Book database) {
+    return new PaperUserStorage(database);
+  }
+
+  @Provides @Singleton
+  static Source<User, String> provideUserSource(@NonNull ExecutorService executor,
+      @NonNull Handler mainThreadHandler, @NonNull TelegramApi api,
+      @NonNull Storage<User> userStorage) {
+    return new UserSource(executor, mainThreadHandler, api, userStorage);
   }
 }

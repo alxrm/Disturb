@@ -41,6 +41,10 @@ dependencies {
   compile supportDeps.design
   compile supportDeps.appCompat
 
+  compile glide.lib
+  compile glide.okhttpIntegration
+
   compile 'io.paperdb:paperdb:2.6'
   compile "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+  compile 'com.mikhaellopez:circularimageview:3.0.2'
 }

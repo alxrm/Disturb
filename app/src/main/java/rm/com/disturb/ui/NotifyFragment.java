@@ -15,12 +15,17 @@ import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.OnClick;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import rm.com.disturb.R;
+import rm.com.disturb.data.async.Reply;
 import rm.com.disturb.data.storage.StringPreference;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
+import rm.com.disturb.data.telegram.model.User;
+import rm.com.disturb.data.telegram.source.Source;
 import rm.com.disturb.inject.qualifier.ChatId;
 import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Password;
@@ -47,6 +52,8 @@ public final class NotifyFragment extends BaseFragment
   @Inject @Password StringPreference passwordPreference;
   @Inject @ChatId Provider<String> chatId;
 
+  @Inject Source<User, String> userSource;
+
   public static NotifyFragment newInstance() {
     return new NotifyFragment();
   }
@@ -61,6 +68,7 @@ public final class NotifyFragment extends BaseFragment
     super.onViewCreated(view, savedInstanceState);
     injector().inject(this);
     attachToolbar();
+    loadUser();
 
     if (areAnyPermissionsGranted()) {
       indicateNotificationsAvailable();
@@ -107,6 +115,26 @@ public final class NotifyFragment extends BaseFragment
   //
   //  PasswordDialogFragment.show(getFragmentManager(), this);
   //}
+
+  @SuppressWarnings("ConstantConditions") //
+  private void loadUser() {
+    userSource.retrieve(chatId.get()).whenReady(new Reply<User>() {
+      @Override public void ready(@NonNull User result) {
+        title.setText(result.firstName() + " " + result.lastName());
+        subtitle.setText(String.format("@%s", result.username()));
+
+        if (result.username().isEmpty()) {
+          subtitle.setVisibility(View.GONE);
+          title.setTextSize(20);
+        }
+
+        Glide.with(parent())
+            .load(result.photoUrl())
+            .transition(DrawableTransitionOptions.withCrossFade())
+            .into(avatar);
+      }
+    });
+  }
 
   private boolean areAnyPermissionsGranted() {
     return Permissions.isReadPhoneStatePermissionGranted(getActivity())
