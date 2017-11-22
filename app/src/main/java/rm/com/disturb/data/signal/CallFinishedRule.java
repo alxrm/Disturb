@@ -1,6 +1,9 @@
 package rm.com.disturb.data.signal;
 
 import android.support.annotation.NonNull;
+import java8.util.Optional;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
@@ -8,17 +11,22 @@ import rm.com.disturb.inject.qualifier.Erase;
 import rm.com.disturb.inject.qualifier.Update;
 import rm.com.disturb.utils.Formats;
 
+import static rm.com.disturb.data.signal.MessageSignal.EMPTY_MESSAGE;
+import static rm.com.disturb.data.signal.MessageSignals.CALL_ANSWERED;
+import static rm.com.disturb.data.signal.MessageSignals.EMPTY;
+
 /**
  * Created by alex
  */
 
+@Singleton //
 public final class CallFinishedRule implements Rule<MessageSignal> {
 
-  private final TelegramCommand<String> update;
+  private final TelegramCommand<Optional<String>> update;
   private final TelegramCommand<Boolean> erase;
   private final Storage<MessageSignal> signalStorage;
 
-  public CallFinishedRule(@NonNull @Update TelegramCommand<String> update,
+  @Inject CallFinishedRule(@NonNull @Update TelegramCommand<Optional<String>> update,
       @NonNull @Erase TelegramCommand<Boolean> erase,
       @NonNull Storage<MessageSignal> signalStorage) {
     this.update = update;
@@ -27,13 +35,13 @@ public final class CallFinishedRule implements Rule<MessageSignal> {
   }
 
   @Override public boolean shouldApply(@NonNull MessageSignal item) {
-    return item.type().equals(Signals.CALL_FINISHED);
+    return item.type().equals(MessageSignals.CALL_FINISHED);
   }
 
   @Override public void apply(@NonNull MessageSignal item) {
-    final MessageSignal signal = signalStorage.get(item.key()).orElse(MessageSignal.EMPTY_MESSAGE);
+    final MessageSignal signal = signalStorage.get(item.key()).orElse(EMPTY_MESSAGE);
 
-    if (signal.key().equals(Signals.EMPTY) && !signal.type().equals(Signals.CALL_ANSWERED)) {
+    if (signal.key().equals(EMPTY) && !signal.type().equals(CALL_ANSWERED)) {
       return;
     }
 
@@ -44,6 +52,6 @@ public final class CallFinishedRule implements Rule<MessageSignal> {
         .build();
 
     // TODO later implement deletion by preference
-    update.send(params).completeSilently();
+    update.send(params).subscribe();
   }
 }

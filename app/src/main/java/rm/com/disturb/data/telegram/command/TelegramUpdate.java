@@ -1,18 +1,18 @@
 package rm.com.disturb.data.telegram.command;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
+import java8.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import retrofit2.Call;
 import retrofit2.Response;
 import rm.com.disturb.data.telegram.TelegramApi;
-import rm.com.disturb.data.telegram.response.MessageResponse;
+import rm.com.disturb.data.telegram.model.Message;
+import rm.com.disturb.data.telegram.model.TelegramResponse;
 import rm.com.disturb.inject.qualifier.ChatId;
 
 /**
@@ -20,37 +20,32 @@ import rm.com.disturb.inject.qualifier.ChatId;
  */
 
 @Singleton //
-public final class TelegramUpdate extends AbstractTelegramCommand<String> {
-  private static final String EMPTY_MESSAGE_ID = "-1";
-
+public final class TelegramUpdate extends AbstractTelegramCommand<Optional<String>> {
   private final Provider<String> chatId;
 
-  @Inject TelegramUpdate(@NonNull ExecutorService executor, @NonNull Handler mainThreadHandler,
-      @NonNull TelegramApi api, @NonNull @ChatId Provider<String> chatIdProvider) {
-    super(executor, mainThreadHandler, api);
+  @Inject TelegramUpdate(@NonNull TelegramApi api,
+      @NonNull @ChatId Provider<String> chatIdProvider) {
+    super(api);
     chatId = chatIdProvider;
   }
 
-  @NonNull @Override String sendBlocking(@NonNull TelegramParams params) throws IOException {
+  @NonNull @Override Optional<String> sendBlocking(@NonNull TelegramParams params)
+      throws IOException {
     final Map<String, String> nextParams = params.newBuilder().chatId(chatId.get()).build().asMap();
-    final Call<MessageResponse> editMessage = api.editMessage(nextParams);
+    final Call<TelegramResponse<Message>> editMessage = api.editMessage(nextParams);
 
-    final Response<MessageResponse> response = editMessage.execute();
-    final MessageResponse body = response.body();
+    final Response<TelegramResponse<Message>> response = editMessage.execute();
+    final TelegramResponse<Message> body = response.body();
     final boolean isOk = isResponseBodyValid(body) && response.isSuccessful();
 
     if (!isOk) {
-      return EMPTY_MESSAGE_ID;
+      return Optional.empty();
     }
 
-    return String.valueOf(body.data().messageId());
+    return Optional.ofNullable(String.valueOf(body.data().messageId()));
   }
 
-  @NonNull @Override String defaultResult() {
-    return EMPTY_MESSAGE_ID;
-  }
-
-  private boolean isResponseBodyValid(@Nullable MessageResponse body) {
+  private boolean isResponseBodyValid(@Nullable TelegramResponse<Message> body) {
     return body != null && body.isOk() && body.data() != null;
   }
 }

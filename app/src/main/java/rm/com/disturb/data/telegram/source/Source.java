@@ -1,12 +1,13 @@
 package rm.com.disturb.data.telegram.source;
 
 import android.support.annotation.NonNull;
-import rm.com.disturb.data.async.PendingResult;
+import io.reactivex.Flowable;
+import java8.util.Optional;
 
 /**
  * Created by alex
  */
 
 public interface Source<T, P> {
-  @NonNull PendingResult<T> retrieve(@NonNull P parameters);
+  @NonNull Flowable<Optional<T>> retrieve(@NonNull P parameters);
 }

@@ -5,4 +5,5 @@
   <string name="message_test_notification">Test</string>
   <string name="permissions_rationale">This app would not work without permission to receive SMS or phone calls</string>
   <string name="text_chat_id">Your Chat ID is %1$s</string>
+  <string name="loading_text">Loading..</string>
 </resources>

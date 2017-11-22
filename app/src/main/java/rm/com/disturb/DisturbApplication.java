@@ -1,10 +1,11 @@
 package rm.com.disturb;
 
 import android.app.Application;
+import io.paperdb.Paper;
+import io.reactivex.plugins.RxJavaPlugins;
 import rm.com.disturb.inject.DaggerDisturbComponent;
 import rm.com.disturb.inject.DisturbComponent;
 import rm.com.disturb.inject.DisturbModule;
-import rm.com.disturb.inject.RulesModule;
 
 /**
  * Created by alex
@@ -16,9 +17,13 @@ public final class DisturbApplication extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
+
+    Paper.init(getApplicationContext());
+    RxJavaPlugins.setErrorHandler(Throwable::printStackTrace);
+
     component = DaggerDisturbComponent.builder()
-        .disturbModule(new DisturbModule(this))
-        .rulesModule(new RulesModule(this))
+        .application(this)
+        .disturbModule(new DisturbModule())
         .build();
   }
 

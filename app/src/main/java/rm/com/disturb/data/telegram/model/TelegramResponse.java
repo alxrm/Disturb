@@ -1,10 +1,10 @@
-package rm.com.disturb.data.telegram.response;
+package rm.com.disturb.data.telegram.model;
 
 /**
  * Created by alex
  */
 
-public class TelegramResponse<T> {
+public final class TelegramResponse<T> {
   private boolean ok;
   private int error_code;
   private String description;

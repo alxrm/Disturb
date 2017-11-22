@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +18,11 @@ import butterknife.BindView;
 import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import java8.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import rm.com.disturb.R;
+import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.storage.StringPreference;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
@@ -29,6 +32,9 @@ import rm.com.disturb.inject.qualifier.ChatId;
 import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Password;
 import rm.com.disturb.utils.Permissions;
+
+import static rm.com.disturb.utils.UserFormats.colorOf;
+import static rm.com.disturb.utils.UserFormats.iconLettersOf;
 
 /**
  * Created by alex
@@ -41,17 +47,19 @@ public final class NotifyFragment extends BaseFragment
   @BindString(R.string.message_test_notification) String messageTestNotification;
   @BindString(R.string.description_test_notification) String descriptionTestNotification;
   @BindString(R.string.permissions_rationale) String permissionsRationale;
+  @BindString(R.string.loading_text) String loadingText;
   @BindColor(R.color.color_icon_activated) int colorIconActivated;
 
   @BindView(R.id.notify_test_send) ImageView testCall;
   @BindView(R.id.notify_description_text) TextView description;
 
-  @Inject @Notify TelegramCommand<String> notify;
+  @Inject @Notify TelegramCommand<Optional<String>> notify;
   @Inject @ChatId StringPreference chatIdPreference;
   @Inject @Password StringPreference passwordPreference;
   @Inject @ChatId Provider<String> chatId;
 
   @Inject Source<User, String> userSource;
+  @Inject Storage<User> userStorage;
 
   public static NotifyFragment newInstance() {
     return new NotifyFragment();
@@ -103,7 +111,7 @@ public final class NotifyFragment extends BaseFragment
       return;
     }
 
-    notify.send(TelegramParams.ofMessage(messageTestNotification)).completeSilently();
+    notify.send(TelegramParams.ofMessage(messageTestNotification)).subscribe();
   }
   // TODO We will need this later
   //@OnClick(R.id.notify_chat_id_change) void onChangeChatId() {
@@ -115,23 +123,42 @@ public final class NotifyFragment extends BaseFragment
   //  PasswordDialogFragment.show(getFragmentManager(), this);
   //}
 
-  @SuppressWarnings("ConstantConditions") //
   private void loadUser() {
-    userSource.retrieve(chatId.get()).whenReady(result -> result.ifPresent(user -> {
-      title.setText(user.firstName() + " " + user.lastName());
+    userStorage.get(chatId.get()).ifPresent(this::showUserInfo);
 
-      subtitle.setText(String.format("@%s", user.username()));
+    userSource.retrieve(chatId.get())
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .subscribe(user -> {
+          showUserInfo(user);
+          loadAvatar(user.photoUrl());
+        });
+  }
 
-      if (user.username().isEmpty()) {
-        subtitle.setVisibility(View.GONE);
-        title.setTextSize(20);
-      }
+  @SuppressWarnings("ConstantConditions") //
+  private void loadAvatar(@NonNull String photoUrl) {
+    if (photoUrl.isEmpty()) {
+      return;
+    }
 
-      Glide.with(parent())
-          .load(user.photoUrl())
-          .transition(DrawableTransitionOptions.withCrossFade())
-          .into(avatar);
-    }));
+    Glide.with(parent())
+        .load(photoUrl)
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .into(avatar);
+  }
+
+  @SuppressWarnings("ConstantConditions") //
+  private void showUserInfo(@NonNull User user) {
+    avatarEmpty.setText(iconLettersOf(user.firstName()));
+    DrawableCompat.setTint(avatarEmpty.getBackground(), colorOf(user.firstName()));
+
+    title.setText(user.firstName() + " " + user.lastName());
+    subtitle.setText(String.format("@%s", user.username()));
+
+    if (user.username().isEmpty()) {
+      subtitle.setVisibility(View.GONE);
+      title.setTextSize(20);
+    }
   }
 
   private boolean areAnyPermissionsGranted() {

@@ -10,7 +10,7 @@ import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.data.signal.MessageSignal;
 import rm.com.disturb.data.signal.RuleSet;
-import rm.com.disturb.data.signal.Signals;
+import rm.com.disturb.data.signal.MessageSignals;
 import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.utils.Intents;
 
@@ -52,22 +52,22 @@ public final class CallReceiver extends BroadcastReceiver {
   private String nextSignalTypeForState(@NonNull MessageSignal current, @NonNull String state) {
     final String prevType = current.type();
 
-    if (prevType.equals(Signals.EMPTY) && state.equals(EXTRA_STATE_RINGING)) {
-      return Signals.CALL_RINGING;
+    if (prevType.equals(MessageSignals.EMPTY) && state.equals(EXTRA_STATE_RINGING)) {
+      return MessageSignals.CALL_RINGING;
     }
 
-    if (prevType.equals(Signals.CALL_RINGING) && state.equals(EXTRA_STATE_OFFHOOK)) {
-      return Signals.CALL_ANSWERED;
+    if (prevType.equals(MessageSignals.CALL_RINGING) && state.equals(EXTRA_STATE_OFFHOOK)) {
+      return MessageSignals.CALL_ANSWERED;
     }
 
-    if (prevType.equals(Signals.CALL_RINGING) && state.equals(EXTRA_STATE_IDLE)) {
-      return Signals.CALL_MISSED;
+    if (prevType.equals(MessageSignals.CALL_RINGING) && state.equals(EXTRA_STATE_IDLE)) {
+      return MessageSignals.CALL_MISSED;
     }
 
-    if (prevType.equals(Signals.CALL_ANSWERED) && state.equals(EXTRA_STATE_IDLE)) {
-      return Signals.CALL_FINISHED;
+    if (prevType.equals(MessageSignals.CALL_ANSWERED) && state.equals(EXTRA_STATE_IDLE)) {
+      return MessageSignals.CALL_FINISHED;
     }
 
-    return Signals.EMPTY;
+    return MessageSignals.EMPTY;
   }
 }

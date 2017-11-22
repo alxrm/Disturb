@@ -8,7 +8,7 @@ import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.data.signal.MessageSignal;
 import rm.com.disturb.data.signal.RuleSet;
-import rm.com.disturb.data.signal.Signals;
+import rm.com.disturb.data.signal.MessageSignals;
 import rm.com.disturb.utils.Intents;
 import rm.com.disturb.utils.Sms;
 
@@ -26,7 +26,7 @@ public final class SmsReceiver extends BroadcastReceiver {
     signalRuleSet.apply(new MessageSignal.Builder() //
         .data(Sms.textOf(intent)) //
         .phone(Sms.numberOf(intent)) //
-        .type(Signals.SMS_RECEIVED) //
+        .type(MessageSignals.SMS_RECEIVED) //
         .build());
   }
 }

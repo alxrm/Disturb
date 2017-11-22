@@ -60,11 +60,11 @@ public final class MessageSignal {
     private String sender;
 
     public Builder() {
-      type = Signals.EMPTY;
-      data = Signals.EMPTY;
-      phone = Signals.EMPTY;
-      remoteKey = Signals.EMPTY;
-      sender = Signals.EMPTY;
+      type = MessageSignals.EMPTY;
+      data = MessageSignals.EMPTY;
+      phone = MessageSignals.EMPTY;
+      remoteKey = MessageSignals.EMPTY;
+      sender = MessageSignals.EMPTY;
       time = System.nanoTime();
     }
 

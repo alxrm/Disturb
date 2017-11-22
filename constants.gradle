@@ -29,7 +29,8 @@ ext {
               datePicker   : "3.1.1",
               dbflow       : "4.0.0-beta5",
               streamSupport: "1.5.6",
-              rxjava       : "2.1.6"]
+              rxjava       : "2.1.6",
+              rxandroid    : "2.0.1"]
 
   kotlin = [plugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",
             stdlib: "org.jetbrains.kotlin:kotlin-stdlib:$versions.kotlin"]
@@ -55,6 +56,7 @@ ext {
             retrofit           : "com.squareup.retrofit2:retrofit:$versions.retrofit",
             dagger             : "com.google.dagger:dagger:$versions.dagger",
             daggerCompiler     : "com.google.dagger:dagger-compiler:$versions.dagger",
+            daggerAndroid      : "com.google.dagger:dagger-android-support:$versions.dagger",
             okio               : "com.squareup.okio:okio:$versions.okio",
             butterknife        : "com.jakewharton:butterknife:$versions.butterknife",
             butterknifeCompiler: "com.jakewharton:butterknife-compiler:$versions.butterknife"]
@@ -76,7 +78,8 @@ ext {
            compiler         : "com.github.bumptech.glide:compiler:$versions.glide",
            okhttpIntegration: "com.github.bumptech.glide:okhttp3-integration:$versions.glide"]
 
-  rxjava = [lib: "io.reactivex.rxjava2:rxjava:$versions.rxjava",]
+  rxjava = [lib    : "io.reactivex.rxjava2:rxjava:$versions.rxjava",
+            android: "io.reactivex.rxjava2:rxandroid:$versions.rxandroid"]
 
   streamSupport = [lib    : "net.sourceforge.streamsupport:streamsupport:$versions.streamSupport",
                    cfuture: "net.sourceforge.streamsupport:streamsupport-cfuture:$versions.streamSupport",

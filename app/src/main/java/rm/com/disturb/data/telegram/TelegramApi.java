@@ -5,10 +5,10 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
-import rm.com.disturb.data.telegram.response.ChatResponse;
-import rm.com.disturb.data.telegram.response.FileResponse;
-import rm.com.disturb.data.telegram.response.MessageResponse;
-import rm.com.disturb.data.telegram.response.TelegramResponse;
+import rm.com.disturb.data.telegram.model.Chat;
+import rm.com.disturb.data.telegram.model.FileData;
+import rm.com.disturb.data.telegram.model.Message;
+import rm.com.disturb.data.telegram.model.TelegramResponse;
 
 /**
  * Created by alex
@@ -22,17 +22,17 @@ public interface TelegramApi {
   String KEY_TEXT = "text";
 
   @GET("sendMessage?parse_mode=Markdown") //
-  Call<MessageResponse> sendMessage(@QueryMap Map<String, String> params);
+  Call<TelegramResponse<Message>> sendMessage(@QueryMap Map<String, String> params);
 
   @GET("deleteMessage") //
   Call<TelegramResponse> deleteMessage(@QueryMap Map<String, String> params);
 
   @GET("editMessageText?parse_mode=Markdown") //
-  Call<MessageResponse> editMessage(@QueryMap Map<String, String> params);
+  Call<TelegramResponse<Message>> editMessage(@QueryMap Map<String, String> params);
 
   @GET("getFile") //
-  Call<FileResponse> file(@Query("file_id") String fileId);
+  Call<TelegramResponse<FileData>> file(@Query("file_id") String fileId);
 
   @GET("getChat") //
-  Call<ChatResponse> chat(@Query("chat_id") String chatId);
+  Call<TelegramResponse<Chat>> chat(@Query("chat_id") String chatId);
 }

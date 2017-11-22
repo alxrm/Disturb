@@ -1,5 +1,7 @@
 package rm.com.disturb.inject;
 
+import android.app.Application;
+import dagger.BindsInstance;
 import dagger.Component;
 import javax.inject.Singleton;
 import rm.com.disturb.data.receiver.CallReceiver;
@@ -16,9 +18,19 @@ import rm.com.disturb.ui.PasswordDialogFragment;
 
 @Singleton //
 @Component(modules = {
-    DisturbModule.class, RulesModule.class
+    DisturbModule.class
 }) //
 public interface DisturbComponent {
+
+  @Component.Builder //
+  interface Builder {
+    @BindsInstance Builder application(Application application);
+
+    Builder disturbModule(DisturbModule disturbModule);
+
+    DisturbComponent build();
+  }
+
   void inject(MainActivity activity);
 
   void inject(BaseFragment fragment);

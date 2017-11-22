@@ -4,7 +4,7 @@ package rm.com.disturb.data.signal;
  * Created by alex
  */
 
-public interface Signals {
+public interface MessageSignals {
   String CALL_RINGING = "CALL_RINGING";
   String CALL_MISSED = "CALL_MISSED";
   String CALL_ANSWERED = "CALL_ANSWERED";

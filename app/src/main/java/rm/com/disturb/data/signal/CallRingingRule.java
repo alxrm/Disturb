@@ -1,7 +1,11 @@
 package rm.com.disturb.data.signal;
 
+import android.app.Application;
 import android.content.Context;
 import android.support.annotation.NonNull;
+import java8.util.Optional;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import rm.com.disturb.data.resource.Resource;
 import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
@@ -14,24 +18,26 @@ import rm.com.disturb.utils.Permissions;
  * Created by alex
  */
 
+@Singleton //
 public final class CallRingingRule implements Rule<MessageSignal> {
 
   private final Context context;
   private final Storage<MessageSignal> signalStorage;
   private final Resource<String, String> contactResource;
-  private final TelegramCommand<String> notify;
+  private final TelegramCommand<Optional<String>> notify;
 
-  public CallRingingRule(@NonNull Context context, @NonNull Storage<MessageSignal> signalStorage,
+  @Inject CallRingingRule(@NonNull Application application,
+      @NonNull Storage<MessageSignal> signalStorage,
       @NonNull Resource<String, String> contactResource,
-      @NonNull @Notify TelegramCommand<String> notify) {
-    this.context = context.getApplicationContext();
+      @NonNull @Notify TelegramCommand<Optional<String>> notify) {
+    this.context = application.getApplicationContext();
     this.signalStorage = signalStorage;
     this.contactResource = contactResource;
     this.notify = notify;
   }
 
   @Override public boolean shouldApply(@NonNull MessageSignal item) {
-    return item.type().equals(Signals.CALL_RINGING);
+    return item.type().equals(MessageSignals.CALL_RINGING);
   }
 
   @Override public void apply(@NonNull MessageSignal item) {
@@ -44,22 +50,24 @@ public final class CallRingingRule implements Rule<MessageSignal> {
     }
   }
 
-  private void notifyWithContactName(@NonNull String number, @NonNull MessageSignal item) {
-    contactResource //
-        .load(context, number) //
-        .whenReady(result -> result.ifPresent(
-            contact -> notifyCall(Formats.contactNameOf(contact, number), item)));
-  }
-
   private void notifyCall(@NonNull String from, @NonNull MessageSignal item) {
     final String message = Formats.callRingingOf(from);
 
     notify.send(TelegramParams.ofMessage(message))
-        .whenReady(result -> result.ifPresent(messageId -> {
-          final MessageSignal consistentSignal =
-              item.newBuilder().remoteKey(messageId).sender(from).build();
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .subscribe(messageId -> {
+          final MessageSignal full = item.newBuilder().remoteKey(messageId).sender(from).build();
 
-          signalStorage.put(item.key(), consistentSignal);
-        }));
+          signalStorage.put(item.key(), full);
+        });
+  }
+
+  private void notifyWithContactName(@NonNull String number, @NonNull MessageSignal item) {
+    contactResource //
+        .load(context, number) //
+        .map(contact -> contact.orElse(number))
+        .doOnNext(contact -> notifyCall(Formats.contactNameOf(contact, number), item))
+        .subscribe();
   }
 }

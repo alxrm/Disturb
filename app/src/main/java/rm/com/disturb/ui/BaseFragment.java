@@ -28,9 +28,10 @@ public class BaseFragment extends Fragment {
   private static final String PATH_TOOLBAR_TYPEFACE = "Roboto-Medium.ttf";
 
   @BindView(R.id.toolbar) @Nullable Toolbar toolbar;
-  @BindView(R.id.toolbar_avatar) @Nullable CircularImageView avatar;
   @BindView(R.id.toolbar_title) @Nullable TextView title;
   @BindView(R.id.toolbar_subtitle) @Nullable TextView subtitle;
+  @BindView(R.id.toolbar_avatar) @Nullable CircularImageView avatar;
+  @BindView(R.id.toolbar_avatar_empty) @Nullable TextView avatarEmpty;
 
   @Inject Resource<Typeface, String> typefaceResource;
 
@@ -86,6 +87,7 @@ public class BaseFragment extends Fragment {
     parent().setSupportActionBar(toolbar);
 
     typefaceResource.load(parent(), PATH_TOOLBAR_TYPEFACE)
-        .whenReady(result -> result.ifPresent(typeface -> title.setTypeface(typeface)));
+        .map(typeFace -> typeFace.orElse(Typeface.DEFAULT))
+        .subscribe(typeface -> title.setTypeface(typeface));
   }
 }

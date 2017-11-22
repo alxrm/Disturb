@@ -2,48 +2,44 @@ package rm.com.disturb.data.resource;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.os.Handler;
 import android.support.annotation.NonNull;
+import io.reactivex.Flowable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import java.util.HashMap;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
 import java8.util.Optional;
-import rm.com.disturb.data.async.PendingResult;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import rm.com.disturb.utils.Preconditions;
 
 /**
  * Created by alex
  */
 
+@Singleton //
 public final class TypefaceResource implements Resource<Typeface, String> {
 
+  @Inject TypefaceResource() {
+  }
+
   private final HashMap<String, Typeface> typefaceCache = new HashMap<>(5);
-  private final PendingResult<Typeface> result;
 
-  public TypefaceResource(@NonNull ExecutorService executor, @NonNull Handler handler) {
-    this.result = new PendingResult.Builder<Typeface>() //
-        .executor(executor) //
-        .handler(handler) //
-        .build();
-  }
+  @NonNull @Override
+  public Flowable<Optional<Typeface>> load(@NonNull Context context, @NonNull String path) {
+    return Flowable //
+        .fromCallable(() -> {
+          if (typefaceCache.containsKey(path)) {
+            return Optional.ofNullable(typefaceCache.get(path));
+          }
 
-  @Override public PendingResult<Typeface> load(@NonNull Context context, @NonNull String path) {
-    return result.newBuilder().from(asCallable(context, path)).build();
-  }
+          final Typeface typeface = Typeface.createFromAsset(context.getAssets(), path);
+          Preconditions.checkNotNull(typeface, "Could not load typeface from this path: " + path);
 
-  @NonNull private Callable<Optional<Typeface>> asCallable(@NonNull final Context context,
-      @NonNull final String path) {
-    return () -> {
-      if (typefaceCache.containsKey(path)) {
-        return Optional.ofNullable(typefaceCache.get(path));
-      }
+          typefaceCache.put(path, typeface);
 
-      final Typeface typeface = Typeface.createFromAsset(context.getAssets(), path);
-      Preconditions.checkNotNull(typeface, "Could not load typeface from this path: " + path);
-
-      typefaceCache.put(path, typeface);
-
-      return Optional.of(typeface);
-    };
+          return Optional.of(typeface);
+        }) //
+        .observeOn(AndroidSchedulers.mainThread()) //
+        .subscribeOn(Schedulers.single());
   }
 }
