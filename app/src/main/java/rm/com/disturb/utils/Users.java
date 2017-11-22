@@ -3,6 +3,7 @@ package rm.com.disturb.utils;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.text.MessageFormat;
+import java8.util.Optional;
 import rm.com.disturb.data.telegram.model.Chat;
 import rm.com.disturb.data.telegram.model.User;
 
@@ -18,15 +19,13 @@ public final class Users {
     throw new IllegalStateException("No instances");
   }
 
-  @NonNull public static User ofChat(@Nullable Chat chat) {
-    if (chat == null) {
-      return User.EMPTY_USER;
-    }
-
-    return new User.Builder().firstName(chat.firstName())
-        .lastName(chat.lastName())
-        .username(chat.username())
-        .build();
+  @NonNull public static User ofChat(@NonNull Optional<Chat> chat) {
+    return chat //
+        .map(it -> new User.Builder().firstName(it.firstName())
+            .lastName(it.lastName())
+            .username(it.username())
+            .build()) //
+        .orElse(User.EMPTY_USER);
   }
 
   @NonNull public static String photoLinkOf(@Nullable String path) {

@@ -3,11 +3,12 @@ package rm.com.disturb.utils;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.telephony.SmsMessage;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-
-import static rm.com.disturb.utils.Lists.listOfArray;
-import static rm.com.disturb.utils.Lists.map;
-import static rm.com.disturb.utils.Lists.reduce;
+import java8.util.Optional;
+import java8.util.stream.Collectors;
+import java8.util.stream.StreamSupport;
 
 /**
  * Created by alex
@@ -33,15 +34,22 @@ public final class Sms {
   }
 
   @NonNull private static String unwrapMessageText(@NonNull List<SmsMessage> receivedChunks) {
-    return reduce(receivedChunks, "", (result, item) -> result + item.getMessageBody());
+    return StreamSupport.stream(receivedChunks) //
+        .collect( //
+            StringBuilder::new, //
+            (result, item) -> result.append(item.getMessageBody()), //
+            StringBuilder::append //
+        ) //
+        .toString();
   }
 
   @NonNull private static List<SmsMessage> unwrapMessage(@NonNull Intent intent) {
-    final List<Object> pduChunks = listOfArray((Object[]) intent.getExtras().get(KEY_PDU_CHUNKS));
-
-    return map(pduChunks, item -> {
-      //noinspection deprecation
-      return SmsMessage.createFromPdu((byte[]) item);
-    });
+    //noinspection deprecation
+    return Optional.ofNullable((Object[]) intent.getExtras().get(KEY_PDU_CHUNKS))
+        .map(Arrays::asList)
+        .map(it -> StreamSupport.stream(it)
+            .map(item -> SmsMessage.createFromPdu((byte[]) item))
+            .collect(Collectors.toList()))
+        .orElse(Collections.emptyList());
   }
 }

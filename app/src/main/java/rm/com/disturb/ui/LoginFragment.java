@@ -61,13 +61,13 @@ public final class LoginFragment extends BaseFragment {
 
     showProgressDialog();
 
-    auth.send(TelegramParams.ofChatId(chatId)).whenReady(result -> {
-      if (result) {
+    auth.send(TelegramParams.ofChatId(chatId)).whenReady(result -> result.ifPresent(success -> {
+      if (success) {
         proceedToNotifyFragment();
       } else {
         showError();
       }
-    });
+    }));
   }
 
   @OnClick(R.id.login_activate_bot) void onActivateBot() {

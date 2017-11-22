@@ -45,10 +45,10 @@ public final class SmsRule implements Rule<MessageSignal> {
   }
 
   private void notifyWithContactName(@NonNull String number, @NonNull String messageText) {
-    contactResource.load(context, number).whenReady(contactName -> {
-      final String from = Formats.contactNameOf(contactName, number);
+    contactResource.load(context, number).whenReady(result -> result.ifPresent(contact -> {
+      final String from = Formats.contactNameOf(contact, number);
 
       notifySms(from, messageText);
-    });
+    }));
   }
 }

@@ -27,7 +27,7 @@ public final class Formats {
   }
 
   @NonNull public static String smsOf(@NonNull String from, @NonNull String text) {
-    final String code = extractCodeFrom(text);
+    final String code = magnifyCodeIn(text);
 
     if (!code.isEmpty()) {
       return String.format(Locale.getDefault(), "%s\n_Code: %s_\n%s", boldOf(from), code, text);
@@ -60,7 +60,7 @@ public final class Formats {
     return String.format(Locale.getDefault(), "*%s*", text);
   }
 
-  @NonNull private static String extractCodeFrom(@NonNull String text) {
+  @NonNull private static String magnifyCodeIn(@NonNull String text) {
     final List<String> words = asWords(text);
     boolean keywordMet = false;
 

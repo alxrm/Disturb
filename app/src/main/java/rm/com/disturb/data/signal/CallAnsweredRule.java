@@ -17,7 +17,8 @@ public final class CallAnsweredRule implements Rule<MessageSignal> {
   private final Storage<MessageSignal> signalStorage;
 
   public CallAnsweredRule(@NonNull @Update TelegramCommand<String> update,
-      @NonNull @Erase TelegramCommand<Boolean> erase, @NonNull Storage<MessageSignal> signalStorage) {
+      @NonNull @Erase TelegramCommand<Boolean> erase,
+      @NonNull Storage<MessageSignal> signalStorage) {
     this.update = update;
     this.erase = erase;
     this.signalStorage = signalStorage;
@@ -28,7 +29,7 @@ public final class CallAnsweredRule implements Rule<MessageSignal> {
   }
 
   @Override public void apply(@NonNull final MessageSignal item) {
-    final MessageSignal signal = signalStorage.get(item.key(), MessageSignal.EMPTY_MESSAGE);
+    final MessageSignal signal = signalStorage.get(item.key()).orElse(MessageSignal.EMPTY_MESSAGE);
 
     if (signal.key().equals(Signals.EMPTY) && !signal.type().equals(Signals.CALL_RINGING)) {
       return;

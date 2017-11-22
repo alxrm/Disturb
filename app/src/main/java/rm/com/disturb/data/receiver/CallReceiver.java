@@ -37,7 +37,8 @@ public final class CallReceiver extends BroadcastReceiver {
 
     final String state = intent.getExtras().getString(EXTRA_STATE, EXTRA_STATE_IDLE);
     final String number = intent.getExtras().getString(EXTRA_INCOMING_NUMBER, "Unknown number");
-    final String signalType = nextSignalTypeForState(signalStorage.get(number), state);
+    final MessageSignal signal = signalStorage.get(number).orElse(MessageSignal.EMPTY_MESSAGE);
+    final String signalType = nextSignalTypeForState(signal, state);
 
     Log.e("DBG", "Signal type: " + signalType);
 

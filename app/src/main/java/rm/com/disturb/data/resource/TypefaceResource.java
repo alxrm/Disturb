@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java8.util.Optional;
 import rm.com.disturb.data.async.PendingResult;
 import rm.com.disturb.utils.Preconditions;
 
@@ -20,7 +21,7 @@ public final class TypefaceResource implements Resource<Typeface, String> {
   private final PendingResult<Typeface> result;
 
   public TypefaceResource(@NonNull ExecutorService executor, @NonNull Handler handler) {
-    this.result = new PendingResult.Builder<>(Typeface.DEFAULT) //
+    this.result = new PendingResult.Builder<Typeface>() //
         .executor(executor) //
         .handler(handler) //
         .build();
@@ -30,11 +31,11 @@ public final class TypefaceResource implements Resource<Typeface, String> {
     return result.newBuilder().from(asCallable(context, path)).build();
   }
 
-  @NonNull
-  private Callable<Typeface> asCallable(@NonNull final Context context, @NonNull final String path) {
+  @NonNull private Callable<Optional<Typeface>> asCallable(@NonNull final Context context,
+      @NonNull final String path) {
     return () -> {
       if (typefaceCache.containsKey(path)) {
-        return typefaceCache.get(path);
+        return Optional.ofNullable(typefaceCache.get(path));
       }
 
       final Typeface typeface = Typeface.createFromAsset(context.getAssets(), path);
@@ -42,7 +43,7 @@ public final class TypefaceResource implements Resource<Typeface, String> {
 
       typefaceCache.put(path, typeface);
 
-      return typeface;
+      return Optional.of(typeface);
     };
   }
 }

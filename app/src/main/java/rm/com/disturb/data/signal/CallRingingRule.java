@@ -45,18 +45,21 @@ public final class CallRingingRule implements Rule<MessageSignal> {
   }
 
   private void notifyWithContactName(@NonNull String number, @NonNull MessageSignal item) {
-    contactResource.load(context, number)
-        .whenReady(contactName -> notifyCall(Formats.contactNameOf(contactName, number), item));
+    contactResource //
+        .load(context, number) //
+        .whenReady(result -> result.ifPresent(
+            contact -> notifyCall(Formats.contactNameOf(contact, number), item)));
   }
 
   private void notifyCall(@NonNull String from, @NonNull MessageSignal item) {
     final String message = Formats.callRingingOf(from);
 
-    notify.send(TelegramParams.ofMessage(message)).whenReady(result -> {
-      final MessageSignal consistentSignal =
-          item.newBuilder().remoteKey(result).sender(from).build();
+    notify.send(TelegramParams.ofMessage(message))
+        .whenReady(result -> result.ifPresent(messageId -> {
+          final MessageSignal consistentSignal =
+              item.newBuilder().remoteKey(messageId).sender(from).build();
 
-      signalStorage.put(item.key(), consistentSignal);
-    });
+          signalStorage.put(item.key(), consistentSignal);
+        }));
   }
 }

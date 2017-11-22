@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
+import java8.util.Optional;
 import rm.com.disturb.data.async.PendingResult;
 import rm.com.disturb.data.async.Transform;
 import rm.com.disturb.data.storage.Storage;
@@ -15,7 +16,7 @@ import rm.com.disturb.data.telegram.response.ChatResponse;
 import rm.com.disturb.data.telegram.response.FileResponse;
 import rm.com.disturb.utils.Users;
 
-import static rm.com.disturb.data.telegram.model.User.EMPTY_USER;
+import static rm.com.disturb.utils.Users.photoLinkOf;
 
 /**
  * Created by alex
@@ -30,7 +31,7 @@ public final class UserSource implements Source<User, String> {
       @NonNull TelegramApi api, @NonNull Storage<User> userStorage) {
     this.api = api;
     this.userStorage = userStorage;
-    this.result = new PendingResult.Builder<>(EMPTY_USER) //
+    this.result = new PendingResult.Builder<User>() //
         .executor(executor) //
         .handler(mainThreadHandler) //
         .build();
@@ -44,8 +45,8 @@ public final class UserSource implements Source<User, String> {
     }
 
     return result //
-        .map(new Chat(), toChat(chatId)) //
-        .map(EMPTY_USER, toUser(chatId));
+        .map(toChat(chatId)) //
+        .map(toUser(chatId));
   }
 
   @NonNull private Transform<User, Chat> toChat(@NonNull final String chatId) {
@@ -56,10 +57,8 @@ public final class UserSource implements Source<User, String> {
         throw new IOException("Response was unsuccessful");
       }
 
-      final Chat chat = response.data();
-      final User user = Users.ofChat(chat);
-
-      userStorage.put(chatId, user);
+      final Optional<Chat> chat = Optional.ofNullable(response.data());
+      userStorage.put(chatId, Users.ofChat(chat));
 
       return chat;
     };
@@ -67,27 +66,25 @@ public final class UserSource implements Source<User, String> {
 
   @NonNull private Transform<Chat, User> toUser(@NonNull final String chatId) {
     return input -> {
-      final Photo userPhoto = input.photo();
+      final Photo userPhoto = input.map(Chat::photo).orElse(null);
 
       if (userPhoto == null) {
-        return userStorage.get(String.valueOf(chatId), EMPTY_USER);
+        return userStorage.get(String.valueOf(chatId));
       }
 
       final FileResponse response = api.file(userPhoto.smallFileId()).execute().body();
 
       if (response == null || response.data() == null || !response.isOk()) {
-        return userStorage.get(String.valueOf(chatId), EMPTY_USER);
+        return userStorage.get(String.valueOf(chatId));
       }
 
-      //noinspection ConstantConditions
       final User updated = userStorage.get(String.valueOf(chatId))
-          .newBuilder()
-          .photoUrl(Users.photoLinkOf(response.data().filePath()))
-          .build();
+          .map(it -> it.newBuilder().photoUrl(photoLinkOf(response.data().filePath())).build())
+          .get();
 
       userStorage.put(chatId, updated);
 
-      return updated;
+      return Optional.of(updated);
     };
   }
 }

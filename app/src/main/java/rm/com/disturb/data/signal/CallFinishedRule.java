@@ -31,7 +31,7 @@ public final class CallFinishedRule implements Rule<MessageSignal> {
   }
 
   @Override public void apply(@NonNull MessageSignal item) {
-    final MessageSignal signal = signalStorage.get(item.key(), MessageSignal.EMPTY_MESSAGE);
+    final MessageSignal signal = signalStorage.get(item.key()).orElse(MessageSignal.EMPTY_MESSAGE);
 
     if (signal.key().equals(Signals.EMPTY) && !signal.type().equals(Signals.CALL_ANSWERED)) {
       return;

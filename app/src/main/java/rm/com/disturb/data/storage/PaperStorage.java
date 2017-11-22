@@ -5,7 +5,8 @@ import android.support.annotation.Nullable;
 import io.paperdb.Book;
 import java.util.ArrayList;
 import java.util.List;
-import rm.com.disturb.utils.Lists;
+import java8.util.Optional;
+import java8.util.stream.StreamSupport;
 
 /**
  * Created by alex
@@ -27,12 +28,8 @@ public class PaperStorage<T> implements Storage<T> {
     }
   }
 
-  @Nullable @Override public T get(@NonNull String key) {
-    return database.read(key);
-  }
-
-  @NonNull @Override public T get(@NonNull String key, @NonNull T defaultValue) {
-    return database.read(key, defaultValue);
+  @NonNull @Override public Optional<T> get(@NonNull String key) {
+    return Optional.ofNullable(database.read(key));
   }
 
   @Override public void delete(@NonNull String key) {
@@ -44,16 +41,12 @@ public class PaperStorage<T> implements Storage<T> {
   }
 
   @NonNull @Override public List<T> all() {
-    final List<String> allKeys = database.getAllKeys();
-    final List<T> signals = new ArrayList<>(allKeys.size());
-
-    return Lists.reduce(allKeys, signals, (result, item) -> {
-      if (database.contains(item)) {
-        result.add(get(item));
-      }
-
-      return result;
-    });
+    return StreamSupport.stream(database.getAllKeys()) //
+        .collect( //
+            ArrayList::new, //
+            (result, key) -> get(key).ifPresent(result::add), //
+            ArrayList::addAll //
+        );
   }
 
   @Override public void clear() {

@@ -8,7 +8,7 @@ import android.util.Log;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import rm.com.disturb.utils.Preconditions;
+import java8.util.Optional;
 
 /**
  * Created by alex
@@ -18,18 +18,16 @@ import rm.com.disturb.utils.Preconditions;
 public final class PendingResult<T> {
   private final ExecutorService executor;
   private final Handler handler;
-  private final Callable<T> from;
-  private final T defaultResult;
+  private final Callable<Optional<T>> from;
 
   private PendingResult(@NonNull PendingResult.Builder<T> builder) {
     executor = builder.executor;
     handler = builder.handler;
     from = builder.from;
-    defaultResult = builder.defaultResult;
   }
 
-  public <R> PendingResult<R> map(@NonNull R orElse, @NonNull final Transform<T, R> transformer) {
-    return new PendingResult.Builder<>(orElse) //
+  public <R> PendingResult<R> map(@NonNull Transform<T, R> transformer) {
+    return new Builder<R>() //
         .handler(handler) //
         .executor(executor) //
         .from(() -> transformer.apply(PendingResult.this.from.call())) //
@@ -38,7 +36,7 @@ public final class PendingResult<T> {
 
   public void whenReady(@Nullable final Reply<T> reply) {
     executor.submit(() -> {
-      final T result = await();
+      final Optional<T> result = await();
 
       replyToHandler(reply, result);
     });
@@ -48,7 +46,7 @@ public final class PendingResult<T> {
     whenReady(null);
   }
 
-  @NonNull public T await() {
+  @NonNull public Optional<T> await() {
     try {
       return from.call();
     } catch (RuntimeException e) {
@@ -56,7 +54,7 @@ public final class PendingResult<T> {
       throw new RuntimeException(e);
     } catch (Exception e) {
       logError(e);
-      return defaultResult;
+      return Optional.empty();
     }
   }
 
@@ -64,7 +62,7 @@ public final class PendingResult<T> {
     return new Builder<>(this);
   }
 
-  private void replyToHandler(@Nullable final Reply<T> reply, @NonNull final T result) {
+  private void replyToHandler(@Nullable Reply<T> reply, @NonNull Optional<T> result) {
     if (reply == null) {
       return;
     }
@@ -82,24 +80,15 @@ public final class PendingResult<T> {
     private static final ExecutorService DEFAULT_EXECUTOR = Executors.newSingleThreadExecutor();
     private static final Handler HANDLER = new Handler(Looper.getMainLooper());
 
-    final Callable<T> EMPTY_TASK = new Callable<T>() {
-      @Override public T call() throws Exception {
-        return defaultResult;
-      }
-    };
+    final Callable<Optional<T>> EMPTY_TASK = Optional::empty;
 
     ExecutorService executor;
     Handler handler;
-    Callable<T> from;
-    T defaultResult;
+    Callable<Optional<T>> from;
 
-    public Builder(@NonNull T nextDefaultResult) {
-      Preconditions.checkNotNull(nextDefaultResult,
-          "Default value in PendingResult cannot be null");
-
+    public Builder() {
       executor = DEFAULT_EXECUTOR;
       handler = HANDLER;
-      defaultResult = nextDefaultResult;
       from = EMPTY_TASK;
     }
 
@@ -107,12 +96,6 @@ public final class PendingResult<T> {
       executor = current.executor;
       handler = current.handler;
       from = current.from;
-      defaultResult = current.defaultResult;
-    }
-
-    @NonNull public Builder<T> defaultResult(@NonNull T defaultResult) {
-      this.defaultResult = defaultResult;
-      return this;
     }
 
     @NonNull public Builder<T> executor(@NonNull ExecutorService executor) {
@@ -125,7 +108,7 @@ public final class PendingResult<T> {
       return this;
     }
 
-    @NonNull public Builder<T> from(@NonNull Callable<T> from) {
+    @NonNull public Builder<T> from(@NonNull Callable<Optional<T>> from) {
       this.from = from;
       return this;
     }

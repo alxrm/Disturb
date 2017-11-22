@@ -117,20 +117,21 @@ public final class NotifyFragment extends BaseFragment
 
   @SuppressWarnings("ConstantConditions") //
   private void loadUser() {
-    userSource.retrieve(chatId.get()).whenReady(result -> {
-      title.setText(result.firstName() + " " + result.lastName());
-      subtitle.setText(String.format("@%s", result.username()));
+    userSource.retrieve(chatId.get()).whenReady(result -> result.ifPresent(user -> {
+      title.setText(user.firstName() + " " + user.lastName());
 
-      if (result.username().isEmpty()) {
+      subtitle.setText(String.format("@%s", user.username()));
+
+      if (user.username().isEmpty()) {
         subtitle.setVisibility(View.GONE);
         title.setTextSize(20);
       }
 
       Glide.with(parent())
-          .load(result.photoUrl())
+          .load(user.photoUrl())
           .transition(DrawableTransitionOptions.withCrossFade())
           .into(avatar);
-    });
+    }));
   }
 
   private boolean areAnyPermissionsGranted() {

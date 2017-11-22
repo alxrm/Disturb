@@ -49,6 +49,9 @@ dependencies {
   compile glide.lib
   compile glide.okhttpIntegration
 
+  compile streamSupport.lib
+//  compile rxjava.lib
+
   compile 'io.paperdb:paperdb:2.6'
   compile "com.squareup.retrofit2:converter-gson:$versions.retrofit"
   compile 'com.mikhaellopez:circularimageview:3.0.2'

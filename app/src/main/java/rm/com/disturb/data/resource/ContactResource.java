@@ -6,8 +6,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
+import java8.util.Optional;
 import rm.com.disturb.data.async.PendingResult;
 
 import static android.provider.BaseColumns._ID;
@@ -18,22 +18,22 @@ import static android.provider.ContactsContract.PhoneLookup.DISPLAY_NAME;
  * Created by alex
  */
 public final class ContactResource implements Resource<String, String> {
-  private static final String EMPTY_NAME = "";
-
   private final PendingResult<String> result;
 
   public ContactResource(@NonNull ExecutorService executor, @NonNull Handler handler) {
-    this.result = new PendingResult.Builder<>(EMPTY_NAME) //
+    this.result = new PendingResult.Builder<String>() //
         .executor(executor) //
         .handler(handler) //
         .build();
   }
 
   @Override public PendingResult<String> load(@NonNull Context context, @NonNull String phone) {
-    return result.newBuilder().from(findNameCallable(context.getContentResolver(), phone)).build();
+    return result.newBuilder()
+        .from(() -> findNameBlocking(context.getContentResolver(), phone))
+        .build();
   }
 
-  @NonNull private String findNameBlocking(@NonNull ContentResolver contentResolver,
+  @NonNull private Optional<String> findNameBlocking(@NonNull ContentResolver contentResolver,
       @NonNull String phoneNumber) {
     final Uri uri = Uri.withAppendedPath(CONTENT_FILTER_URI, Uri.encode(phoneNumber));
     final Cursor contactLookup = contentResolver.query(uri, new String[] {
@@ -41,7 +41,7 @@ public final class ContactResource implements Resource<String, String> {
     }, null, null, null);
 
     if (contactLookup == null) {
-      return EMPTY_NAME;
+      return Optional.empty();
     }
 
     try {
@@ -50,17 +50,12 @@ public final class ContactResource implements Resource<String, String> {
         final int columnIndex = contactLookup.getColumnIndex(DISPLAY_NAME);
         final String name = contactLookup.getString(columnIndex);
 
-        return name == null ? EMPTY_NAME : name;
+        return Optional.ofNullable(name);
       }
     } finally {
       contactLookup.close();
     }
 
-    return EMPTY_NAME;
-  }
-
-  @NonNull private Callable<String> findNameCallable(@NonNull final ContentResolver contentResolver,
-      @NonNull final String phoneNumber) {
-    return () -> findNameBlocking(contentResolver, phoneNumber);
+    return Optional.empty();
   }
 }

@@ -86,6 +86,6 @@ public class BaseFragment extends Fragment {
     parent().setSupportActionBar(toolbar);
 
     typefaceResource.load(parent(), PATH_TOOLBAR_TYPEFACE)
-        .whenReady(result -> title.setTypeface(result));
+        .whenReady(result -> result.ifPresent(typeface -> title.setTypeface(typeface)));
   }
 }
