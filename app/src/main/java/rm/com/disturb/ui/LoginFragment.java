@@ -35,7 +35,7 @@ public final class LoginFragment extends BaseFragment {
   private @NonNull String chatId = "";
   private @NonNull String password = "";
 
-  public static LoginFragment newInstance() {
+  @NonNull public static LoginFragment newInstance() {
     return new LoginFragment();
   }
 

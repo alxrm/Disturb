@@ -5,7 +5,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +32,7 @@ import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Password;
 import rm.com.disturb.utils.Permissions;
 
-import static rm.com.disturb.utils.UserFormats.colorOf;
+import static rm.com.disturb.utils.UserFormats.avatarColorFilterOf;
 import static rm.com.disturb.utils.UserFormats.iconLettersOf;
 
 /**
@@ -61,7 +60,7 @@ public final class NotifyFragment extends BaseFragment
   @Inject Source<User, String> userSource;
   @Inject Storage<User> userStorage;
 
-  public static NotifyFragment newInstance() {
+  @NonNull public static NotifyFragment newInstance() {
     return new NotifyFragment();
   }
 
@@ -150,7 +149,7 @@ public final class NotifyFragment extends BaseFragment
   @SuppressWarnings("ConstantConditions") //
   private void showUserInfo(@NonNull User user) {
     avatarEmpty.setText(iconLettersOf(user.firstName()));
-    DrawableCompat.setTint(avatarEmpty.getBackground(), colorOf(user.firstName()));
+    avatarEmpty.getBackground().setColorFilter(avatarColorFilterOf(user.firstName()));
 
     title.setText(user.firstName() + " " + user.lastName());
     subtitle.setText(String.format("@%s", user.username()));
