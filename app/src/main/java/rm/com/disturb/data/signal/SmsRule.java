@@ -53,7 +53,7 @@ public final class SmsRule implements Rule<MessageSignal> {
 
   private void notifyWithContactName(@NonNull String number, @NonNull String messageText) {
     contactResource.load(context, number)
-        .map(contact -> contact.orElse(number))
+        .map(contact -> contact.orElse(""))
         .doOnNext(contact -> notifySms(Formats.contactNameOf(contact, number), messageText))
         .subscribe();
   }

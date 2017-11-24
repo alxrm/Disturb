@@ -66,7 +66,7 @@ public final class CallRingingRule implements Rule<MessageSignal> {
   private void notifyWithContactName(@NonNull String number, @NonNull MessageSignal item) {
     contactResource //
         .load(context, number) //
-        .map(contact -> contact.orElse(number))
+        .map(contact -> contact.orElse(""))
         .doOnNext(contact -> notifyCall(Formats.contactNameOf(contact, number), item))
         .subscribe();
   }

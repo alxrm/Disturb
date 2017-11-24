@@ -134,13 +134,12 @@ public final class NotifyFragment extends BaseFragment
         });
   }
 
-  @SuppressWarnings("ConstantConditions") //
   private void loadAvatar(@NonNull String photoUrl) {
-    if (photoUrl.isEmpty()) {
+    if (photoUrl.isEmpty() || avatar == null) {
       return;
     }
 
-    Glide.with(parent())
+    Glide.with(this)
         .load(photoUrl)
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(avatar);
