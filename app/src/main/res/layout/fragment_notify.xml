@@ -19,10 +19,15 @@
       android:layout_below="@id/appbar"
       >
 
+    <include
+        layout="@layout/layout_settings"
+        />
+
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
+        android:background="#BFFFFFFF"
         android:gravity="center"
         android:orientation="vertical"
         >
@@ -31,7 +36,7 @@
           android:id="@+id/notify_test_send"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_margin="32dp"
+          android:layout_margin="24dp"
           android:alpha="0.5"
           android:background="?attr/selectableItemBackgroundBorderless"
           android:clickable="true"
