@@ -1,8 +1,11 @@
 package rm.com.disturb;
 
 import android.app.Application;
+import android.content.IntentFilter;
+import android.telephony.TelephonyManager;
 import io.paperdb.Paper;
 import io.reactivex.plugins.RxJavaPlugins;
+import rm.com.disturb.data.receiver.CallReceiver;
 import rm.com.disturb.inject.DaggerDisturbComponent;
 import rm.com.disturb.inject.DisturbComponent;
 import rm.com.disturb.inject.DisturbModule;
@@ -25,6 +28,9 @@ public final class DisturbApplication extends Application {
         .application(this)
         .disturbModule(new DisturbModule())
         .build();
+
+    registerReceiver(new CallReceiver(),
+        new IntentFilter(TelephonyManager.ACTION_PHONE_STATE_CHANGED));
   }
 
   public DisturbComponent injector() {
