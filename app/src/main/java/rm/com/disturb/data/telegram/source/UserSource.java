@@ -1,7 +1,7 @@
 package rm.com.disturb.data.telegram.source;
 
 import android.support.annotation.NonNull;
-import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
@@ -32,12 +32,12 @@ public final class UserSource implements Source<User, String> {
     this.userStorage = userStorage;
   }
 
-  @NonNull @Override public Flowable<Optional<User>> retrieve(@NonNull String chatId) {
+  @NonNull @Override public Single<Optional<User>> retrieve(@NonNull String chatId) {
     if (userStorage.contains(chatId)) {
-      Flowable.fromCallable(() -> userStorage.get(chatId));
+      return Single.fromCallable(() -> userStorage.get(chatId));
     }
 
-    return Flowable.fromCallable(chatFor(chatId))
+    return Single.fromCallable(chatFor(chatId))
         .map(toUser(chatId))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io());
@@ -66,7 +66,8 @@ public final class UserSource implements Source<User, String> {
         return userStorage.get(String.valueOf(chatId));
       }
 
-      final TelegramResponse<FileData> response = api.file(userPhoto.smallFileId()).execute().body();
+      final TelegramResponse<FileData> response =
+          api.file(userPhoto.smallFileId()).execute().body();
 
       if (response == null || response.data() == null || !response.isOk()) {
         return userStorage.get(String.valueOf(chatId));

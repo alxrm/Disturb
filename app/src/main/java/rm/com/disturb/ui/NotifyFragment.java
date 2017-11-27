@@ -21,7 +21,6 @@ import java8.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import rm.com.disturb.R;
-import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.storage.StringPreference;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
@@ -56,9 +55,7 @@ public final class NotifyFragment extends BaseFragment
   @Inject @ChatId StringPreference chatIdPreference;
   @Inject @Password StringPreference passwordPreference;
   @Inject @ChatId Provider<String> chatId;
-
   @Inject Source<User, String> userSource;
-  @Inject Storage<User> userStorage;
 
   @NonNull public static NotifyFragment newInstance() {
     return new NotifyFragment();
@@ -123,8 +120,6 @@ public final class NotifyFragment extends BaseFragment
   //}
 
   private void loadUser() {
-    userStorage.get(chatId.get()).ifPresent(this::showUserInfo);
-
     userSource.retrieve(chatId.get())
         .filter(Optional::isPresent)
         .map(Optional::get)

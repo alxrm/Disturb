@@ -5,7 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.annotation.NonNull;
-import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import java8.util.Optional;
@@ -27,8 +27,8 @@ public final class ContactResource implements Resource<String, String> {
   }
 
   @NonNull @Override
-  public Flowable<Optional<String>> load(@NonNull Context context, @NonNull String phone) {
-    return Flowable.fromCallable(() -> findNameBlocking(context.getContentResolver(), phone))
+  public Single<Optional<String>> load(@NonNull Context context, @NonNull String phone) {
+    return Single.fromCallable(() -> findNameBlocking(context.getContentResolver(), phone))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.single());
   }

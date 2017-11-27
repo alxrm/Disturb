@@ -3,7 +3,7 @@ package rm.com.disturb.data.resource;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
-import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import java.util.HashMap;
@@ -25,8 +25,8 @@ public final class TypefaceResource implements Resource<Typeface, String> {
   private final HashMap<String, Typeface> typefaceCache = new HashMap<>(5);
 
   @NonNull @Override
-  public Flowable<Optional<Typeface>> load(@NonNull Context context, @NonNull String path) {
-    return Flowable //
+  public Single<Optional<Typeface>> load(@NonNull Context context, @NonNull String path) {
+    return Single //
         .fromCallable(() -> {
           if (typefaceCache.containsKey(path)) {
             return Optional.ofNullable(typefaceCache.get(path));

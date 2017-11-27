@@ -67,7 +67,7 @@ public final class CallRingingRule implements Rule<MessageSignal> {
     contactResource //
         .load(context, number) //
         .map(contact -> contact.orElse(""))
-        .doOnNext(contact -> notifyCall(Formats.contactNameOf(contact, number), item))
+        .doOnSuccess(contact -> notifyCall(Formats.contactNameOf(contact, number), item))
         .subscribe();
   }
 }

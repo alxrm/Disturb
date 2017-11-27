@@ -1,7 +1,7 @@
 package rm.com.disturb.data.telegram.command;
 
 import android.support.annotation.NonNull;
-import io.reactivex.Flowable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 import java.io.IOException;
@@ -18,8 +18,8 @@ public abstract class AbstractTelegramCommand<T> implements TelegramCommand<T> {
     this.api = api;
   }
 
-  @NonNull @Override public Flowable<T> send(@NonNull TelegramParams params) {
-    return Flowable.fromCallable(() -> sendBlocking(params))
+  @NonNull @Override public Single<T> send(@NonNull TelegramParams params) {
+    return Single.fromCallable(() -> sendBlocking(params))
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.single());
   }
