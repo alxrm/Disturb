@@ -123,21 +123,7 @@ public final class NotifyFragment extends BaseFragment
     userSource.retrieve(chatId.get())
         .filter(Optional::isPresent)
         .map(Optional::get)
-        .subscribe(user -> {
-          showUserInfo(user);
-          loadAvatar(user.photoUrl());
-        });
-  }
-
-  private void loadAvatar(@NonNull String photoUrl) {
-    if (photoUrl.isEmpty() || avatar == null) {
-      return;
-    }
-
-    Glide.with(this)
-        .load(photoUrl)
-        .transition(DrawableTransitionOptions.withCrossFade())
-        .into(avatar);
+        .subscribe(this::showUserInfo);
   }
 
   @SuppressWarnings("ConstantConditions") //
@@ -152,6 +138,15 @@ public final class NotifyFragment extends BaseFragment
       subtitle.setVisibility(View.GONE);
       title.setTextSize(20);
     }
+
+    if (user.photoUrl().isEmpty()) {
+      return;
+    }
+
+    Glide.with(this)
+        .load(user.photoUrl())
+        .transition(DrawableTransitionOptions.withCrossFade())
+        .into(avatar);
   }
 
   private boolean areAnyPermissionsGranted() {

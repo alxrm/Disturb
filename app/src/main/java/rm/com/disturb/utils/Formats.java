@@ -27,7 +27,7 @@ public final class Formats {
   }
 
   @NonNull public static String smsOf(@NonNull String from, @NonNull String text) {
-    final String code = magnifyCodeIn(text);
+    final String code = magnifyCodeIn(escapeMarkdown(text));
 
     if (!code.isEmpty()) {
       return String.format(Locale.getDefault(), "%s\n_Code: %s_\n%s", boldOf(from), code, text);
@@ -58,6 +58,10 @@ public final class Formats {
 
   @NonNull private static String boldOf(@NonNull String text) {
     return String.format(Locale.getDefault(), "*%s*", text);
+  }
+
+  @NonNull private static String escapeMarkdown(@NonNull String text) {
+    return text.replaceAll("\\*", "\\*").replaceAll("_", "\\_");
   }
 
   @NonNull private static String magnifyCodeIn(@NonNull String text) {
