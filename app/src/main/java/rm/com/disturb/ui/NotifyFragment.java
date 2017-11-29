@@ -50,6 +50,7 @@ public final class NotifyFragment extends BaseFragment
 
   @BindView(R.id.notify_test_send) ImageView testCall;
   @BindView(R.id.notify_description_text) TextView description;
+  @BindView(R.id.settings_header_behaviour) TextView settingsHeader;
 
   @Inject @Notify TelegramCommand<Optional<String>> notify;
   @Inject @ChatId StringPreference chatIdPreference;
@@ -80,6 +81,8 @@ public final class NotifyFragment extends BaseFragment
     if (!areAllPermissionsGranted()) {
       requestAllPermissions();
     }
+
+    setupSettingsHeaders();
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -147,6 +150,13 @@ public final class NotifyFragment extends BaseFragment
         .load(user.photoUrl())
         .transition(DrawableTransitionOptions.withCrossFade())
         .into(avatar);
+  }
+
+  private void setupSettingsHeaders() {
+    typefaceResource.load(parent(), PATH_MEDIUM_TYPEFACE)
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .subscribe(font -> settingsHeader.setTypeface(font));
   }
 
   private boolean areAnyPermissionsGranted() {

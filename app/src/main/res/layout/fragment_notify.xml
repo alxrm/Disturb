@@ -30,6 +30,7 @@
         android:background="#BFFFFFFF"
         android:gravity="center"
         android:orientation="vertical"
+        android:visibility="gone"
         >
 
       <ImageView

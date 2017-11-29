@@ -25,7 +25,7 @@ import rm.com.disturb.utils.Preconditions;
  */
 
 public class BaseFragment extends Fragment {
-  private static final String PATH_TOOLBAR_TYPEFACE = "Roboto-Medium.ttf";
+  static final String PATH_MEDIUM_TYPEFACE = "Roboto-Medium.ttf";
 
   @BindView(R.id.toolbar) @Nullable Toolbar toolbar;
   @BindView(R.id.toolbar_title) @Nullable TextView title;
@@ -86,7 +86,7 @@ public class BaseFragment extends Fragment {
 
     parent().setSupportActionBar(toolbar);
 
-    typefaceResource.load(parent(), PATH_TOOLBAR_TYPEFACE)
+    typefaceResource.load(parent(), PATH_MEDIUM_TYPEFACE)
         .map(typeFace -> typeFace.orElse(Typeface.DEFAULT))
         .subscribe(typeface -> title.setTypeface(typeface));
   }
