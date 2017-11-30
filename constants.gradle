@@ -29,7 +29,7 @@ ext {
               datePicker   : "3.1.1",
               dbflow       : "4.0.0-beta5",
               streamSupport: "1.5.6",
-              rxjava       : "2.1.6",
+              rxjava       : "2.1.7",
               rxandroid    : "2.0.1"]
 
   kotlin = [plugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin",

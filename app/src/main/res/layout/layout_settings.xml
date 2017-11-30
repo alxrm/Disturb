@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#f2f2f2"
     >
 
@@ -99,7 +100,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="Edit message"
+            android:text="Delete message"
             android:textColor="@color/color_text_secondary_dark"
             android:textSize="12sp"
             />
@@ -122,6 +123,9 @@
       android:layout_alignParentEnd="true"
       android:layout_alignParentRight="true"
       android:layout_margin="16dp"
+      android:clickable="true"
+      app:srcCompat="@drawable/ic_notifications_send"
+      app:rippleColor="@android:color/white"
       />
 
 </RelativeLayout>
