@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#f2f2f2"
+    android:background="@color/color_settings_background"
     >
 
   <ScrollView
@@ -15,105 +15,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
         android:orientation="vertical"
+        android:paddingBottom="6dp"
         >
 
-      <TextView
-          android:id="@+id/settings_header_behaviour"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@color/color_settings_header"
-          android:paddingBottom="10dp"
-          android:paddingLeft="16dp"
-          android:paddingRight="16dp"
-          android:paddingTop="10dp"
-          android:text="Behaviour"
-          android:textColor="@color/color_text_secondary_dark"
-          android:textSize="15sp"
-          />
+      <include layout="@layout/layout_settings_calls"/>
 
       <View
           android:layout_width="match_parent"
-          android:layout_height="0.5dp"
-          android:background="@color/color_separator_dark"
+          android:layout_height="3dp"
+          android:background="@drawable/shadow"
           />
 
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="80dp"
-          android:background="?attr/selectableItemBackground"
-          android:clickable="true"
-          android:gravity="center_vertical"
-          android:orientation="vertical"
-          android:paddingLeft="16dp"
-          android:paddingRight="16dp"
-          >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Missed call"
-            android:textColor="@color/color_text_primary_dark"
-            android:textSize="16sp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Edit message"
-            android:textColor="@color/color_text_secondary_dark"
-            android:textSize="12sp"
-            />
-
-      </LinearLayout>
+      <include layout="@layout/layout_settings_sms"/>
 
       <View
           android:layout_width="match_parent"
-          android:layout_height="0.2dp"
-          android:layout_gravity="bottom"
-          android:alpha="0.5"
-          android:background="@color/color_separator_dark"
-          />
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="80dp"
-          android:background="?attr/selectableItemBackground"
-          android:clickable="true"
-          android:gravity="center_vertical"
-          android:orientation="vertical"
-          android:paddingLeft="16dp"
-          android:paddingRight="16dp"
-          >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Finished call"
-            android:textColor="@color/color_text_primary_dark"
-            android:textSize="16sp"
-            />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:text="Delete message"
-            android:textColor="@color/color_text_secondary_dark"
-            android:textSize="12sp"
-            />
-
-      </LinearLayout>
-
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/color_disabled"
+          android:layout_height="3dp"
+          android:background="@drawable/shadow"
           />
 
     </LinearLayout>
+
   </ScrollView>
 
   <android.support.design.widget.FloatingActionButton
@@ -124,8 +47,8 @@
       android:layout_alignParentRight="true"
       android:layout_margin="16dp"
       android:clickable="true"
-      app:srcCompat="@drawable/ic_notifications_send"
       app:rippleColor="@android:color/white"
+      app:srcCompat="@drawable/ic_notifications_send"
       />
 
 </RelativeLayout>

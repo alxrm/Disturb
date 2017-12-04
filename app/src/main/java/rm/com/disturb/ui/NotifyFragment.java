@@ -1,6 +1,7 @@
 package rm.com.disturb.ui;
 
 import android.Manifest;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,9 +15,12 @@ import android.widget.Toast;
 import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.BindView;
+import butterknife.BindViews;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import java.util.List;
 import java8.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -42,6 +46,9 @@ public final class NotifyFragment extends BaseFragment
     implements PasswordDialogFragment.OnPasswordConfirmationListener {
   private static final int REQ_PERMISSION = 1;
 
+  static final ButterKnife.Setter<TextView, Typeface> TYPEFACE =
+      (view, value, index) -> view.setTypeface(value);
+
   @BindString(R.string.message_test_notification) String messageTestNotification;
   @BindString(R.string.description_test_notification) String descriptionTestNotification;
   @BindString(R.string.permissions_rationale) String permissionsRationale;
@@ -50,7 +57,10 @@ public final class NotifyFragment extends BaseFragment
 
   @BindView(R.id.notify_test_send) ImageView testCall;
   @BindView(R.id.notify_description_text) TextView description;
-  @BindView(R.id.settings_header_behaviour) TextView settingsHeader;
+
+  @BindViews({ //
+      R.id.settings_header_calls, R.id.settings_header_sms
+  }) List<TextView> settingsHeaders;
 
   @Inject @Notify TelegramCommand<Optional<String>> notify;
   @Inject @ChatId StringPreference chatIdPreference;
@@ -156,7 +166,7 @@ public final class NotifyFragment extends BaseFragment
     typefaceResource.load(parent(), PATH_MEDIUM_TYPEFACE)
         .filter(Optional::isPresent)
         .map(Optional::get)
-        .subscribe(font -> settingsHeader.setTypeface(font));
+        .subscribe(font -> ButterKnife.apply(settingsHeaders, TYPEFACE, font));
   }
 
   private boolean areAnyPermissionsGranted() {

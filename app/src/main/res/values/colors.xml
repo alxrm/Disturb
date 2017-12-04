@@ -12,7 +12,7 @@
   <color name="color_text_primary_dark">#DB000000</color>
   <color name="color_text_secondary_dark">#73000000</color>
   <color name="color_separator_dark">#5C000000</color>
-  <color name="color_settings_header">#F2F2F2</color>
+  <color name="color_settings_background">#F2F2F2</color>
   <color name="color_disabled">#4D616161</color>
 
   <!-- Opaque values: http://stackoverflow.com/a/25170174/2270722
