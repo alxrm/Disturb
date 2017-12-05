@@ -23,7 +23,7 @@
 
       <View
           android:layout_width="match_parent"
-          android:layout_height="3dp"
+          android:layout_height="2.5dp"
           android:background="@drawable/shadow"
           />
 
@@ -31,7 +31,7 @@
 
       <View
           android:layout_width="match_parent"
-          android:layout_height="3dp"
+          android:layout_height="2.5dp"
           android:background="@drawable/shadow"
           />
 
@@ -40,6 +40,7 @@
   </ScrollView>
 
   <android.support.design.widget.FloatingActionButton
+      android:id="@+id/settings_notify"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"

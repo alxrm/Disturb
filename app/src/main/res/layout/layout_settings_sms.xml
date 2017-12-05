@@ -6,19 +6,19 @@
     android:orientation="vertical"
     >
 
-    <TextView
-        android:id="@+id/settings_header_sms"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/color_settings_background"
-        android:paddingBottom="10dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="10dp"
-        android:text="Sms"
-        android:textColor="@color/color_text_secondary_dark"
-        android:textSize="15sp"
-        />
+  <TextView
+      android:id="@+id/settings_sms_header"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/color_settings_background"
+      android:paddingBottom="10dp"
+      android:paddingLeft="16dp"
+      android:paddingRight="16dp"
+      android:paddingTop="10dp"
+      android:text="SMS"
+      android:textColor="@color/color_text_secondary_dark"
+      android:textSize="15sp"
+      />
 
   <View
       android:layout_width="match_parent"
@@ -27,6 +27,7 @@
       />
 
   <RelativeLayout
+      android:id="@+id/settings_sms_toggle_item"
       android:layout_width="match_parent"
       android:layout_height="56dp"
       android:background="?attr/selectableItemBackground"
@@ -39,12 +40,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:text="Notify about sms messages"
+        android:text="Notify about SMS messages"
         android:textColor="@color/color_text_primary_dark"
         android:textSize="16sp"
         />
 
     <android.support.v7.widget.SwitchCompat
+        android:id="@+id/settings_sms_toggle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -62,7 +64,9 @@
       android:alpha="0.5"
       android:background="@color/color_separator_dark"
       />
+
   <RelativeLayout
+      android:id="@+id/settings_sms_codes_item"
       android:layout_width="match_parent"
       android:layout_height="56dp"
       android:background="?attr/selectableItemBackground"
@@ -81,6 +85,7 @@
         />
 
     <android.support.v7.widget.SwitchCompat
+        android:id="@+id/settings_sms_codes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"

@@ -59,7 +59,7 @@ public final class NotifyFragment extends BaseFragment
   @BindView(R.id.notify_description_text) TextView description;
 
   @BindViews({ //
-      R.id.settings_header_calls, R.id.settings_header_sms
+      R.id.settings_calls_header, R.id.settings_sms_header
   }) List<TextView> settingsHeaders;
 
   @Inject @Notify TelegramCommand<Optional<String>> notify;
