@@ -10,11 +10,9 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.BindColor;
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.BindViews;
@@ -59,10 +57,8 @@ public final class NotifyFragment extends BaseFragment
   @BindString(R.string.description_test_notification) String descriptionTestNotification;
   @BindString(R.string.permissions_rationale) String permissionsRationale;
   @BindString(R.string.loading_text) String loadingText;
-  @BindColor(R.color.color_icon_activated) int colorIconActivated;
 
-  @BindView(R.id.notify_test_send) ImageView testCall;
-  @BindView(R.id.notify_description_text) TextView description;
+  @BindView(R.id.notify_permissions_overlay) LinearLayout permissionsOverlay;
 
   @BindViews({ //
       R.id.settings_calls_header, R.id.settings_sms_header
@@ -75,6 +71,9 @@ public final class NotifyFragment extends BaseFragment
   @BindViews({
       R.id.settings_sms_codes_item
   }) List<ViewGroup> settingsSmsItems;
+
+  @BindView(R.id.settings_sms_toggle) SwitchCompat settingsSmsToggle;
+  @BindView(R.id.settings_calls_toggle) SwitchCompat settingsCallsToggle;
 
   @BindView(R.id.settings_calls_root) LinearLayout settingsCallsRoot;
   @BindView(R.id.settings_sms_root) LinearLayout settingsSmsRoot;
@@ -132,12 +131,13 @@ public final class NotifyFragment extends BaseFragment
   }
 
   @OnClick(R.id.settings_notify) void onSendTestNotification() {
+    notify.send(TelegramParams.ofMessage(messageTestNotification)).subscribe();
+  }
+
+  @OnClick(R.id.notify_permissions_icon) void onRequestPermissions() {
     if (!areAnyPermissionsGranted()) {
       requestAllPermissions();
-      return;
     }
-
-    notify.send(TelegramParams.ofMessage(messageTestNotification)).subscribe();
   }
 
   @OnCheckedChanged({ R.id.settings_calls_toggle, R.id.settings_sms_toggle }) //
@@ -216,9 +216,7 @@ public final class NotifyFragment extends BaseFragment
   }
 
   private void indicateNotificationsAvailable() {
-    description.setText(descriptionTestNotification);
-    testCall.setAlpha(1.0F);
-    testCall.setColorFilter(colorIconActivated);
+    permissionsOverlay.setVisibility(View.GONE);
   }
 
   private void requestAllPermissions() {
