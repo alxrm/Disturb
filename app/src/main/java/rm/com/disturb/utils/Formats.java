@@ -27,13 +27,15 @@ public final class Formats {
   }
 
   @NonNull public static String smsOf(@NonNull String from, @NonNull String text) {
-    final String code = magnifyCodeIn(escapeMarkdown(text));
+    final String mdFreeText = escapeMarkdown(text);
+    final String code = magnifyCodeIn(mdFreeText);
 
     if (!code.isEmpty()) {
-      return String.format(Locale.getDefault(), "%s\n_Code: %s_\n%s", boldOf(from), code, text);
+      return String.format(Locale.getDefault(), "%s\n_Code: %s_\n%s", boldOf(from), code,
+          mdFreeText);
     }
 
-    return String.format(Locale.getDefault(), "%s\n%s", boldOf(from), text);
+    return String.format(Locale.getDefault(), "%s\n%s", boldOf(from), mdFreeText);
   }
 
   @NonNull public static String callRingingOf(@NonNull String from) {
@@ -68,8 +70,10 @@ public final class Formats {
     final List<String> words = asWords(text);
     boolean keywordMet = false;
 
+    System.out.println(words);
+
     for (String word : words) {
-      if (KEYWORDS.contains(word)) {
+      if (KEYWORDS.contains(word.toLowerCase())) {
         keywordMet = true;
         continue;
       }
