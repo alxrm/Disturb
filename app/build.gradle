@@ -42,6 +42,8 @@ dependencies {
   compile square.dagger
   compile square.butterknife
   compile square.retrofit
+  compile square.retrofitGson
+  compile square.retrofitRxJava
 
   compile supportDeps.design
   compile supportDeps.appCompat
@@ -54,6 +56,5 @@ dependencies {
   compile rxjava.android
 
   compile 'io.paperdb:paperdb:2.6'
-  compile "com.squareup.retrofit2:converter-gson:$versions.retrofit"
   compile 'com.mikhaellopez:circularimageview:3.0.2'
 }

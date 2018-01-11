@@ -1,13 +1,11 @@
 package rm.com.disturb.data.telegram.command;
 
 import android.support.annotation.NonNull;
-import java.io.IOException;
+import io.reactivex.Single;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import retrofit2.Response;
 import rm.com.disturb.data.telegram.TelegramApi;
-import rm.com.disturb.data.telegram.model.Message;
 import rm.com.disturb.data.telegram.model.TelegramResponse;
 
 /**
@@ -15,21 +13,16 @@ import rm.com.disturb.data.telegram.model.TelegramResponse;
  */
 
 @Singleton //
-public final class TelegramAuth extends AbstractTelegramCommand<Boolean> {
+public final class TelegramAuth implements TelegramCommand<Boolean> {
   private static final String MESSAGE_AUTH = "Authorized!";
+  private final TelegramApi api;
 
   @Inject public TelegramAuth(@NonNull TelegramApi api) {
-    super(api);
+    this.api = api;
   }
 
-  @NonNull @Override Boolean sendBlocking(@NonNull TelegramParams params) throws IOException {
+  @NonNull @Override public Single<Boolean> send(@NonNull TelegramParams params) {
     final Map<String, String> nextParams = params.newBuilder().text(MESSAGE_AUTH).build().asMap();
-
-    return isResponseValid(api.sendMessage(nextParams).execute());
-  }
-
-  private boolean isResponseValid(@NonNull Response<TelegramResponse<Message>> response) {
-    final TelegramResponse<Message> body = response.body();
-    return body != null && response.isSuccessful() && body.isOk();
+    return api.sendMessage(nextParams).map(TelegramResponse::isOk);
   }
 }
