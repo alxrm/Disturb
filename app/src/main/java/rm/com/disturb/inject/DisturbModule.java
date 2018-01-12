@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rm.com.disturb.BuildConfig;
 import rm.com.disturb.data.signal.MessageSignal;
@@ -74,8 +75,9 @@ public final class DisturbModule {
 
   @Provides @Singleton static TelegramApi provideRetrofit(@NonNull OkHttpClient httpClient) {
     return new Retrofit.Builder().client(httpClient)
-        .addConverterFactory(GsonConverterFactory.create())
         .baseUrl(MessageFormat.format("{0}{1}/", TELEGRAM_BASE_URL, BuildConfig.BOT_TOKEN))
+        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .client(httpClient)
         .build()
         .create(TelegramApi.class);

@@ -6,7 +6,6 @@ import android.graphics.PorterDuffColorFilter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import java.text.MessageFormat;
-import java8.util.Optional;
 import rm.com.disturb.data.telegram.model.Chat;
 import rm.com.disturb.data.telegram.model.User;
 
@@ -17,24 +16,26 @@ import static rm.com.disturb.data.telegram.TelegramApi.TELEGRAM_FILE_URL;
  * Created by alex
  */
 
-public final class UserFormats {
+public final class Users {
   public static final int[] AVATAR_ICON_COLORS = {
       0xffe57373, 0xfff06292, 0xffba68c8, 0xff9575cd, 0xff7986cb, 0xff64b5f6, 0xff4fc3f7,
       0xff4dd0e1, 0xff4db6ac, 0xff81c784, 0xffaed581, 0xffff8a65, 0xffd4e157, 0xffffd54f,
       0xffffb74d, 0xffa1887f, 0xff90a4ae
   };
 
-  private UserFormats() {
+  private Users() {
     throw new IllegalStateException("No instances");
   }
 
-  @NonNull public static User ofChat(@NonNull Optional<Chat> chat) {
-    return chat //
-        .map(it -> new User.Builder().firstName(it.firstName())
-            .lastName(it.lastName())
-            .username(it.username())
-            .build()) //
-        .orElse(User.EMPTY_USER);
+  @NonNull public static User ofChat(@Nullable Chat chat) {
+    if (chat == null) {
+      return User.EMPTY_USER;
+    }
+
+    return new User.Builder().firstName(chat.firstName())
+        .lastName(chat.lastName())
+        .username(chat.username())
+        .build(); //
   }
 
   @NonNull public static String photoLinkOf(@Nullable String path) {

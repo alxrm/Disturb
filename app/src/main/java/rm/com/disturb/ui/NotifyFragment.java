@@ -36,8 +36,8 @@ import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Password;
 import rm.com.disturb.utils.Permissions;
 
-import static rm.com.disturb.utils.UserFormats.avatarColorFilterOf;
-import static rm.com.disturb.utils.UserFormats.iconLettersOf;
+import static rm.com.disturb.utils.Users.avatarColorFilterOf;
+import static rm.com.disturb.utils.Users.iconLettersOf;
 
 /**
  * Created by alex
