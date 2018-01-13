@@ -75,7 +75,7 @@ public final class DisturbModule {
 
   @Provides @Singleton static TelegramApi provideRetrofit(@NonNull OkHttpClient httpClient) {
     return new Retrofit.Builder().client(httpClient)
-        .baseUrl(MessageFormat.format("{0}{1}/", TELEGRAM_BASE_URL, BuildConfig.BOT_TOKEN))
+        .baseUrl(MessageFormat.format("{0}{1}", TELEGRAM_BASE_URL, BuildConfig.BOT_TOKEN))
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .client(httpClient)

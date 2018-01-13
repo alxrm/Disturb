@@ -18,6 +18,10 @@ public final class TelegramResponse<T> {
     return ok;
   }
 
+  public final boolean isViable() {
+    return isOk() && data() != null;
+  }
+
   public final int errorCode() {
     return error_code;
   }

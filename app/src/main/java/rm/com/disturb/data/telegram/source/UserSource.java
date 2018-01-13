@@ -35,7 +35,7 @@ public final class UserSource implements Source<User, String> {
     return api.chat(chatId)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribeOn(Schedulers.io())
-        .filter(TelegramResponse::isOk)
+        .filter(TelegramResponse::isViable)
         .map(TelegramResponse::data)
         .map(it -> {
           userStorage.put(chatId, Users.ofChat(it));
@@ -45,7 +45,7 @@ public final class UserSource implements Source<User, String> {
         .filter(Optional::isPresent)
         .map(it -> it.map(Photo::smallFileId).get())
         .flatMapSingle(api::file)
-        .filter(it -> it.isOk() && it.data() != null)
+        .filter(TelegramResponse::isViable)
         .map(it -> it.data().filePath())
         .map(photoPath -> userStorage.get(String.valueOf(chatId))
             .map(it -> it.newBuilder().photoUrl(photoLinkOf(photoPath)).build())

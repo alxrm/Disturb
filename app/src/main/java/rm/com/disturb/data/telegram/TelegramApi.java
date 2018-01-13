@@ -21,18 +21,18 @@ public interface TelegramApi {
   String KEY_MESSAGE_ID = "message_id";
   String KEY_TEXT = "text";
 
-  @GET("sendMessage?parse_mode=Markdown") //
+  @GET("/sendMessage?parse_mode=Markdown") //
   Single<TelegramResponse<Message>> sendMessage(@QueryMap Map<String, String> params);
 
-  @GET("deleteMessage") //
+  @GET("/deleteMessage") //
   Single<TelegramResponse> deleteMessage(@QueryMap Map<String, String> params);
 
-  @GET("editMessageText?parse_mode=Markdown") //
+  @GET("/editMessageText?parse_mode=Markdown") //
   Single<TelegramResponse<Message>> editMessage(@QueryMap Map<String, String> params);
 
-  @GET("getFile") //
+  @GET("/getFile") //
   Single<TelegramResponse<FileData>> file(@Query("file_id") String fileId);
 
-  @GET("getChat") //
+  @GET("/getChat") //
   Single<TelegramResponse<Chat>> chat(@Query("chat_id") String chatId);
 }
