@@ -43,7 +43,7 @@ dependencies {
   compile square.butterknife
   compile square.retrofit
   compile square.retrofitGson
-  compile square.retrofitRxJava
+  compile square.retrofitRxJava2
 
   compile supportDeps.design
   compile supportDeps.appCompat

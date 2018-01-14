@@ -21,12 +21,14 @@ import rm.com.disturb.inject.qualifier.Update;
 @Module //
 public abstract class CommandModule {
 
-  @Binds @Auth abstract TelegramCommand<Boolean> bindAuth(@NonNull TelegramAuth telegramAuth);
+  @Binds @Auth //
+  abstract TelegramCommand<Boolean> bindAuth(@NonNull TelegramAuth telegramAuth);
 
   @Binds @Notify
   abstract TelegramCommand<Optional<String>> bindNotify(@NonNull TelegramNotify telegramNotify);
 
-  @Binds @Erase abstract TelegramCommand<Boolean> bindErase(@NonNull TelegramErase telegramErase);
+  @Binds @Erase //
+  abstract TelegramCommand<Boolean> bindErase(@NonNull TelegramErase telegramErase);
 
   @Binds @Update
   abstract TelegramCommand<Optional<String>> bindUpdate(@NonNull TelegramUpdate telegramUpdate);

@@ -55,6 +55,7 @@ ext {
   square = [timber             : "com.jakewharton.timber:timber:$versions.timber",
             retrofit           : "com.squareup.retrofit2:retrofit:$versions.retrofit",
             retrofitRxJava     : "com.squareup.retrofit2:adapter-rxjava:$versions.retrofit",
+            retrofitRxJava2    : "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit",
             retrofitGson       : "com.squareup.retrofit2:converter-gson:$versions.retrofit",
             dagger             : "com.google.dagger:dagger:$versions.dagger",
             daggerCompiler     : "com.google.dagger:dagger-compiler:$versions.dagger",

@@ -7,13 +7,14 @@ import dagger.Module;
 import dagger.Provides;
 import io.paperdb.Book;
 import io.paperdb.Paper;
+import io.reactivex.schedulers.Schedulers;
 import java.text.MessageFormat;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Singleton;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
-import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rm.com.disturb.BuildConfig;
 import rm.com.disturb.data.signal.MessageSignal;
@@ -75,9 +76,9 @@ public final class DisturbModule {
 
   @Provides @Singleton static TelegramApi provideRetrofit(@NonNull OkHttpClient httpClient) {
     return new Retrofit.Builder().client(httpClient)
-        .baseUrl(MessageFormat.format("{0}{1}", TELEGRAM_BASE_URL, BuildConfig.BOT_TOKEN))
+        .baseUrl(MessageFormat.format("{0}{1}/", TELEGRAM_BASE_URL, BuildConfig.BOT_TOKEN))
         .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
         .client(httpClient)
         .build()
         .create(TelegramApi.class);
