@@ -1,8 +1,10 @@
-package rm.com.disturb.data.signal;
+package rm.com.disturb.data.signal.rule;
 
 import android.support.annotation.NonNull;
 import java.util.Set;
 import java8.util.stream.StreamSupport;
+import rm.com.disturb.data.signal.MessageSignal;
+import rm.com.disturb.data.signal.MessageSignals;
 
 public final class SignalRuleSet implements RuleSet<MessageSignal> {
 

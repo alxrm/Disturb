@@ -1,4 +1,4 @@
-package rm.com.disturb.data.signal;
+package rm.com.disturb.data.signal.rule;
 
 import android.app.Application;
 import android.content.Context;
@@ -7,6 +7,8 @@ import java8.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import rm.com.disturb.data.resource.Resource;
+import rm.com.disturb.data.signal.MessageSignal;
+import rm.com.disturb.data.signal.MessageSignals;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
 import rm.com.disturb.inject.qualifier.Notify;
