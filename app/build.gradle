@@ -38,6 +38,7 @@ dependencies {
 
   annotationProcessor square.butterknifeCompiler
   annotationProcessor square.daggerCompiler
+  annotationProcessor autoValue.compiler
 
   compile square.dagger
   compile square.butterknife
