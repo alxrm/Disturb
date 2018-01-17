@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settings_calls_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    android:layout_marginTop="16dp"
+    >
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="0.2dp"
+      android:alpha="0.5"
+      android:background="@color/color_separator_dark"
+      />
+
+  <LinearLayout
+      android:id="@+id/settings_logout"
+      android:layout_width="match_parent"
+      android:layout_height="56dp"
+      android:background="?attr/selectableItemBackground"
+      android:clickable="true"
+      android:gravity="center_vertical"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="LOGOUT"
+        android:textColor="@color/color_text_red"
+        android:textSize="16sp"
+        />
+
+  </LinearLayout>
+</LinearLayout>

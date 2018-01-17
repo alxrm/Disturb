@@ -158,15 +158,14 @@ public final class NotifyFragment extends BaseFragment
     onEventToggled(toggle, toggle.isChecked());
   }
 
-  // TODO We will need this later
-  //@OnClick(R.id.notify_chat_id_change) void onChangeChatId() {
-  //  if (passwordPreference.get().isEmpty()) {
-  //    onPasswordConfirmed();
-  //    return;
-  //  }
-  //
-  //  PasswordDialogFragment.show(getFragmentManager(), this);
-  //}
+  @OnClick(R.id.settings_logout) void onLogout() {
+    if (passwordPreference.get().isEmpty()) {
+      onPasswordConfirmed();
+      return;
+    }
+
+    PasswordDialogFragment.show(getFragmentManager(), this);
+  }
 
   private void loadUser() {
     userSource.retrieve(chatId.get())

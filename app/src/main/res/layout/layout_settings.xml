@@ -40,6 +40,16 @@
           android:background="@drawable/shadow"
           />
 
+      <include
+          layout="@layout/layout_logout_button"
+          />
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="2.5dp"
+          android:background="@drawable/shadow"
+          />
+
     </LinearLayout>
 
   </ScrollView>
