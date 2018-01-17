@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:text="LOGOUT"
+        android:text="LOG OUT"
         android:textColor="@color/color_text_red"
         android:textSize="16sp"
         />
