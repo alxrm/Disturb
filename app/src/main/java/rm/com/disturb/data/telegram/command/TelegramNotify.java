@@ -29,7 +29,7 @@ public final class TelegramNotify implements TelegramCommand<Optional<String>> {
   @NonNull @Override public Single<Optional<String>> send(@NonNull TelegramParams params) {
     final Map<String, String> nextParams = params.newBuilder().chatId(chatId.get()).build().asMap();
     return api.sendMessage(nextParams).map(it -> it.isOk() //
-        ? Optional.empty() //
-        : Optional.ofNullable(String.valueOf(it.data().messageId())));
+        ? Optional.ofNullable(String.valueOf(it.data().messageId())) //
+        : Optional.empty());
   }
 }

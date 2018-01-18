@@ -34,6 +34,7 @@ import rm.com.disturb.data.telegram.source.Source;
 import rm.com.disturb.inject.qualifier.ChatId;
 import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Password;
+import rm.com.disturb.utils.BottomSheets;
 import rm.com.disturb.utils.Permissions;
 
 import static rm.com.disturb.utils.Users.avatarColorFilterOf;
@@ -46,6 +47,14 @@ import static rm.com.disturb.utils.Users.iconLettersOf;
 public final class NotifyFragment extends BaseFragment
     implements PasswordDialogFragment.OnPasswordConfirmationListener {
   private static final int REQ_PERMISSION = 1;
+
+  static final String[] BEHAVIOUR_TITLES = new String[] {
+      "Delete message", "Update message"
+  };
+
+  static final int[] BEHAVIOUR_ICONS = new int[] {
+      R.drawable.ic_delete, R.drawable.ic_edit
+  };
 
   static final ButterKnife.Setter<TextView, Typeface> TYPEFACE =
       (view, value, index) -> view.setTypeface(value);
@@ -75,8 +84,9 @@ public final class NotifyFragment extends BaseFragment
   @BindView(R.id.settings_sms_toggle) SwitchCompat settingsSmsToggle;
   @BindView(R.id.settings_calls_toggle) SwitchCompat settingsCallsToggle;
 
-  @BindView(R.id.settings_calls_root) LinearLayout settingsCallsRoot;
-  @BindView(R.id.settings_sms_root) LinearLayout settingsSmsRoot;
+  @BindView(R.id.settings_calls_finished_behaviour) TextView settingsCallsFinished;
+  @BindView(R.id.settings_calls_missed_behaviour) TextView settingsCallsMissed;
+  @BindView(R.id.settings_sms_codes) SwitchCompat settingsSmsCodes;
 
   @Inject @Notify TelegramCommand<Optional<String>> notify;
   @Inject @ChatId StringPreference chatIdPreference;
@@ -98,7 +108,7 @@ public final class NotifyFragment extends BaseFragment
     super.onViewCreated(view, savedInstanceState);
     injector().inject(this);
     attachToolbar();
-    loadUser();
+    attachSettings();
 
     if (areAnyPermissionsGranted()) {
       indicateNotificationsAvailable();
@@ -108,7 +118,8 @@ public final class NotifyFragment extends BaseFragment
       requestAllPermissions();
     }
 
-    setupSettings();
+    loadUser();
+    loadSettings();
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -140,8 +151,20 @@ public final class NotifyFragment extends BaseFragment
     }
   }
 
+  @OnClick(R.id.settings_calls_finished) void onCallsFinishedClicked() {
+    BottomSheets.list(parent(), BEHAVIOUR_TITLES, BEHAVIOUR_ICONS, (i, item) -> {
+      Toast.makeText(parent(), BEHAVIOUR_TITLES[i], Toast.LENGTH_SHORT).show();
+    });
+  }
+
+  @OnClick(R.id.settings_calls_missed) void onCallsMissedClicked() {
+    BottomSheets.list(parent(), BEHAVIOUR_TITLES, BEHAVIOUR_ICONS, (i, item) -> {
+      Toast.makeText(parent(), BEHAVIOUR_TITLES[i], Toast.LENGTH_SHORT).show();
+    });
+  }
+
   @OnCheckedChanged({ R.id.settings_calls_toggle, R.id.settings_sms_toggle }) //
-  void onEventToggled(@NonNull SwitchCompat toggle, boolean isChecked) {
+  void onFeatureToggled(@NonNull SwitchCompat toggle, boolean isChecked) {
     if (toggle.getId() == R.id.settings_calls_toggle) {
       ButterKnife.apply(settingsCallsItems, VISIBLE, isChecked);
     }
@@ -152,10 +175,21 @@ public final class NotifyFragment extends BaseFragment
   }
 
   @OnClick({ R.id.settings_calls_toggle_item, R.id.settings_sms_toggle_item }) //
-  void onEventItemClicked(@NonNull ViewGroup item) {
+  void onFeatureItemClicked(@NonNull ViewGroup item) {
     final SwitchCompat toggle = (SwitchCompat) item.getChildAt(1);
     toggle.setChecked(!toggle.isChecked());
-    onEventToggled(toggle, toggle.isChecked());
+    onFeatureToggled(toggle, toggle.isChecked());
+  }
+
+  @OnCheckedChanged(R.id.settings_sms_codes) //
+  void onCodesMagnifierToggled(@NonNull SwitchCompat toggle, boolean isChecked) {
+
+  }
+
+  @OnClick(R.id.settings_sms_codes_item) //
+  void onCodesMagnifierItemClicked() {
+    settingsSmsCodes.setChecked(!settingsSmsCodes.isChecked());
+    onCodesMagnifierToggled(settingsCallsToggle, settingsCallsToggle.isChecked());
   }
 
   @OnClick(R.id.settings_logout) void onLogout() {
@@ -197,7 +231,11 @@ public final class NotifyFragment extends BaseFragment
         .into(avatar);
   }
 
-  private void setupSettings() {
+  private void loadSettings() {
+
+  }
+
+  private void attachSettings() {
     typefaceResource.load(parent(), PATH_MEDIUM_TYPEFACE)
         .filter(Optional::isPresent)
         .map(Optional::get)

@@ -3,7 +3,6 @@ package rm.com.disturb.data.telegram.source;
 import android.support.annotation.NonNull;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 import java8.util.Optional;
 import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.data.telegram.TelegramApi;
@@ -33,8 +32,6 @@ public final class UserSource implements Source<User, String> {
     }
 
     return api.chat(chatId)
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribeOn(Schedulers.io())
         .filter(TelegramResponse::isViable)
         .map(TelegramResponse::data)
         .map(it -> {
@@ -54,6 +51,7 @@ public final class UserSource implements Source<User, String> {
           userStorage.put(chatId, it);
           return Optional.of(it);
         })
-        .switchIfEmpty(Single.fromCallable(() -> userStorage.get(chatId)));
+        .switchIfEmpty(Single.fromCallable(() -> userStorage.get(chatId)))
+        .observeOn(AndroidSchedulers.mainThread());
   }
 }

@@ -52,16 +52,16 @@ public final class CallRingingRule implements Rule<MessageSignal> {
     }
   }
 
-  private void notifyCall(@NonNull String from, @NonNull MessageSignal item) {
+  private void notifyCall(@NonNull String from, @NonNull MessageSignal signal) {
     final String message = Formats.callRingingOf(from);
 
     notify.send(TelegramParams.ofMessage(message))
         .filter(Optional::isPresent)
         .map(Optional::get)
         .subscribe(messageId -> {
-          final MessageSignal full = item.newBuilder().remoteKey(messageId).sender(from).build();
+          final MessageSignal full = signal.newBuilder().remoteKey(messageId).sender(from).build();
 
-          signalStorage.put(item.key(), full);
+          signalStorage.put(signal.key(), full);
         });
   }
 

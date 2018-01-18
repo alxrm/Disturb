@@ -32,20 +32,19 @@ public final class CallMissedRule implements Rule<MessageSignal> {
     return item.type().equals(MessageSignals.CALL_MISSED);
   }
 
-  @Override public void apply(@NonNull MessageSignal item) {
-    final MessageSignal signal = signalStorage.get(item.key()).orElse(MessageSignal.EMPTY_MESSAGE);
+  @Override public void apply(@NonNull MessageSignal signal) {
+    final MessageSignal saved = signalStorage.get(signal.key()).orElse(MessageSignal.EMPTY_MESSAGE);
 
-    if (signal.key().equals(MessageSignals.EMPTY) && !signal.type()
+    if (saved.key().equals(MessageSignals.EMPTY) && !saved.type()
         .equals(MessageSignals.CALL_RINGING)) {
       return;
     }
 
-    signalStorage.delete(item.key());
-
-    final TelegramParams params = new TelegramParams.Builder().messageId(signal.remoteKey())
-        .text(Formats.callMissedOf(signal.sender()))
+    final TelegramParams params = new TelegramParams.Builder().messageId(saved.remoteKey())
+        .text(Formats.callMissedOf(saved.sender()))
         .build();
 
+    signalStorage.delete(signal.key());
     update.send(params).subscribe();
   }
 }

@@ -9,8 +9,8 @@ import android.util.Log;
 import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.data.signal.MessageSignal;
-import rm.com.disturb.data.signal.rule.RuleSet;
 import rm.com.disturb.data.signal.MessageSignals;
+import rm.com.disturb.data.signal.rule.RuleSet;
 import rm.com.disturb.data.storage.Storage;
 import rm.com.disturb.utils.Intents;
 
@@ -35,6 +35,7 @@ public final class CallReceiver extends BroadcastReceiver {
 
     ((DisturbApplication) context.getApplicationContext()).injector().inject(this);
 
+    // extras: state, incoming_number
     final String state = intent.getExtras().getString(EXTRA_STATE, EXTRA_STATE_IDLE);
     final String number = intent.getExtras().getString(EXTRA_INCOMING_NUMBER, "Unknown number");
     final MessageSignal signal = signalStorage.get(number).orElse(MessageSignal.EMPTY_MESSAGE);
