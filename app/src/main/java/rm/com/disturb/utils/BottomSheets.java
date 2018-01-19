@@ -40,6 +40,8 @@ public final class BottomSheets {
       @NonNull int[] icons, @NonNull int[] colors,
       @NonNull OnClickListener<SheetItem> itemClickListener) {
     final BottomSheet.Builder builder = new BottomSheet.Builder(context);
+
+    // if I could do it without atomic reference and forking his repo, I'd do it that way
     final AtomicReference<BottomSheet> sheet = new AtomicReference<>();
     final RecyclerView items = itemsOf(context, titles, icons, colors, (position, item) -> {
       Optional.ofNullable(sheet.get()).ifPresent(BottomSheet::dismiss);
