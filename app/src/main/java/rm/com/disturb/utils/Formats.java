@@ -26,11 +26,12 @@ public final class Formats {
     throw new IllegalStateException("No instances");
   }
 
-  @NonNull public static String smsOf(@NonNull String from, @NonNull String text) {
+  @NonNull public static String smsOf(@NonNull String from, @NonNull String text,
+      boolean withCodesMagnification) {
     final String mdFreeText = escapeMarkdown(text);
     final String code = magnifyCodeIn(mdFreeText);
 
-    if (!code.isEmpty()) {
+    if (!code.isEmpty() && withCodesMagnification) {
       return String.format(Locale.getDefault(), "%s\n_Code: %s_\n%s", boldOf(from), code,
           mdFreeText);
     }

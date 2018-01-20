@@ -5,12 +5,14 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import java8.util.Optional;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
 import rm.com.disturb.data.resource.Resource;
 import rm.com.disturb.data.signal.MessageSignal;
 import rm.com.disturb.data.signal.MessageSignals;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
+import rm.com.disturb.inject.qualifier.Magnify;
 import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.utils.Formats;
 import rm.com.disturb.utils.Permissions;
@@ -24,13 +26,16 @@ public final class SmsRule implements Rule<MessageSignal> {
 
   private final Resource<String, String> contactResource;
   private final Context context;
+  private final Provider<Boolean> shouldMagnify;
   private final TelegramCommand<Optional<String>> notify;
 
   @Inject SmsRule(@NonNull Application application,
       @NonNull Resource<String, String> contactResource,
+      @NonNull @Magnify Provider<Boolean> shouldMagnify,
       @NonNull @Notify TelegramCommand<Optional<String>> notify) {
     this.context = application.getApplicationContext();
     this.contactResource = contactResource;
+    this.shouldMagnify = shouldMagnify;
     this.notify = notify;
   }
 
@@ -50,7 +55,8 @@ public final class SmsRule implements Rule<MessageSignal> {
   }
 
   private void notifySms(@NonNull String from, @NonNull String text) {
-    notify.send(TelegramParams.ofMessage(Formats.smsOf(from, text))).subscribe();
+    notify.send(TelegramParams.ofMessage(Formats.smsOf(from, text, shouldMagnify.get())))
+        .subscribe();
   }
 
   private void notifyWithContactName(@NonNull String number, @NonNull String messageText) {

@@ -11,5 +11,5 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Qualifier //
 @Retention(RUNTIME) //
-public @interface Sms {
+public @interface HandleCalls {
 }

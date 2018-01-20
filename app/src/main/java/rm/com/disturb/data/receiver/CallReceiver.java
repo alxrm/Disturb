@@ -7,11 +7,13 @@ import android.support.annotation.NonNull;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import javax.inject.Inject;
+import javax.inject.Provider;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.data.signal.MessageSignal;
 import rm.com.disturb.data.signal.MessageSignals;
 import rm.com.disturb.data.signal.rule.RuleSet;
 import rm.com.disturb.data.storage.Storage;
+import rm.com.disturb.inject.qualifier.HandleCalls;
 import rm.com.disturb.utils.Intents;
 
 import static android.telephony.TelephonyManager.EXTRA_INCOMING_NUMBER;
@@ -27,6 +29,7 @@ public final class CallReceiver extends BroadcastReceiver {
 
   @Inject RuleSet<MessageSignal> signalRuleSet;
   @Inject Storage<MessageSignal> signalStorage;
+  @Inject @HandleCalls Provider<Boolean> callsShouldBeHandled;
 
   @Override public void onReceive(Context context, Intent intent) {
     if (!Intents.matches(intent, TelephonyManager.ACTION_PHONE_STATE_CHANGED)) {
@@ -34,6 +37,10 @@ public final class CallReceiver extends BroadcastReceiver {
     }
 
     ((DisturbApplication) context.getApplicationContext()).injector().inject(this);
+
+    if (!callsShouldBeHandled.get()) {
+      return;
+    }
 
     // extras: state, incoming_number
     final String state = intent.getExtras().getString(EXTRA_STATE, EXTRA_STATE_IDLE);

@@ -28,14 +28,14 @@ import rm.com.disturb.data.telegram.TelegramApi;
 import rm.com.disturb.data.telegram.model.User;
 import rm.com.disturb.data.telegram.source.Source;
 import rm.com.disturb.data.telegram.source.UserSource;
-import rm.com.disturb.inject.qualifier.Calls;
+import rm.com.disturb.inject.qualifier.HandleCalls;
 import rm.com.disturb.inject.qualifier.ChatId;
 import rm.com.disturb.inject.qualifier.Finished;
 import rm.com.disturb.inject.qualifier.Magnify;
 import rm.com.disturb.inject.qualifier.Missed;
 import rm.com.disturb.inject.qualifier.Password;
 import rm.com.disturb.inject.qualifier.Signals;
-import rm.com.disturb.inject.qualifier.Sms;
+import rm.com.disturb.inject.qualifier.HandleSms;
 import rm.com.disturb.inject.qualifier.Users;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -75,7 +75,7 @@ public final class DisturbModule {
 
   @Provides @Singleton @Missed
   static StringPreference provideMissedPreference(@NonNull SharedPreferences preferences) {
-    return new StringPreference(preferences, "missed");
+    return new StringPreference(preferences, "missed", "Edit message");
   }
 
   @Provides @Missed static String provideMissed(@Missed StringPreference pref) {
@@ -84,7 +84,7 @@ public final class DisturbModule {
 
   @Provides @Singleton @Finished
   static StringPreference provideFinishedPreference(@NonNull SharedPreferences preferences) {
-    return new StringPreference(preferences, "finished");
+    return new StringPreference(preferences, "finished", "Edit message");
   }
 
   @Provides @Finished static String provideFinished(@Finished StringPreference pref) {
@@ -93,28 +93,28 @@ public final class DisturbModule {
 
   @Provides @Singleton @Magnify
   static BooleanPreference provideMagnifyPreference(@NonNull SharedPreferences preferences) {
-    return new BooleanPreference(preferences, "magnify");
+    return new BooleanPreference(preferences, "magnify", true);
   }
 
   @Provides @Magnify static boolean provideMagnify(@Magnify BooleanPreference pref) {
     return pref.get();
   }
 
-  @Provides @Singleton @Calls
+  @Provides @Singleton @HandleCalls
   static BooleanPreference provideCallsPreference(@NonNull SharedPreferences preferences) {
-    return new BooleanPreference(preferences, "calls");
+    return new BooleanPreference(preferences, "calls", true);
   }
 
-  @Provides @Calls static boolean provideCalls(@Calls BooleanPreference pref) {
+  @Provides @HandleCalls static boolean provideCalls(@HandleCalls BooleanPreference pref) {
     return pref.get();
   }
 
-  @Provides @Singleton @Sms
+  @Provides @Singleton @HandleSms
   static BooleanPreference provideSmsPreference(@NonNull SharedPreferences preferences) {
-    return new BooleanPreference(preferences, "sms");
+    return new BooleanPreference(preferences, "sms", true);
   }
 
-  @Provides @Sms static boolean provideSms(@Sms BooleanPreference pref) {
+  @Provides @HandleSms static boolean provideSms(@HandleSms BooleanPreference pref) {
     return pref.get();
   }
 

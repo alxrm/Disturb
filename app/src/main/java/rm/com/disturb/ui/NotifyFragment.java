@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,12 +27,18 @@ import java8.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import rm.com.disturb.R;
+import rm.com.disturb.data.storage.BooleanPreference;
 import rm.com.disturb.data.storage.StringPreference;
 import rm.com.disturb.data.telegram.command.TelegramCommand;
 import rm.com.disturb.data.telegram.command.TelegramParams;
 import rm.com.disturb.data.telegram.model.User;
 import rm.com.disturb.data.telegram.source.Source;
 import rm.com.disturb.inject.qualifier.ChatId;
+import rm.com.disturb.inject.qualifier.Finished;
+import rm.com.disturb.inject.qualifier.HandleCalls;
+import rm.com.disturb.inject.qualifier.HandleSms;
+import rm.com.disturb.inject.qualifier.Magnify;
+import rm.com.disturb.inject.qualifier.Missed;
 import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Password;
 import rm.com.disturb.utils.BottomSheets;
@@ -49,11 +56,11 @@ public final class NotifyFragment extends BaseFragment
   private static final int REQ_PERMISSION = 1;
 
   static final String[] BEHAVIOUR_TITLES = new String[] {
-      "Delete message", "Update message"
+      "Edit message", "Delete message"
   };
 
   static final int[] BEHAVIOUR_ICONS = new int[] {
-      R.drawable.ic_delete, R.drawable.ic_edit
+      R.drawable.ic_edit, R.drawable.ic_delete
   };
 
   static final ButterKnife.Setter<TextView, Typeface> TYPEFACE =
@@ -78,7 +85,7 @@ public final class NotifyFragment extends BaseFragment
   }) List<ViewGroup> settingsCallsItems;
 
   @BindViews({
-      R.id.settings_sms_codes_item
+      R.id.settings_sms_magnify_item
   }) List<ViewGroup> settingsSmsItems;
 
   @BindView(R.id.settings_sms_toggle) SwitchCompat settingsSmsToggle;
@@ -86,11 +93,16 @@ public final class NotifyFragment extends BaseFragment
 
   @BindView(R.id.settings_calls_finished_behaviour) TextView settingsCallsFinished;
   @BindView(R.id.settings_calls_missed_behaviour) TextView settingsCallsMissed;
-  @BindView(R.id.settings_sms_codes) SwitchCompat settingsSmsCodes;
+  @BindView(R.id.settings_sms_magnify) SwitchCompat settingsSmsMagnify;
 
   @Inject @Notify TelegramCommand<Optional<String>> notify;
   @Inject @ChatId StringPreference chatIdPreference;
   @Inject @Password StringPreference passwordPreference;
+  @Inject @HandleCalls BooleanPreference callsPreference;
+  @Inject @HandleSms BooleanPreference smsPreference;
+  @Inject @Magnify BooleanPreference magnifyPreference;
+  @Inject @Missed StringPreference missedPreference;
+  @Inject @Finished StringPreference finishedPreference;
   @Inject @ChatId Provider<String> chatId;
   @Inject Source<User, String> userSource;
 
@@ -119,7 +131,7 @@ public final class NotifyFragment extends BaseFragment
     }
 
     loadUser();
-    loadSettings();
+    showSettings();
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -153,13 +165,15 @@ public final class NotifyFragment extends BaseFragment
 
   @OnClick(R.id.settings_calls_finished) void onCallsFinishedClicked() {
     BottomSheets.list(parent(), BEHAVIOUR_TITLES, BEHAVIOUR_ICONS, (i, item) -> {
-      Toast.makeText(parent(), BEHAVIOUR_TITLES[i], Toast.LENGTH_SHORT).show();
+      finishedPreference.set(BEHAVIOUR_TITLES[i]);
+      settingsCallsFinished.setText(BEHAVIOUR_TITLES[i]);
     });
   }
 
   @OnClick(R.id.settings_calls_missed) void onCallsMissedClicked() {
     BottomSheets.list(parent(), BEHAVIOUR_TITLES, BEHAVIOUR_ICONS, (i, item) -> {
-      Toast.makeText(parent(), BEHAVIOUR_TITLES[i], Toast.LENGTH_SHORT).show();
+      missedPreference.set(BEHAVIOUR_TITLES[i]);
+      settingsCallsMissed.setText(BEHAVIOUR_TITLES[i]);
     });
   }
 
@@ -167,10 +181,12 @@ public final class NotifyFragment extends BaseFragment
   void onFeatureToggled(@NonNull SwitchCompat toggle, boolean isChecked) {
     if (toggle.getId() == R.id.settings_calls_toggle) {
       ButterKnife.apply(settingsCallsItems, VISIBLE, isChecked);
+      callsPreference.set(isChecked);
     }
 
     if (toggle.getId() == R.id.settings_sms_toggle) {
       ButterKnife.apply(settingsSmsItems, VISIBLE, isChecked);
+      smsPreference.set(isChecked);
     }
   }
 
@@ -181,15 +197,15 @@ public final class NotifyFragment extends BaseFragment
     onFeatureToggled(toggle, toggle.isChecked());
   }
 
-  @OnCheckedChanged(R.id.settings_sms_codes) //
+  @OnCheckedChanged(R.id.settings_sms_magnify) //
   void onCodesMagnifierToggled(@NonNull SwitchCompat toggle, boolean isChecked) {
-
+    magnifyPreference.set(isChecked);
   }
 
-  @OnClick(R.id.settings_sms_codes_item) //
+  @OnClick(R.id.settings_sms_magnify_item) //
   void onCodesMagnifierItemClicked() {
-    settingsSmsCodes.setChecked(!settingsSmsCodes.isChecked());
-    onCodesMagnifierToggled(settingsCallsToggle, settingsCallsToggle.isChecked());
+    settingsSmsMagnify.setChecked(!settingsSmsMagnify.isChecked());
+    onCodesMagnifierToggled(settingsSmsMagnify, settingsSmsMagnify.isChecked());
   }
 
   @OnClick(R.id.settings_logout) void onLogout() {
@@ -231,8 +247,12 @@ public final class NotifyFragment extends BaseFragment
         .into(avatar);
   }
 
-  private void loadSettings() {
-
+  private void showSettings() {
+    settingsCallsToggle.setChecked(callsPreference.get());
+    settingsSmsToggle.setChecked(smsPreference.get());
+    settingsCallsFinished.setText(finishedPreference.get());
+    settingsCallsMissed.setText(missedPreference.get());
+    settingsSmsMagnify.setChecked(magnifyPreference.get());
   }
 
   private void attachSettings() {
