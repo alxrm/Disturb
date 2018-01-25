@@ -1,6 +1,7 @@
 package rm.com.disturb;
 
 import android.app.Application;
+import android.support.annotation.NonNull;
 import io.paperdb.Paper;
 import io.reactivex.plugins.RxJavaPlugins;
 import rm.com.disturb.inject.DaggerDisturbComponent;
@@ -27,7 +28,7 @@ public final class DisturbApplication extends Application {
         .build();
   }
 
-  public DisturbComponent injector() {
+  @NonNull public DisturbComponent injector() {
     return component;
   }
 }

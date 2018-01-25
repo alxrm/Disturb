@@ -28,14 +28,14 @@ import rm.com.disturb.data.telegram.TelegramApi;
 import rm.com.disturb.data.telegram.model.User;
 import rm.com.disturb.data.telegram.source.Source;
 import rm.com.disturb.data.telegram.source.UserSource;
-import rm.com.disturb.inject.qualifier.HandleCalls;
 import rm.com.disturb.inject.qualifier.ChatId;
 import rm.com.disturb.inject.qualifier.Finished;
+import rm.com.disturb.inject.qualifier.HandleCalls;
+import rm.com.disturb.inject.qualifier.HandleSms;
 import rm.com.disturb.inject.qualifier.Magnify;
 import rm.com.disturb.inject.qualifier.Missed;
 import rm.com.disturb.inject.qualifier.Password;
 import rm.com.disturb.inject.qualifier.Signals;
-import rm.com.disturb.inject.qualifier.HandleSms;
 import rm.com.disturb.inject.qualifier.Users;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -135,11 +135,11 @@ public final class DisturbModule {
         .create(TelegramApi.class);
   }
 
-  @Provides @Singleton @Signals Book provideSignalsDatabase() {
+  @Provides @Singleton @Signals static Book provideSignalsDatabase() {
     return Paper.book("signals");
   }
 
-  @Provides @Singleton @Users Book provideUsersDatabase() {
+  @Provides @Singleton @Users static Book provideUsersDatabase() {
     return Paper.book("users");
   }
 
