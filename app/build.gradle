@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'me.tatarka.retrolambda'
 
 apply from: "${rootDir}/constants.gradle"
 apply from: "${rootDir}/telegram.gradle"
@@ -45,6 +44,7 @@ dependencies {
   compile square.retrofit
   compile square.retrofitGson
   compile square.retrofitRxJava2
+  compile square.okhttpLogging
 
   compile supportDeps.design
   compile supportDeps.appCompat

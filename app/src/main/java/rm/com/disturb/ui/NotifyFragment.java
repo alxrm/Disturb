@@ -228,7 +228,7 @@ public final class NotifyFragment extends BaseFragment
     avatarEmpty.setText(iconLettersOf(user.firstName()));
     avatarEmpty.getBackground().setColorFilter(avatarColorFilterOf(user.firstName()));
 
-    title.setText(user.firstName() + " " + user.lastName());
+    title.setText(String.format("%s %s", user.firstName(), user.lastName()));
     subtitle.setText(String.format("@%s", user.username()));
 
     if (user.username().isEmpty()) {
