@@ -33,31 +33,31 @@ android {
 }
 
 dependencies {
-  compile fileTree(dir: 'libs', include: ['*.jar'])
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
 
   annotationProcessor square.butterknifeCompiler
   annotationProcessor square.daggerCompiler
   annotationProcessor autoValue.compiler
 
-  compile square.dagger
-  compile square.butterknife
-  compile square.retrofit
-  compile square.retrofitGson
-  compile square.retrofitRxJava2
-  compile square.okhttpLogging
+  implementation square.dagger
+  implementation square.butterknife
+  implementation square.retrofit
+  implementation square.retrofitGson
+  implementation square.retrofitRxJava2
+  implementation square.okhttpLogging
 
-  compile supportDeps.design
-  compile supportDeps.appCompat
+  implementation supportDeps.design
+  implementation supportDeps.appCompat
 
-  compile glide.lib
-  compile glide.okhttpIntegration
+  implementation glide.lib
+  implementation glide.okhttpIntegration
 
-  compile streamSupport.lib
-  compile rxjava.lib
-  compile rxjava.android
+  implementation streamSupport.lib
+  implementation rxjava.lib
+  implementation rxjava.android
 
-  compile 'org.michaelbel:bottomsheet:1.1.2'
+  implementation 'org.michaelbel:bottomsheet:1.1.2'
 
-  compile 'io.paperdb:paperdb:2.6'
-  compile 'com.mikhaellopez:circularimageview:3.0.2'
+  implementation 'io.paperdb:paperdb:2.6'
+  implementation 'com.mikhaellopez:circularimageview:3.0.2'
 }
