@@ -63,6 +63,7 @@
       android:layout_alignParentRight="true"
       android:layout_margin="16dp"
       android:clickable="true"
+      android:focusable="true"
       app:fabSize="normal"
       app:rippleColor="@android:color/white"
       app:srcCompat="@drawable/ic_notifications_send"

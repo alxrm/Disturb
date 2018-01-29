@@ -1,6 +1,6 @@
 ext {
   minSdk = 16
-  targetSdk = 26
+  targetSdk = 27
   buildTools = "26.0.2"
   publishVersion = "1.0"
 
@@ -18,7 +18,7 @@ ext {
               playServices : "9.8.0",
               retrofit     : "2.3.0",
               stetho       : "1.4.1",
-              support      : "26.0.0-alpha1",
+              support      : "27.0.2",
               vksdk        : "1.6.7",
               timber       : "4.3.1",
               realm        : "2.2.1",
@@ -28,7 +28,7 @@ ext {
               redex        : "1.1.0",
               datePicker   : "3.1.1",
               dbflow       : "4.0.0-beta5",
-              streamSupport: "1.6.0",
+              streamSupport: "1.6.1",
               rxjava       : "2.1.9",
               rxandroid    : "2.0.1",
               autoParcel   : "0.2.6",
