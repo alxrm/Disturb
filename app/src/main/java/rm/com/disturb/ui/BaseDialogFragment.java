@@ -28,7 +28,7 @@ public abstract class BaseDialogFragment extends DialogFragment
   final View.OnClickListener CANCEL = v -> onCancelClick();
   final View.OnClickListener SUBMIT = v -> onSubmitClick();
 
-  private View rootView;
+  protected View rootView;
   private Unbinder unbinder;
 
   @Override public final void show(FragmentManager manager, String tag) {
@@ -91,8 +91,8 @@ public abstract class BaseDialogFragment extends DialogFragment
   }
 
   protected final void rebindButtons() {
-    final Button positiveButton = ((Button) getDialog().findViewById(android.R.id.button1));
-    final Button negativeButton = ((Button) getDialog().findViewById(android.R.id.button2));
+    final Button positiveButton = getDialog().findViewById(android.R.id.button1);
+    final Button negativeButton = getDialog().findViewById(android.R.id.button2);
 
     positiveButton.setOnClickListener(SUBMIT);
     negativeButton.setOnClickListener(CANCEL);
