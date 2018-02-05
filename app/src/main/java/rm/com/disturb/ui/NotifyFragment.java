@@ -1,11 +1,14 @@
 package rm.com.disturb.ui;
 
 import android.Manifest;
-import android.graphics.Typeface;
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,10 +43,15 @@ import rm.com.disturb.inject.qualifier.Magnify;
 import rm.com.disturb.inject.qualifier.Missed;
 import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Password;
+import rm.com.disturb.ui.adapter.BottomSheetCallbackAdapter;
+import rm.com.disturb.ui.adapter.SheetAdapter;
 import rm.com.disturb.ui.model.SheetItem;
 import rm.com.disturb.utils.BottomSheets;
 import rm.com.disturb.utils.Permissions;
 
+import static android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED;
+import static android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED;
+import static android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN;
 import static rm.com.disturb.utils.Users.avatarColorFilterOf;
 import static rm.com.disturb.utils.Users.iconLettersOf;
 
@@ -65,9 +73,6 @@ public final class NotifyFragment extends BaseFragment
 
   static final List<SheetItem> ACTIONS =
       BottomSheets.sheetItemsOf(BEHAVIOUR_TITLES, BEHAVIOUR_ICONS);
-
-  static final ButterKnife.Setter<TextView, Typeface> TYPEFACE =
-      (view, value, index) -> view.setTypeface(value);
 
   static final ButterKnife.Setter<ViewGroup, Boolean> VISIBLE =
       (view, value, index) -> view.setVisibility(value ? View.VISIBLE : View.GONE);
@@ -97,6 +102,9 @@ public final class NotifyFragment extends BaseFragment
   @BindView(R.id.settings_calls_finished_behaviour) TextView settingsCallsFinished;
   @BindView(R.id.settings_calls_missed_behaviour) TextView settingsCallsMissed;
   @BindView(R.id.settings_sms_magnify) SwitchCompat settingsSmsMagnify;
+  @BindView(R.id.bottom_sheet_actions) RecyclerView bottomSheetActions;
+  @BindView(R.id.bottom_sheet) LinearLayout bottomSheet;
+  @BindView(R.id.bottom_sheet_dim) View sheetDim;
 
   @Inject @Notify TelegramCommand<Optional<String>> notify;
   @Inject @ChatId StringPreference chatIdPreference;
@@ -108,6 +116,9 @@ public final class NotifyFragment extends BaseFragment
   @Inject @Finished StringPreference finishedPreference;
   @Inject @ChatId Provider<String> chatId;
   @Inject Source<User, String> userSource;
+
+  private final SheetAdapter sheetAdapter = new SheetAdapter();
+  private BottomSheetBehavior<LinearLayout> sheetBehaviour;
 
   @NonNull public static NotifyFragment newInstance() {
     return new NotifyFragment();
@@ -134,6 +145,7 @@ public final class NotifyFragment extends BaseFragment
 
     loadUser();
     showSettings();
+    attachBottomSheet();
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
@@ -166,21 +178,30 @@ public final class NotifyFragment extends BaseFragment
   }
 
   @OnClick(R.id.settings_calls_finished) void onCallsFinishedClicked() {
-    ActionsBottomSheetFragment.show(getFragmentManager())
-        .setActions(ACTIONS)
-        .setActionListener((position, item) -> {
-          finishedPreference.set(BEHAVIOUR_TITLES[position]);
-          settingsCallsFinished.setText(BEHAVIOUR_TITLES[position]);
-        });
+    toggleSheetDim(true);
+    sheetBehaviour.setState(STATE_EXPANDED);
+    sheetAdapter.setOnClickListener((position, item) -> {
+      sheetBehaviour.setState(STATE_COLLAPSED);
+      finishedPreference.set(BEHAVIOUR_TITLES[position]);
+      settingsCallsFinished.setText(BEHAVIOUR_TITLES[position]);
+    });
+    bottomSheetActions.setAdapter(sheetAdapter);
   }
 
   @OnClick(R.id.settings_calls_missed) void onCallsMissedClicked() {
-    ActionsBottomSheetFragment.show(getFragmentManager())
-        .setActions(ACTIONS)
-        .setActionListener((position, item) -> {
-          missedPreference.set(BEHAVIOUR_TITLES[position]);
-          settingsCallsMissed.setText(BEHAVIOUR_TITLES[position]);
-        });
+    toggleSheetDim(true);
+    sheetBehaviour.setState(STATE_EXPANDED);
+    sheetAdapter.setOnClickListener((position, item) -> {
+      sheetBehaviour.setState(STATE_COLLAPSED);
+      missedPreference.set(BEHAVIOUR_TITLES[position]);
+      settingsCallsMissed.setText(BEHAVIOUR_TITLES[position]);
+    });
+    bottomSheetActions.setAdapter(sheetAdapter);
+  }
+
+  @OnClick(R.id.bottom_sheet_dim) void onBottomSheetDimClicked() {
+    toggleSheetDim(false);
+    sheetBehaviour.setState(STATE_COLLAPSED);
   }
 
   @OnCheckedChanged({ R.id.settings_calls_toggle, R.id.settings_sms_toggle }) //
@@ -254,6 +275,19 @@ public final class NotifyFragment extends BaseFragment
     settingsSmsMagnify.setChecked(magnifyPreference.get());
   }
 
+  private void attachBottomSheet() {
+    sheetAdapter.updateData(ACTIONS);
+    bottomSheetActions.setAdapter(sheetAdapter);
+    sheetBehaviour = BottomSheetBehavior.from(bottomSheet);
+    sheetBehaviour.setBottomSheetCallback(new BottomSheetCallbackAdapter() {
+      @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
+        if (newState == STATE_COLLAPSED || newState == STATE_HIDDEN) {
+          toggleSheetDim(false);
+        }
+      }
+    });
+  }
+
   private void loadUser() {
     userSource.retrieve(chatId.get())
         .filter(Optional::isPresent)
@@ -273,6 +307,26 @@ public final class NotifyFragment extends BaseFragment
 
   private void indicateNotificationsAvailable() {
     permissionsOverlay.setVisibility(View.GONE);
+  }
+
+  private void toggleSheetDim(boolean shown) {
+    sheetDim.animate()
+        .alpha(shown ? 1 : 0)
+        .setDuration(200)
+        .setListener(new AnimatorListenerAdapter() {
+          @Override public void onAnimationStart(Animator animation) {
+            if (shown) {
+              sheetDim.setVisibility(View.VISIBLE);
+            }
+          }
+
+          @Override public void onAnimationEnd(Animator animation) {
+            if (!shown) {
+              sheetDim.setVisibility(View.GONE);
+            }
+          }
+        })
+        .start();
   }
 
   private void requestAllPermissions() {

@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
     tools:context="rm.com.disturb.ui.MainActivity"
     >
 
@@ -13,52 +12,35 @@
       android:id="@+id/appbar"
       />
 
-  <RelativeLayout
+  <include
+      layout="@layout/layout_settings"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_below="@id/appbar"
-      android:animateLayoutChanges="true"
-      >
+      />
 
-    <include
-        layout="@layout/layout_settings"
-        />
+  <View
+      android:id="@+id/bottom_sheet_dim"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/color_separator_dark"
+      android:clickable="true"
+      android:focusable="true"
+      android:visibility="gone"
+      android:alpha="0"
+      app:layout_behavior="@string/appbar_scrolling_view_behavior"
+      />
 
-    <LinearLayout
-        android:id="@+id/notify_permissions_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true"
-        android:background="#EFFFFFFF"
-        android:clickable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        >
+  <include
+      layout="@layout/layout_bottom_sheet"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_alignParentBottom="true"
+      />
 
-      <ImageView
-          android:id="@+id/notify_permissions_icon"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_margin="24dp"
-          android:alpha="0.5"
-          android:background="?attr/selectableItemBackgroundBorderless"
-          android:clickable="true"
-          android:scaleType="centerInside"
-          app:srcCompat="@drawable/ic_notifications_paused"
-          tools:ignore="ContentDescription"
-          />
+  <include
+      layout="@layout/layout_permissions_overlay"
+      />
 
-      <TextView
-          android:id="@+id/notify_permissions_text"
-          android:layout_width="224dp"
-          android:layout_height="wrap_content"
-          android:gravity="center"
-          android:text="@string/description_wait_permissions"
-          android:textColor="#8A000000"
-          android:textSize="16sp"
-          />
-
-    </LinearLayout>
-  </RelativeLayout>
 </RelativeLayout>
 

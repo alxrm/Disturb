@@ -71,7 +71,7 @@ public final class ActionsBottomSheetFragment extends BottomSheetDialogFragment
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
-    return inflater.inflate(R.layout.bottom_sheet_layout, container);
+    return inflater.inflate(R.layout.layout_bottom_sheet, container);
   }
 
   @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

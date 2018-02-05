@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/notify_permissions_overlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerInParent="true"
+    android:background="#EFFFFFFF"
+    android:clickable="true"
+    android:focusable="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    >
+
+  <ImageView
+      android:id="@+id/notify_permissions_icon"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="24dp"
+      android:alpha="0.5"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:clickable="true"
+      android:focusable="true"
+      android:scaleType="centerInside"
+      app:srcCompat="@drawable/ic_notifications_paused"
+      tools:ignore="ContentDescription"
+      />
+
+  <TextView
+      android:id="@+id/notify_permissions_text"
+      android:layout_width="224dp"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/description_wait_permissions"
+      android:textColor="#8A000000"
+      android:textSize="16sp"
+      />
+
+</LinearLayout>
