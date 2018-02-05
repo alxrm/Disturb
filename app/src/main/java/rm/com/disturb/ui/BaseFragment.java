@@ -1,10 +1,10 @@
 package rm.com.disturb.ui;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -13,10 +13,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.mikhaellopez.circularimageview.CircularImageView;
-import javax.inject.Inject;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.R;
-import rm.com.disturb.data.resource.Resource;
 import rm.com.disturb.inject.DisturbComponent;
 import rm.com.disturb.utils.Preconditions;
 
@@ -25,15 +23,13 @@ import rm.com.disturb.utils.Preconditions;
  */
 
 public class BaseFragment extends Fragment {
-  static final String PATH_MEDIUM_TYPEFACE = "Roboto-Medium.ttf";
+  static final String PATH_MEDIUM_TYPEFACE = "font/roboto_medium.ttf";
 
   @BindView(R.id.toolbar) @Nullable Toolbar toolbar;
   @BindView(R.id.toolbar_title) @Nullable TextView title;
   @BindView(R.id.toolbar_subtitle) @Nullable TextView subtitle;
   @BindView(R.id.toolbar_avatar) @Nullable CircularImageView avatar;
   @BindView(R.id.toolbar_avatar_empty) @Nullable TextView avatarEmpty;
-
-  @Inject Resource<Typeface, String> typefaceResource;
 
   protected Unbinder unbinder;
 
@@ -86,8 +82,6 @@ public class BaseFragment extends Fragment {
 
     parent().setSupportActionBar(toolbar);
 
-    typefaceResource.load(parent(), PATH_MEDIUM_TYPEFACE)
-        .map(typeFace -> typeFace.orElse(Typeface.DEFAULT))
-        .subscribe(typeface -> title.setTypeface(typeface));
+    title.setTypeface(ResourcesCompat.getFont(parent(), R.font.roboto_medium_family));
   }
 }

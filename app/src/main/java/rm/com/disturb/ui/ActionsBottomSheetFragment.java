@@ -37,12 +37,14 @@ public final class ActionsBottomSheetFragment extends BottomSheetDialogFragment
   private BaseHolder.OnClickListener<SheetItem> actionListener = (position, item) -> {
   };
 
-  @NonNull public static ActionsBottomSheetFragment show(@NonNull FragmentManager manager) {
+  @NonNull public static ActionsBottomSheetFragment show(@Nullable FragmentManager manager) {
     final ActionsBottomSheetFragment sheetFragment = newInstance();
 
-    manager.executePendingTransactions();
+    if (manager != null) {
+      manager.executePendingTransactions();
+      sheetFragment.show(manager, TAG_ACTIONS_SHEET_DIALOG);
+    }
 
-    sheetFragment.show(manager, TAG_ACTIONS_SHEET_DIALOG);
     return sheetFragment;
   }
 

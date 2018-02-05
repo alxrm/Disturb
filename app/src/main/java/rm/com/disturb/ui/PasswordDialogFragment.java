@@ -27,14 +27,15 @@ public final class PasswordDialogFragment extends BaseDialogFragment {
   private String password = "";
   private OnPasswordConfirmationListener confirmationListener;
 
-  public static void show(@NonNull FragmentManager fragmentManager,
+  public static void show(@Nullable FragmentManager fragmentManager,
       @NonNull OnPasswordConfirmationListener listener) {
     final PasswordDialogFragment dialogFragment = newInstance();
 
-    fragmentManager.executePendingTransactions();
-
-    dialogFragment.setConfirmationListener(listener);
-    dialogFragment.show(fragmentManager, TAG_PASSWORD_DIALOG);
+    if (fragmentManager != null) {
+      fragmentManager.executePendingTransactions();
+      dialogFragment.setConfirmationListener(listener);
+      dialogFragment.show(fragmentManager, TAG_PASSWORD_DIALOG);
+    }
   }
 
   @NonNull public static PasswordDialogFragment newInstance() {

@@ -114,7 +114,7 @@ public final class NotifyFragment extends BaseFragment
   }
 
   @Nullable @Override
-  public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
       Bundle savedInstanceState) {
     return inflater.inflate(R.layout.fragment_notify, container, false);
   }
@@ -123,7 +123,6 @@ public final class NotifyFragment extends BaseFragment
     super.onViewCreated(view, savedInstanceState);
     injector().inject(this);
     attachToolbar();
-    loadSettingsFonts();
 
     if (areAnyPermissionsGranted()) {
       indicateNotificationsAvailable();
@@ -205,14 +204,14 @@ public final class NotifyFragment extends BaseFragment
   }
 
   @OnCheckedChanged(R.id.settings_sms_magnify) //
-  void onCodesMagnifierToggled(@NonNull SwitchCompat toggle, boolean isChecked) {
+  void onCodesMagnifierToggled(boolean isChecked) {
     magnifyPreference.set(isChecked);
   }
 
   @OnClick(R.id.settings_sms_magnify_item) //
   void onCodesMagnifierItemClicked() {
     settingsSmsMagnify.setChecked(!settingsSmsMagnify.isChecked());
-    onCodesMagnifierToggled(settingsSmsMagnify, settingsSmsMagnify.isChecked());
+    onCodesMagnifierToggled(settingsSmsMagnify.isChecked());
   }
 
   @OnClick(R.id.settings_logout) void onLogout() {
@@ -253,14 +252,6 @@ public final class NotifyFragment extends BaseFragment
     settingsCallsFinished.setText(finishedPreference.get());
     settingsCallsMissed.setText(missedPreference.get());
     settingsSmsMagnify.setChecked(magnifyPreference.get());
-  }
-
-  // TODO Change to font resource
-  private void loadSettingsFonts() {
-    typefaceResource.load(parent(), PATH_MEDIUM_TYPEFACE)
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .subscribe(font -> ButterKnife.apply(settingsHeaders, TYPEFACE, font));
   }
 
   private void loadUser() {
