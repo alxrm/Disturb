@@ -1,7 +1,7 @@
 package rm.com.disturb.ui;
 
-import android.app.Fragment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 
 /**
  * Created by alex

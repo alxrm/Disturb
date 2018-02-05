@@ -56,8 +56,6 @@ dependencies {
   implementation rxjava.lib
   implementation rxjava.android
 
-  implementation 'org.michaelbel:bottomsheet:1.1.2'
-
   implementation 'io.paperdb:paperdb:2.6'
   implementation 'com.mikhaellopez:circularimageview:3.0.2'
 }

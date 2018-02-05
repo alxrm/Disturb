@@ -1,11 +1,10 @@
 package rm.com.disturb.ui;
 
-import android.annotation.SuppressLint;
-import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +22,6 @@ import rm.com.disturb.inject.qualifier.Password;
 public final class PasswordDialogFragment extends BaseDialogFragment {
   public static final String TAG_PASSWORD_DIALOG = "TAG_PASSWORD_DIALOG";
 
-  @SuppressLint("StaticFieldLeak") //
-  private static PasswordDialogFragment instance;
-
   @Inject @Password Provider<String> savedPassword;
 
   private String password = "";
@@ -33,19 +29,15 @@ public final class PasswordDialogFragment extends BaseDialogFragment {
 
   public static void show(@NonNull FragmentManager fragmentManager,
       @NonNull OnPasswordConfirmationListener listener) {
-    if (instance == null) {
-      instance = newInstance();
-    }
+    final PasswordDialogFragment dialogFragment = newInstance();
 
     fragmentManager.executePendingTransactions();
 
-    if (!instance.isAdded()) {
-      instance.setConfirmationListener(listener);
-      instance.show(fragmentManager, TAG_PASSWORD_DIALOG);
-    }
+    dialogFragment.setConfirmationListener(listener);
+    dialogFragment.show(fragmentManager, TAG_PASSWORD_DIALOG);
   }
 
-  public static PasswordDialogFragment newInstance() {
+  @NonNull public static PasswordDialogFragment newInstance() {
     return new PasswordDialogFragment();
   }
 

@@ -40,6 +40,7 @@ import rm.com.disturb.inject.qualifier.Magnify;
 import rm.com.disturb.inject.qualifier.Missed;
 import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Password;
+import rm.com.disturb.ui.model.SheetItem;
 import rm.com.disturb.utils.BottomSheets;
 import rm.com.disturb.utils.Permissions;
 
@@ -61,6 +62,9 @@ public final class NotifyFragment extends BaseFragment
   static final int[] BEHAVIOUR_ICONS = new int[] {
       R.drawable.ic_edit, R.drawable.ic_delete
   };
+
+  static final List<SheetItem> ACTIONS =
+      BottomSheets.sheetItemsOf(BEHAVIOUR_TITLES, BEHAVIOUR_ICONS);
 
   static final ButterKnife.Setter<TextView, Typeface> TYPEFACE =
       (view, value, index) -> view.setTypeface(value);
@@ -119,7 +123,7 @@ public final class NotifyFragment extends BaseFragment
     super.onViewCreated(view, savedInstanceState);
     injector().inject(this);
     attachToolbar();
-    attachSettings();
+    loadSettingsFonts();
 
     if (areAnyPermissionsGranted()) {
       indicateNotificationsAvailable();
@@ -163,17 +167,21 @@ public final class NotifyFragment extends BaseFragment
   }
 
   @OnClick(R.id.settings_calls_finished) void onCallsFinishedClicked() {
-    BottomSheets.list(parent(), BEHAVIOUR_TITLES, BEHAVIOUR_ICONS, (i, item) -> {
-      finishedPreference.set(BEHAVIOUR_TITLES[i]);
-      settingsCallsFinished.setText(BEHAVIOUR_TITLES[i]);
-    });
+    ActionsBottomSheetFragment.show(getFragmentManager())
+        .setActions(ACTIONS)
+        .setActionListener((position, item) -> {
+          finishedPreference.set(BEHAVIOUR_TITLES[position]);
+          settingsCallsFinished.setText(BEHAVIOUR_TITLES[position]);
+        });
   }
 
   @OnClick(R.id.settings_calls_missed) void onCallsMissedClicked() {
-    BottomSheets.list(parent(), BEHAVIOUR_TITLES, BEHAVIOUR_ICONS, (i, item) -> {
-      missedPreference.set(BEHAVIOUR_TITLES[i]);
-      settingsCallsMissed.setText(BEHAVIOUR_TITLES[i]);
-    });
+    ActionsBottomSheetFragment.show(getFragmentManager())
+        .setActions(ACTIONS)
+        .setActionListener((position, item) -> {
+          missedPreference.set(BEHAVIOUR_TITLES[position]);
+          settingsCallsMissed.setText(BEHAVIOUR_TITLES[position]);
+        });
   }
 
   @OnCheckedChanged({ R.id.settings_calls_toggle, R.id.settings_sms_toggle }) //
@@ -216,13 +224,6 @@ public final class NotifyFragment extends BaseFragment
     PasswordDialogFragment.show(getFragmentManager(), this);
   }
 
-  private void loadUser() {
-    userSource.retrieve(chatId.get())
-        .filter(Optional::isPresent)
-        .map(Optional::get)
-        .subscribe(this::showUserInfo);
-  }
-
   @SuppressWarnings("ConstantConditions") //
   private void showUserInfo(@NonNull User user) {
     avatarEmpty.setText(iconLettersOf(user.firstName()));
@@ -254,11 +255,19 @@ public final class NotifyFragment extends BaseFragment
     settingsSmsMagnify.setChecked(magnifyPreference.get());
   }
 
-  private void attachSettings() {
+  // TODO Change to font resource
+  private void loadSettingsFonts() {
     typefaceResource.load(parent(), PATH_MEDIUM_TYPEFACE)
         .filter(Optional::isPresent)
         .map(Optional::get)
         .subscribe(font -> ButterKnife.apply(settingsHeaders, TYPEFACE, font));
+  }
+
+  private void loadUser() {
+    userSource.retrieve(chatId.get())
+        .filter(Optional::isPresent)
+        .map(Optional::get)
+        .subscribe(this::showUserInfo);
   }
 
   private boolean areAnyPermissionsGranted() {
