@@ -1,8 +1,6 @@
 package rm.com.disturb.ui;
 
 import android.Manifest;
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,13 +44,11 @@ import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Password;
 import rm.com.disturb.ui.adapter.BottomSheetCallbackAdapter;
 import rm.com.disturb.ui.adapter.SheetAdapter;
-import rm.com.disturb.ui.model.SheetItem;
-import rm.com.disturb.utils.BottomSheets;
 import rm.com.disturb.utils.Permissions;
 
 import static android.support.design.widget.BottomSheetBehavior.STATE_COLLAPSED;
 import static android.support.design.widget.BottomSheetBehavior.STATE_EXPANDED;
-import static android.support.design.widget.BottomSheetBehavior.STATE_HIDDEN;
+import static rm.com.disturb.utils.BottomSheets.BEHAVIOR_ACTIONS;
 import static rm.com.disturb.utils.Users.avatarColorFilterOf;
 import static rm.com.disturb.utils.Users.iconLettersOf;
 
@@ -62,17 +59,6 @@ import static rm.com.disturb.utils.Users.iconLettersOf;
 public final class NotifyFragment extends BaseFragment
     implements PasswordDialogFragment.OnPasswordConfirmationListener {
   private static final int REQ_PERMISSION = 1;
-
-  static final String[] BEHAVIOUR_TITLES = new String[] {
-      "Edit message", "Delete message"
-  };
-
-  static final int[] BEHAVIOUR_ICONS = new int[] {
-      R.drawable.ic_edit, R.drawable.ic_delete
-  };
-
-  static final List<SheetItem> ACTIONS =
-      BottomSheets.sheetItemsOf(BEHAVIOUR_TITLES, BEHAVIOUR_ICONS);
 
   static final ButterKnife.Setter<ViewGroup, Boolean> VISIBLE =
       (view, value, index) -> view.setVisibility(value ? View.VISIBLE : View.GONE);
@@ -99,8 +85,8 @@ public final class NotifyFragment extends BaseFragment
   @BindView(R.id.settings_sms_toggle) SwitchCompat settingsSmsToggle;
   @BindView(R.id.settings_calls_toggle) SwitchCompat settingsCallsToggle;
 
-  @BindView(R.id.settings_calls_finished_behaviour) TextView settingsCallsFinished;
-  @BindView(R.id.settings_calls_missed_behaviour) TextView settingsCallsMissed;
+  @BindView(R.id.settings_calls_finished_behavior) TextView settingsCallsFinished;
+  @BindView(R.id.settings_calls_missed_behavior) TextView settingsCallsMissed;
   @BindView(R.id.settings_sms_magnify) SwitchCompat settingsSmsMagnify;
   @BindView(R.id.bottom_sheet_actions) RecyclerView bottomSheetActions;
   @BindView(R.id.bottom_sheet) LinearLayout bottomSheet;
@@ -118,7 +104,7 @@ public final class NotifyFragment extends BaseFragment
   @Inject Source<User, String> userSource;
 
   private final SheetAdapter sheetAdapter = new SheetAdapter();
-  private BottomSheetBehavior<LinearLayout> sheetBehaviour;
+  private BottomSheetBehavior<LinearLayout> sheetBehavior;
 
   @NonNull public static NotifyFragment newInstance() {
     return new NotifyFragment();
@@ -130,7 +116,7 @@ public final class NotifyFragment extends BaseFragment
     return inflater.inflate(R.layout.fragment_notify, container, false);
   }
 
-  @Override public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+  @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     injector().inject(this);
     attachToolbar();
@@ -178,30 +164,27 @@ public final class NotifyFragment extends BaseFragment
   }
 
   @OnClick(R.id.settings_calls_finished) void onCallsFinishedClicked() {
-    toggleSheetDim(true);
-    sheetBehaviour.setState(STATE_EXPANDED);
+    sheetBehavior.setState(STATE_EXPANDED);
     sheetAdapter.setOnClickListener((position, item) -> {
-      sheetBehaviour.setState(STATE_COLLAPSED);
-      finishedPreference.set(BEHAVIOUR_TITLES[position]);
-      settingsCallsFinished.setText(BEHAVIOUR_TITLES[position]);
+      sheetBehavior.setState(STATE_COLLAPSED);
+      finishedPreference.set(item.text);
+      settingsCallsFinished.setText(item.text);
     });
     bottomSheetActions.setAdapter(sheetAdapter);
   }
 
   @OnClick(R.id.settings_calls_missed) void onCallsMissedClicked() {
-    toggleSheetDim(true);
-    sheetBehaviour.setState(STATE_EXPANDED);
+    sheetBehavior.setState(STATE_EXPANDED);
     sheetAdapter.setOnClickListener((position, item) -> {
-      sheetBehaviour.setState(STATE_COLLAPSED);
-      missedPreference.set(BEHAVIOUR_TITLES[position]);
-      settingsCallsMissed.setText(BEHAVIOUR_TITLES[position]);
+      sheetBehavior.setState(STATE_COLLAPSED);
+      missedPreference.set(item.text);
+      settingsCallsMissed.setText(item.text);
     });
     bottomSheetActions.setAdapter(sheetAdapter);
   }
 
   @OnClick(R.id.bottom_sheet_dim) void onBottomSheetDimClicked() {
-    toggleSheetDim(false);
-    sheetBehaviour.setState(STATE_COLLAPSED);
+    sheetBehavior.setState(STATE_COLLAPSED);
   }
 
   @OnCheckedChanged({ R.id.settings_calls_toggle, R.id.settings_sms_toggle }) //
@@ -241,7 +224,7 @@ public final class NotifyFragment extends BaseFragment
       return;
     }
 
-    PasswordDialogFragment.show(getFragmentManager(), this);
+    PasswordDialogFragment.show(fragmentManager(), this);
   }
 
   @SuppressWarnings("ConstantConditions") //
@@ -276,14 +259,15 @@ public final class NotifyFragment extends BaseFragment
   }
 
   private void attachBottomSheet() {
-    sheetAdapter.updateData(ACTIONS);
+    sheetAdapter.updateData(BEHAVIOR_ACTIONS);
     bottomSheetActions.setAdapter(sheetAdapter);
-    sheetBehaviour = BottomSheetBehavior.from(bottomSheet);
-    sheetBehaviour.setBottomSheetCallback(new BottomSheetCallbackAdapter() {
-      @Override public void onStateChanged(@NonNull View bottomSheet, int newState) {
-        if (newState == STATE_COLLAPSED || newState == STATE_HIDDEN) {
-          toggleSheetDim(false);
-        }
+    sheetBehavior = BottomSheetBehavior.from(bottomSheet);
+    sheetBehavior.setBottomSheetCallback(new BottomSheetCallbackAdapter() {
+      @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+        super.onSlide(bottomSheet, slideOffset);
+        Log.e("DBG", "Offset: " + slideOffset);
+        sheetDim.setAlpha(slideOffset);
+        sheetDim.setVisibility(slideOffset == 0 ? View.GONE : View.VISIBLE);
       }
     });
   }
@@ -296,37 +280,17 @@ public final class NotifyFragment extends BaseFragment
   }
 
   private boolean areAnyPermissionsGranted() {
-    return Permissions.isReadPhoneStatePermissionGranted(getActivity())
-        || Permissions.isReceiveSmsPermissionGranted(getActivity());
+    return Permissions.isReadPhoneStatePermissionGranted(parent())
+        || Permissions.isReceiveSmsPermissionGranted(parent());
   }
 
   private boolean areAllPermissionsGranted() {
-    return Permissions.isReadPhoneStatePermissionGranted(getActivity())
-        && Permissions.isReceiveSmsPermissionGranted(getActivity());
+    return Permissions.isReadPhoneStatePermissionGranted(parent())
+        && Permissions.isReceiveSmsPermissionGranted(parent());
   }
 
   private void indicateNotificationsAvailable() {
     permissionsOverlay.setVisibility(View.GONE);
-  }
-
-  private void toggleSheetDim(boolean shown) {
-    sheetDim.animate()
-        .alpha(shown ? 1 : 0)
-        .setDuration(200)
-        .setListener(new AnimatorListenerAdapter() {
-          @Override public void onAnimationStart(Animator animation) {
-            if (shown) {
-              sheetDim.setVisibility(View.VISIBLE);
-            }
-          }
-
-          @Override public void onAnimationEnd(Animator animation) {
-            if (!shown) {
-              sheetDim.setVisibility(View.GONE);
-            }
-          }
-        })
-        .start();
   }
 
   private void requestAllPermissions() {

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -23,8 +24,6 @@ import rm.com.disturb.utils.Preconditions;
  */
 
 public class BaseFragment extends Fragment {
-  static final String PATH_MEDIUM_TYPEFACE = "font/roboto_medium.ttf";
-
   @BindView(R.id.toolbar) @Nullable Toolbar toolbar;
   @BindView(R.id.toolbar_title) @Nullable TextView title;
   @BindView(R.id.toolbar_subtitle) @Nullable TextView subtitle;
@@ -33,7 +32,7 @@ public class BaseFragment extends Fragment {
 
   protected Unbinder unbinder;
 
-  @Override public void onViewCreated(View view, Bundle savedInstanceState) {
+  @Override public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     unbinder = ButterKnife.bind(this, view);
     injector().inject(this);
@@ -44,36 +43,33 @@ public class BaseFragment extends Fragment {
     unbinder.unbind();
   }
 
-  protected void navigateBack() {
-    final Navigation navigation = navigator();
-
-    if (navigation != null) {
-      navigation.back();
-    }
+  @NonNull final protected Navigation navigator() {
+    return (Navigation) parent();
   }
 
-  @Nullable final protected Navigation navigator() {
-    return (Navigation) getActivity();
+  protected void navigateBack() {
+    navigator().back();
   }
 
   final protected void navigateTo(@NonNull Fragment fragment) {
-    final Navigation navigation = navigator();
-
-    if (navigation != null) {
-      navigation.to(fragment);
-    }
+    navigator().to(fragment);
   }
 
   @NonNull final protected DisturbComponent injector() {
-    return ((DisturbApplication) getActivity().getApplication()).injector();
+    return ((DisturbApplication) parent().getApplication()).injector();
   }
 
   @NonNull final protected AppCompatActivity parent() {
     final AppCompatActivity activity = (AppCompatActivity) getActivity();
-
     Preconditions.checkNotNull(activity, "Parent activity was null, you are doing something wrong");
 
     return activity;
+  }
+
+  @NonNull final protected FragmentManager fragmentManager() {
+    final FragmentManager manager = getFragmentManager();
+    Preconditions.checkNotNull(manager, "Fragment manager was null, you are doing something wrong");
+    return manager;
   }
 
   final protected void attachToolbar() {

@@ -88,7 +88,7 @@
         />
 
     <TextView
-        android:id="@+id/settings_calls_missed_behaviour"
+        android:id="@+id/settings_calls_missed_behavior"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
@@ -128,7 +128,7 @@
         />
 
     <TextView
-        android:id="@+id/settings_calls_finished_behaviour"
+        android:id="@+id/settings_calls_finished_behavior"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"

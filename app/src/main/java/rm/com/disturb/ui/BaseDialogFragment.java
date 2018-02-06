@@ -10,6 +10,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import rm.com.disturb.DisturbApplication;
 import rm.com.disturb.inject.DisturbComponent;
+import rm.com.disturb.utils.Preconditions;
 
 /**
  * Created by alex
@@ -48,7 +50,7 @@ public abstract class BaseDialogFragment extends DialogFragment
     super.dismissAllowingStateLoss();
   }
 
-  @Override public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
+  @NonNull @Override public Dialog onCreateDialog(@NonNull Bundle savedInstanceState) {
     final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()) //
         .setView(view())
         .setTitle(title())
@@ -85,7 +87,7 @@ public abstract class BaseDialogFragment extends DialogFragment
 
   @NonNull protected final View view() {
     final ViewGroup root = (ViewGroup) getView();
-    final LayoutInflater inflater = getActivity().getLayoutInflater();
+    final LayoutInflater inflater = parent().getLayoutInflater();
 
     rootView = createView(root, inflater);
     unbinder = ButterKnife.bind(this, rootView);
@@ -93,8 +95,15 @@ public abstract class BaseDialogFragment extends DialogFragment
     return rootView;
   }
 
+  @NonNull final protected AppCompatActivity parent() {
+    final AppCompatActivity activity = (AppCompatActivity) getActivity();
+    Preconditions.checkNotNull(activity, "Parent activity was null, you are doing something wrong");
+
+    return activity;
+  }
+
   @NonNull protected final DisturbComponent injector() {
-    return ((DisturbApplication) getActivity().getApplication()).injector();
+    return ((DisturbApplication) parent().getApplication()).injector();
   }
 
   protected final void rebindButtons() {

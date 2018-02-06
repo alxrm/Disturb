@@ -39,22 +39,18 @@ public final class MainActivity extends AppCompatActivity implements Navigation 
   }
 
   @Override public void to(@NonNull Fragment dest) {
-    changeFragment(dest, true);
+    changeFragment(dest);
   }
 
   @Override public void back() {
     onBackPressed();
   }
 
-  private void changeFragment(@NonNull Fragment fragment, boolean isRoot) {
+  private void changeFragment(@NonNull Fragment fragment) {
     this.currentFragment = fragment;
 
     final FragmentTransaction fragmentTransaction =
         getSupportFragmentManager().beginTransaction().replace(R.id.container, fragment);
-
-    if (!isRoot) {
-      fragmentTransaction.addToBackStack(null);
-    }
 
     fragmentTransaction.commit();
   }

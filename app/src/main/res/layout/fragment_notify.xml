@@ -1,6 +1,5 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -23,12 +22,11 @@
       android:id="@+id/bottom_sheet_dim"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:alpha="0"
       android:background="@color/color_separator_dark"
       android:clickable="true"
       android:focusable="true"
       android:visibility="gone"
-      android:alpha="0"
-      app:layout_behavior="@string/appbar_scrolling_view_behavior"
       />
 
   <include

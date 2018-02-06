@@ -11,9 +11,9 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseHolder<T> extends RecyclerView.ViewHolder {
 
-  protected OnClickListener<T> clickListener;
+  OnClickListener<T> clickListener;
 
-  public BaseHolder(View itemView) {
+  BaseHolder(View itemView) {
     super(itemView);
     ButterKnife.bind(this, itemView);
   }
