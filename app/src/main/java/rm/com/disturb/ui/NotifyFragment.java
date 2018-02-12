@@ -42,7 +42,7 @@ import rm.com.disturb.inject.qualifier.Magnify;
 import rm.com.disturb.inject.qualifier.Missed;
 import rm.com.disturb.inject.qualifier.Notify;
 import rm.com.disturb.inject.qualifier.Password;
-import rm.com.disturb.ui.adapter.BottomSheetCallbackAdapter;
+import rm.com.disturb.ui.widget.BottomSheetCallbackProxy;
 import rm.com.disturb.ui.adapter.SheetAdapter;
 import rm.com.disturb.utils.Permissions;
 
@@ -262,7 +262,7 @@ public final class NotifyFragment extends BaseFragment
     sheetAdapter.updateData(BEHAVIOR_ACTIONS);
     bottomSheetActions.setAdapter(sheetAdapter);
     sheetBehavior = BottomSheetBehavior.from(bottomSheet);
-    sheetBehavior.setBottomSheetCallback(new BottomSheetCallbackAdapter() {
+    sheetBehavior.setBottomSheetCallback(new BottomSheetCallbackProxy() {
       @Override public void onSlide(@NonNull View bottomSheet, float slideOffset) {
         super.onSlide(bottomSheet, slideOffset);
         Log.e("DBG", "Offset: " + slideOffset);
