@@ -1,15 +1,11 @@
 package rm.com.disturb.data.signal.rule;
 
 import android.support.annotation.NonNull;
-import java8.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import rm.com.disturb.data.signal.MessageSignal;
 import rm.com.disturb.data.signal.MessageSignals;
 import rm.com.disturb.data.storage.Storage;
-import rm.com.disturb.data.telegram.command.TelegramCommand;
-import rm.com.disturb.inject.qualifier.Erase;
-import rm.com.disturb.inject.qualifier.Update;
 
 import static rm.com.disturb.data.signal.MessageSignal.EMPTY_MESSAGE;
 import static rm.com.disturb.data.signal.MessageSignals.CALL_RINGING;
@@ -22,15 +18,9 @@ import static rm.com.disturb.data.signal.MessageSignals.EMPTY;
 @Singleton //
 public final class CallAnsweredRule implements Rule<MessageSignal> {
 
-  private final TelegramCommand<Optional<String>> update;
-  private final TelegramCommand<Boolean> erase;
   private final Storage<MessageSignal> signalStorage;
 
-  @Inject CallAnsweredRule(@NonNull @Update TelegramCommand<Optional<String>> update,
-      @NonNull @Erase TelegramCommand<Boolean> erase,
-      @NonNull Storage<MessageSignal> signalStorage) {
-    this.update = update;
-    this.erase = erase;
+  @Inject CallAnsweredRule(@NonNull Storage<MessageSignal> signalStorage) {
     this.signalStorage = signalStorage;
   }
 

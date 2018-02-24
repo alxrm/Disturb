@@ -58,7 +58,7 @@ public final class CallMissedRule implements Rule<MessageSignal> {
     if (missedCallBehavior.get().startsWith("Edit")) {
       update.send(params).subscribe();
     } else {
-      erase.send(TelegramParams.ofMessageId(saved.remoteKey()));
+      erase.send(TelegramParams.ofMessageId(saved.remoteKey())).subscribe();
     }
   }
 }

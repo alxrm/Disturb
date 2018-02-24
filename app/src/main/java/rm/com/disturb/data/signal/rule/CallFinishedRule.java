@@ -61,7 +61,7 @@ public final class CallFinishedRule implements Rule<MessageSignal> {
     if (finishedCallBehavior.get().startsWith("Edit")) {
       update.send(params).subscribe();
     } else {
-      erase.send(TelegramParams.ofMessageId(saved.remoteKey()));
+      erase.send(TelegramParams.ofMessageId(saved.remoteKey())).subscribe();
     }
   }
 }
