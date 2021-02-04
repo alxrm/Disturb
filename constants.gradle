@@ -1,7 +1,6 @@
 ext {
-  minSdk = 16
-  targetSdk = 26
-  buildTools = "27.0.3"
+  minSdk = 21
+  targetSdk = 30
   publishVersion = "1.0"
 
   versions = [androidBuild : "2.2.3",

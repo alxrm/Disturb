@@ -4,12 +4,11 @@ apply from: "${rootDir}/constants.gradle"
 apply from: "${rootDir}/telegram.gradle"
 
 android {
-  compileSdkVersion targetSdk
-  buildToolsVersion buildTools
+  compileSdkVersion 30
   defaultConfig {
     applicationId "rm.com.disturb"
-    minSdkVersion minSdk
-    targetSdkVersion targetSdk
+    minSdkVersion 21
+    targetSdkVersion 30
     versionCode 1
     versionName "1.0"
     vectorDrawables.useSupportLibrary = true
